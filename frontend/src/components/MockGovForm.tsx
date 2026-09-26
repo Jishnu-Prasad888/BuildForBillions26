@@ -37,9 +37,9 @@ const MockGovForm = forwardRef(function MockGovForm(
           <div>{referenceLabel ?? "Application no.: (assigned on submission)"}</div>
         </div>
       </div>
-      <div className="flex items-center gap-2 border-b border-saffron-100 bg-saffron-50 px-6 py-2 text-sm text-saffron-700" data-warning>
+      {/* <div className="flex items-center gap-2 border-b border-saffron-100 bg-saffron-50 px-6 py-2 text-sm text-saffron-700" data-warning>
         <AlertCircle size={16} className="flex-none" /> <span>Fields marked <b className="text-brick">*</b> are mandatory. This is a DEMO form — nothing is sent to any government portal.</span>
-      </div>
+      </div> */}
 
       <div className="space-y-8 px-6 py-6">
         {form.sections.map((sec, si) => (

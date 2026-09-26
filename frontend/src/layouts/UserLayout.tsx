@@ -8,7 +8,7 @@ import { useI18n } from "@/i18n";
 
 export function DemoStrip() {
   return (
-    <div className="border-b border-saffron-100 bg-saffron-50 px-4 py-1.5 text-center text-xs font-semibold text-saffron-700">
+    <div className="border-b border-saffron-100 bg-saffron-50 px-4 py-1 text-center text-[0.72rem] font-semibold leading-snug text-saffron-700">
       <span className="sm:hidden">DEMO MODE · Practice only — nothing is sent to the government.</span>
       <span className="hidden sm:inline">DEMO MODE · Hackathon prototype. Seed documents are summaries marked “demo”; forms and submissions are mock — nothing is sent to any government portal.</span>
     </div>

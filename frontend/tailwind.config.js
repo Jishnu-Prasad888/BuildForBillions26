@@ -4,11 +4,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Noto Sans"', '"Noto Sans Devanagari"', '"Noto Sans Kannada"', "system-ui", "sans-serif"],
-        display: ['"Noto Serif"', '"Noto Serif Devanagari"', '"Noto Serif Kannada"', "Georgia", "serif"],
+        sans: ['"Encode Sans Semi Expanded"', '"Noto Sans Devanagari"', '"Noto Sans Kannada"', "system-ui", "sans-serif"],
+        display: ['"Commissioner"', '"Noto Sans Devanagari"', '"Noto Sans Kannada"', "system-ui", "sans-serif"],
       },
       colors: {
         ink: { DEFAULT: "#14213d", 900: "#0e1729", 800: "#14213d", 700: "#223257", 600: "#34466f", 500: "#56688f", 400: "#8793ad", 300: "#b6bfd1", 200: "#dfe3ec", 100: "#eef1f6", 50: "#f6f8fb" },
+        forest: { DEFAULT: "#0f4a37", 950: "#06231a", 900: "#0a3126", 800: "#0f4a37", 700: "#145c45", 600: "#1a7457", 500: "#23906e", 300: "#7fc4a8", 200: "#b5e0cf", 100: "#d9efe5", 50: "#eef8f3" },
         paper: { DEFAULT: "#f7f5f0", 100: "#fbfaf7", 200: "#f1eee6", 300: "#e6e1d5" },
         saffron: { DEFAULT: "#d9731a", 50: "#fdf4ea", 100: "#fbe6cf", 600: "#b85f12", 700: "#8f4a0e" },
         leaf: { DEFAULT: "#1f7a4d", 50: "#ebf6f0", 100: "#d2ecdf", 600: "#19643f", 700: "#124b2f" },

@@ -6,28 +6,28 @@
   html { font-size: 16.5px; scroll-behavior: smooth; }
   body { @apply bg-paper text-ink-800 antialiased; }
   h1, h2, h3 { @apply text-ink-900; }
-  :focus-visible { @apply outline-none ring-2 ring-saffron ring-offset-2 ring-offset-paper; }
-  ::selection { @apply bg-saffron-100; }
+  :focus-visible { @apply outline-none ring-2 ring-forest-500 ring-offset-2 ring-offset-paper; }
+  ::selection { @apply bg-forest-100; }
 }
 
 @layer components {
   /* Buttons: every size keeps at least a 44px touch target except btn-sm (36px) for dense rows. */
-  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[0.95rem] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
-  .btn-primary { @apply btn bg-ink-800 text-white hover:bg-ink-700; }
-  .btn-accent { @apply btn bg-saffron text-white hover:bg-saffron-600; }
-  .btn-secondary { @apply btn border border-ink-200 bg-white text-ink-800 hover:bg-ink-50; }
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[0.95rem] font-semibold transition-all duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply btn bg-forest-800 text-white shadow-sm hover:bg-forest-900 hover:shadow-md; }
+  .btn-accent { @apply btn bg-saffron text-white shadow-sm hover:bg-saffron-600 hover:shadow-md; }
+  .btn-secondary { @apply btn border border-ink-200 bg-white text-ink-800 hover:border-ink-300 hover:bg-ink-50; }
   .btn-ghost { @apply btn text-ink-700 hover:bg-ink-100; }
   .btn-danger { @apply btn border border-brick-100 bg-white text-brick hover:bg-brick-50; }
-  .btn-sm { @apply min-h-[36px] rounded-lg px-3 py-1.5 text-sm; }
-  .btn-lg { @apply min-h-[54px] rounded-2xl px-6 py-3.5 text-lg; }
+  .btn-sm { @apply min-h-[36px] rounded-md px-3 py-1.5 text-sm; }
+  .btn-lg { @apply min-h-[52px] rounded-lg px-6 py-3 text-base; }
 
-  .card { @apply rounded-2xl border border-paper-300 bg-white shadow-card; }
-  .card-link { @apply card block transition-all hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-lift; }
-  .input { @apply min-h-[44px] w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-[0.98rem] text-ink-900 placeholder:text-ink-400 focus:border-ink-500 focus:outline-none focus:ring-2 focus:ring-ink-200; }
+  .card { @apply rounded-xl border border-paper-300 bg-white shadow-card; }
+  .card-link { @apply card block transition-all hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift; }
+  .input { @apply min-h-[44px] w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-[0.98rem] text-ink-900 transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-600/20 aria-[invalid=true]:border-brick aria-[invalid=true]:ring-brick/20; }
   .label { @apply mb-1.5 block text-sm font-semibold text-ink-700; }
   .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold; }
   .eyebrow { @apply text-xs font-bold uppercase tracking-[0.08em] text-ink-500; }
-  .link { @apply font-semibold text-ink-900 underline decoration-saffron decoration-2 underline-offset-4 hover:text-saffron-700; }
+  .link { @apply font-semibold text-forest-800 underline decoration-saffron decoration-2 underline-offset-4 hover:text-forest-600; }
   .section-title { @apply text-lg font-bold text-ink-900; }
   .cite { @apply mx-0.5 inline-flex h-[1.25rem] min-w-[1.25rem] -translate-y-[1px] cursor-pointer items-center justify-center rounded bg-saffron-50 px-1 align-middle text-[0.7rem] font-bold text-saffron-700 ring-1 ring-saffron-100 hover:bg-saffron-100; }
   .prose-chat p { @apply my-1.5 leading-relaxed; }
