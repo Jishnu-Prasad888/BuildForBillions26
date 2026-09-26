@@ -176,6 +176,58 @@ class TestReference:
         from app.services.reference import resolve
         assert resolve(None, None, None) is None  # type: ignore[arg-type]
 
+    def test_reference_text_only(self):
+        from app.services.reference import resolve
+        ref = resolve(None, "KCC documents required for crop loan", None)
+        assert ref is not None
+        assert "PRIMARY REFERENCE" in ref.context
+        assert "KCC" in ref.topic or "documents" in ref.topic
+
+    def test_reference_topic_strips_stop_words(self):
+        from app.services.reference import resolve
+        ref = resolve(None, "The a an of to for and or is are be your you my i do does what how", None)
+        assert ref is not None
+        assert ref.topic.strip() == ""  # all stop words
+
+    def test_reference_context_length_capped(self):
+        from app.services.reference import resolve
+        long_text = "a" * 2000
+        ref = resolve(None, long_text, None)
+        assert ref is not None
+        assert len(ref.context) < 700  # capped at 600 chars + PREFIX
+
+    def test_ownership_ok_no_message(self):
+        from app.services.reference import ownership_ok
+        from unittest.mock import MagicMock
+        db = MagicMock()
+        db.get.return_value = None
+        assert ownership_ok("nonexistent-id", "user-1", db) is False
+
+    def test_chat_in_schema_has_reference_fields(self):
+        """ChatIn schema now has reference_message_id and reference_text."""
+        from app.schemas.common import ChatIn
+        import inspect
+        sig = inspect.signature(ChatIn)
+        assert "reference_message_id" in sig.parameters
+        assert "reference_text" in sig.parameters
+
+    def test_assistant_in_schema_has_reference_fields(self):
+        """AssistantIn schema (forms.py) now has reference fields."""
+        import inspect
+        from app.api import forms as mod
+        # Find AssistantIn class
+        assert hasattr(mod, "AssistantIn")
+        sig = inspect.signature(mod.AssistantIn)
+        assert "reference_message_id" in sig.parameters
+        assert "reference_text" in sig.parameters
+
+    def test_handle_accepts_reference_param(self):
+        """FormAssistant.handle() accepts reference= kwarg."""
+        import inspect
+        from app.services.formdoc.assistant import FormAssistant
+        sig = inspect.signature(FormAssistant.handle)
+        assert "reference" in sig.parameters
+
 
 # ---------------------------------------------------------------------------
 # P6: Mid-form questions — scheme scope and portal reminder

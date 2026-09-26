@@ -21,6 +21,7 @@ from app.services.formdoc import service, turn_router
 from app.services.formdoc.scheme_scope import detect_form_scheme
 from app.services.formdoc.values import ValueError_, is_secret_field, match_options, mask, to_display, validate_value
 from app.services.query_normalizer import answer_normalized
+from app.services.reference import ResolvedReference
 from app.services.redact import contains_secret, redact
 
 log = logging.getLogger("forms.assistant")
@@ -131,7 +132,8 @@ class FormAssistant:
         return self._finish_reply(sections, None)
 
     def handle(self, message: str, current_field_id: str | None, frame_b64: str | None, language: str,
-               pending_field_id: str | None = None, input_mode: str = "text") -> dict:
+               pending_field_id: str | None = None, input_mode: str = "text",
+               reference: "ResolvedReference | None" = None) -> dict:
         """``pending_field_id``: the field the client last displayed as the question (echoed from ``ask``). If it no
         longer matches the server's pointer the client is out of date, so nothing is saved.
         ``current_field_id``: a field the citizen deliberately picked (clicked in the preview / AutoFill panel)."""
@@ -164,10 +166,12 @@ class FormAssistant:
 
         target = self.by_id.get(current_field_id or "") or asking
         turn = turn_router.route(text, target, self.fields, option_match=lambda f, t: match_options(f["options"], t), llm=self._router_llm)
+        if reference is not None and turn.intent not in ("greet", "end"):
+            turn = turn._replace(intent="question")
         log.info("Turn routed: intent=%s confidence=%.2f reason=%s", turn.intent, turn.confidence, turn.reason)
 
         if turn.intent == "question":
-            return self._answer_question(text, current_field_id, frame_b64, language)
+            return self._answer_question(text, current_field_id, frame_b64, language, reference=reference)
         if turn.intent == "dont_know":
             return self._explain_field(target, language) if target else self._answer_question(text, current_field_id, frame_b64, language)
         if turn.intent == "other":
@@ -440,7 +444,8 @@ class FormAssistant:
             log.info("Screen frame not analysed: %s", type(exc).__name__)
         return ""
 
-    def _answer_question(self, text: str, current_field_id: str | None, frame_b64: str | None, language: str) -> dict:
+    def _answer_question(self, text: str, current_field_id: str | None, frame_b64: str | None, language: str,
+                         reference: "ResolvedReference | None" = None) -> dict:
         q = redact(text)
         self._push("user", q)
         sections: list[dict] = []
@@ -457,10 +462,13 @@ class FormAssistant:
         focus = self._focus_field(text, current_field_id)
         field_obs = self._observe(focus) if focus else ""
         ctx = "Uploaded form fields: " + "; ".join(f"{f['label']} ({f['type']})" for f in self.fields[:60])
+        ref_extra_query = reference.topic if reference else ""
         if focus:
             ctx += "\nField context: " + field_obs
         if focus:
             ctx += f"\nThe citizen is asking about the field: {focus['label']}"
+        if reference:
+            ctx = reference.context + "\n\n" + ctx
         if frame_b64:
             screen = self._screen_text(frame_b64, language)
             if screen:
@@ -469,8 +477,9 @@ class FormAssistant:
         knowledge = None
         try:
             schemes = self._detect_scheme()
+            _eq = " ".join(filter(None, [focus["label"] if focus else "", ref_extra_query]))
             res = self._kag_query(query, language, extra_context=ctx,
-                                  extra_query=focus["label"] if focus else "",
+                                  extra_query=_eq,
                                   context_schemes=schemes or None)
             if res and res.get("evidence") and not res.get("insufficient_evidence") and res.get("grounded"):
                 knowledge = res

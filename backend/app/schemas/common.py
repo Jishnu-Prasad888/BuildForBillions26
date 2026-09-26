@@ -55,6 +55,8 @@ class ChatIn(BaseModel):
     language: str | None = Field(default=None, pattern="^(en|hi|kn)$")
     application_id: str | None = None
     input_mode: str = Field(default="text", pattern="^(text|voice)$")  # logging only; never changes routing
+    reference_message_id: str | None = None
+    reference_text: str | None = Field(default=None, max_length=1200)
 
 
 class NoteIn(BaseModel):

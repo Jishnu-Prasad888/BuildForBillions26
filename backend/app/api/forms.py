@@ -22,6 +22,7 @@ from app.services.formdoc import analyze, fill, service, storage
 from app.services.formdoc.assistant import FormAssistant
 from app.services.formdoc.validate import UploadRejected, validate_upload
 from app.services.formdoc.values import profile_suggestions
+from app.services.reference import ownership_ok as ref_ownership_ok, resolve as resolve_reference
 
 log = logging.getLogger("forms.api")
 router = APIRouter(prefix="/api/forms", tags=["forms"])
@@ -241,6 +242,8 @@ class AssistantIn(BaseModel):
     language: str = Field("en", max_length=8)
     frame: str | None = Field(None, max_length=6_000_000)  # base64 JPEG of the shared screen; used in memory, never stored
     screen_shared: bool = False
+    reference_message_id: str | None = None
+    reference_text: str | None = Field(default=None, max_length=1200)
 
 
 @router.post("/{form_id}/assistant")
@@ -250,8 +253,16 @@ def assistant(form_id: str, body: AssistantIn, user: User = Depends(get_current_
     session = _open_session(db, form, user, body.language, body.screen_shared)
     session.language = body.language
     log.info("Form assistant turn (input_mode=%s)", body.input_mode)
+    ref = None
+    if body.reference_message_id:
+        if not ref_ownership_ok(body.reference_message_id, user.id, db):
+            raise HTTPException(403, "Reference not found")
+        ref = resolve_reference(body.reference_message_id, body.reference_text, db)
+    elif body.reference_text:
+        ref = resolve_reference(None, body.reference_text, db)
     return FormAssistant(db, user, form, session).handle(body.message, body.current_field_id, body.frame if body.screen_shared else None, body.language,
-                                                         pending_field_id=body.pending_field_id, input_mode=body.input_mode)
+                                                         pending_field_id=body.pending_field_id, input_mode=body.input_mode,
+                                                         reference=ref)
 
 
 @router.get("/{form_id}/assistant")

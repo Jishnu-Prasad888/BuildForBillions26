@@ -6,6 +6,7 @@ import Markdown, { citationOrderFrom } from "@/components/Markdown";
 import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
 import ChatInput, { type InputMode } from "@/components/ChatInput";
 import { Spinner } from "@/components/ui";
+import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Reference";
 
 interface Msg { id: string; role: "user" | "assistant" | "system"; sections: FormAssistSection[]; choices?: string[] | null }
 interface Screen { active: boolean; error: string | null; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> }
@@ -33,6 +34,9 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
   const [messages, setMessages] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
+  const [reference, setReference] = useState<ReferenceState | null>(null);
+  const referenceRef = useRef<ReferenceState | null>(null);
+  referenceRef.current = reference;
   const bottom = useRef<HTMLDivElement>(null);
   const started = useRef(false);
   const fieldRef = useRef(pickedFieldId);
@@ -46,11 +50,14 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
     if (busy || (!msg && !silent)) return;
     if (msg) setMessages((m) => [...m, { id: `u-${Date.now()}`, role: "user", sections: [{ kind: "assistant", text: msg }] }]);
     setBusy(true);
+    const ref = referenceRef.current;
+    setReference(null);
     try {
       const frame = screen.active && msg && QUESTION_RE.test(msg) ? screen.grabFrame() : null;
       const r = await api.post<FormAssistResponse>(`/api/forms/${formId}/assistant`, {
         message: msg, current_field_id: fieldId ?? fieldRef.current, pending_field_id: pendingRef.current, language: lang, frame,
         screen_shared: screen.active, input_mode: mode,
+        ...(ref ? { reference_message_id: ref.id, reference_text: ref.text.slice(0, 1200) } : {}),
       });
       pendingRef.current = r.pending_field_id ?? null;
       setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", sections: r.sections, choices: r.choices }]);
@@ -126,6 +133,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
                     </div>
                   );
                 })}
+                <QuoteButton messageId={m.id} text={m.sections.map((s) => s.text).join(" ")} onSet={setReference} />
                 {m.id === lastId && m.choices && m.choices.length > 0 && (
                   <div className="flex flex-wrap gap-2 pt-0.5">{m.choices.map((c) => <button key={c} disabled={busy} className="btn-secondary btn-sm" onClick={() => send(c)}>{c}</button>)}</div>
                 )}
@@ -144,6 +152,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
       </div>
       <div className="border-t border-paper-300 p-2.5">
         {screen.error && <div className="mb-1.5 text-xs text-brick">{screen.error}</div>}
+        {reference && <ReferenceChip reference={reference} onClear={() => setReference(null)} />}
         <ChatInput onSend={(t, mode) => send(t, undefined, false, mode)} busy={busy} lang={lang}
           placeholder="Type or speak a question or your answer — e.g. “What does this field mean?”"
           hint="I never ask for OTPs, passwords or PINs. Please don't share them." />

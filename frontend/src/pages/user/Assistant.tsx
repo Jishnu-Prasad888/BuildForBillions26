@@ -11,6 +11,7 @@ import SchemeCard from "@/components/SchemeCard";
 import ChatInput, { type InputMode } from "@/components/ChatInput";
 import KagTrace from "@/components/KagTrace";
 import { Spinner } from "@/components/ui";
+import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Reference";
 
 const SUGGESTIONS: Record<Lang, string[]> = {
   en: ["Heavy rain destroyed my crop. What help can I get?", "What documents do I need for crop damage relief?", "How many days do I have to report crop loss for insurance?", "Who is not eligible for PM-KISAN?"],
@@ -33,6 +34,7 @@ export default function Assistant() {
   const [chatKey, setChatKey] = useState(0); // bumped by "New" to clear the input box
   const [tts, setTts] = useState(() => localStorage.getItem("sahayak.tts") === "1");
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
+  const [reference, setReference] = useState<ReferenceState | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
 
   const send = async (text: string, mode: InputMode = "text") => {
@@ -41,8 +43,13 @@ export default function Assistant() {
     setBusy(true);
     const tmp: ChatMessage = { id: `u-${Date.now()}`, role: "user", content: msg, evidence: [] };
     setMessages((m) => [...m, tmp, { id: "pending", role: "assistant", content: "", evidence: [], pending: true }]);
+    const ref = reference;
+    setReference(null);
     try {
-      const r = await api.post<{ conversation_id: string; message: ChatMessage }>("/api/assistant/chat", { message: msg, conversation_id: conversationId, language: lang, input_mode: mode });
+      const r = await api.post<{ conversation_id: string; message: ChatMessage }>("/api/assistant/chat", {
+        message: msg, conversation_id: conversationId, language: lang, input_mode: mode,
+        ...(ref ? { reference_message_id: ref.id, reference_text: ref.text.slice(0, 1200) } : {}),
+      });
       setConversationId(r.conversation_id);
       setMessages((m) => [...m.filter((x) => x.id !== "pending"), r.message]);
       if (tts) speak(r.message.content, lang);
@@ -107,8 +114,9 @@ export default function Assistant() {
             const order = citationOrderFrom(m.content, m.evidence.map((e) => e.id));
             const ordered = order.map((id) => m.evidence.find((e) => e.id === id)!).filter(Boolean);
             const cards = m.meta?.scheme_cards ?? [];
+            const isRef = reference?.id === m.id;
             return (
-              <div key={m.id} className="flex gap-3">
+              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-saffron-300 ring-offset-2 rounded-2xl" : ""}`}>
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-ink-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
                   <div className="rounded-2xl rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">
@@ -120,6 +128,7 @@ export default function Assistant() {
                   <div className="flex flex-wrap items-center gap-3">
                     <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
                     <button className="mt-2 text-sm font-semibold text-ink-500 hover:text-ink-800" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />{t("listen")}</button>
+                    {!m.pending && <QuoteButton messageId={m.id} text={m.content} onSet={setReference} />}
                   </div>
                   <KagTrace meta={{ ...m.meta }} cited={ordered.length} />
                   {cards.length > 0 && (
@@ -137,6 +146,7 @@ export default function Assistant() {
         </div>
 
         <div className="border-t border-paper-300 bg-white p-3 sm:p-4">
+          {reference && <ReferenceChip reference={reference} onClear={() => setReference(null)} />}
           <ChatInput onSend={send} busy={busy} resetKey={chatKey} />
         </div>
       </div>
