@@ -14,7 +14,8 @@ export interface AssistantHandle { ask: (text: string, fieldId?: string) => void
 interface Props {
   formId: string;
   lang: Lang;
-  currentFieldId: string | null;
+  /** A field the citizen clicked since the last reply (explicit target), else null. */
+  pickedFieldId: string | null;
   screen: Screen;
   onStartScreen: () => void;
   onResponse: (r: FormAssistResponse) => void;
@@ -30,15 +31,18 @@ const TAG: Record<FormAssistSection["kind"], { label: string; cls: string } | nu
   assistant: null,
 };
 
-const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock({ formId, lang, currentFieldId, screen, onStartScreen, onResponse, onEnd, summaryLine }, ref) {
+const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock({ formId, lang, pickedFieldId, screen, onStartScreen, onResponse, onEnd, summaryLine }, ref) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const started = useRef(false);
-  const fieldRef = useRef(currentFieldId);
-  fieldRef.current = currentFieldId;
+  const fieldRef = useRef(pickedFieldId);
+  fieldRef.current = pickedFieldId;
+  // The field the server last asked. Updated as soon as a reply arrives and echoed back, so the server can refuse
+  // an answer meant for a question it has already moved past.
+  const pendingRef = useRef<string | null>(null);
 
   const send = useCallback(async (text: string, fieldId?: string, silent = false) => {
     const msg = text.trim();
@@ -49,8 +53,9 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
     try {
       const frame = screen.active && msg && QUESTION_RE.test(msg) ? screen.grabFrame() : null;
       const r = await api.post<FormAssistResponse>(`/api/forms/${formId}/assistant`, {
-        message: msg, current_field_id: fieldId ?? fieldRef.current, language: lang, frame, screen_shared: screen.active,
+        message: msg, current_field_id: fieldId ?? fieldRef.current, pending_field_id: pendingRef.current, language: lang, frame, screen_shared: screen.active,
       });
+      pendingRef.current = r.pending_field_id ?? null;
       setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", sections: r.sections, choices: r.choices }]);
       onResponse(r);
     } catch (e: any) {

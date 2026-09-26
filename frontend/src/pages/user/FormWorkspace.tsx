@@ -26,6 +26,9 @@ export default function FormWorkspace() {
   const [source, setSource] = useState<"original" | "completed">("original");
   const [showFilled, setShowFilled] = useState(true);
   const [current, setCurrent] = useState<string | null>(null);
+  // A field the citizen clicked since the assistant's last reply. Only then does a message target that field
+  // explicitly; otherwise the server's own pointer decides (it owns the form state).
+  const [picked, setPicked] = useState<string | null>(null);
   const [flash, setFlash] = useState<string[]>([]);
   const [reviewKey, setReviewKey] = useState("0");
   const [screenModal, setScreenModal] = useState(false);
@@ -64,6 +67,7 @@ export default function FormWorkspace() {
 
   const select = useCallback((fid: string | null, alsoTab: Tab | null = "autofill") => {
     setCurrent(fid);
+    setPicked(fid);
     if (!fid || !schema) return;
     const f = schema.fields.find((x) => x.field_id === fid);
     if (f) setPage(f.page);
@@ -73,9 +77,11 @@ export default function FormWorkspace() {
   const onAssistantResponse = useCallback((r: FormAssistResponse) => {
     const ups = Object.keys(r.field_updates);
     if (ups.length) { setFlash(ups); window.setTimeout(() => setFlash([]), 1700); }
+    setPicked(null);
+    // Show the field being asked right away; waiting for the schema reload let the next message go to the old field.
+    if (r.ask) setCurrent(r.ask.field_id);
     loadSchema().then((s) => {
       if (r.ask) {
-        setCurrent(r.ask.field_id);
         const f = s.fields.find((x) => x.field_id === r.ask!.field_id);
         if (f) setPage(f.page);
       }
@@ -184,7 +190,7 @@ export default function FormWorkspace() {
           </section>
         </div>
         {dockOpen ? (
-          <AssistantDock ref={dock} formId={meta.id} lang={lang} currentFieldId={current} screen={screen} onStartScreen={() => setScreenModal(true)}
+          <AssistantDock ref={dock} formId={meta.id} lang={lang} pickedFieldId={picked} screen={screen} onStartScreen={() => setScreenModal(true)}
             onResponse={onAssistantResponse} onEnd={() => setDockOpen(false)} summaryLine={summaryLine} />
         ) : (
           <div className="flex items-center justify-between border-t border-paper-300 bg-white px-4 py-2 text-sm">

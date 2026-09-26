@@ -306,6 +306,8 @@ export interface FormSchema {
 export interface FormAssistSection { kind: "form_observation" | "knowledge" | "assistant"; text: string; evidence?: Evidence[] }
 export interface FormAssistResponse {
   reply: string;
+  /** The one field the server is asking now; echoed back with the next message. */
+  pending_field_id: string | null;
   sections: FormAssistSection[];
   ask: { field_id: string; label: string; type: FormFieldType; options: string[] } | null;
   choices: string[] | null;

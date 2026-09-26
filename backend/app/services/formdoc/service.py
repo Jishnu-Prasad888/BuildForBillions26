@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.models import Form, FormField, FormPage, FormValue
 from app.models.common import utcnow
+from app.services.formdoc.field_hygiene import clean_fields
 from app.services.formdoc.values import NON_FILLABLE, is_secret_field, mask, to_display, validate_value
 
 
@@ -22,8 +23,9 @@ def public_field(f: dict) -> dict:
 
 
 def load_fields(db: Session, form: Form) -> list[dict]:
+    """Fields the citizen works with: office-use fields and duplicates are never shown, asked or filled."""
     rows = db.scalars(select(FormField).where(FormField.form_id == form.id, FormField.user_id == form.user_id).order_by(FormField.position)).all()
-    return [field_dict(r) for r in rows]
+    return clean_fields([field_dict(r) for r in rows])
 
 
 def load_value_rows(db: Session, form: Form) -> dict[str, FormValue]:

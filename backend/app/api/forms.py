@@ -235,7 +235,9 @@ def autofill(form_id: str, body: AutoFillIn, user: User = Depends(get_current_us
 # --------------------------------------------------------------------------- assistant
 class AssistantIn(BaseModel):
     message: str = Field("", max_length=2000)
-    current_field_id: str | None = Field(None, max_length=32)
+    current_field_id: str | None = Field(None, max_length=32)  # a field the citizen deliberately picked
+    pending_field_id: str | None = Field(None, max_length=32)  # echo of the last "pending_field_id" the server sent
+    input_mode: str = Field("text", pattern="^(text|voice)$")  # for logging only; never changes routing
     language: str = Field("en", max_length=8)
     frame: str | None = Field(None, max_length=6_000_000)  # base64 JPEG of the shared screen; used in memory, never stored
     screen_shared: bool = False
@@ -247,7 +249,9 @@ def assistant(form_id: str, body: AssistantIn, user: User = Depends(get_current_
     _require_ready(form)
     session = _open_session(db, form, user, body.language, body.screen_shared)
     session.language = body.language
-    return FormAssistant(db, user, form, session).handle(body.message, body.current_field_id, body.frame if body.screen_shared else None, body.language)
+    log.info("Form assistant turn (input_mode=%s)", body.input_mode)
+    return FormAssistant(db, user, form, session).handle(body.message, body.current_field_id, body.frame if body.screen_shared else None, body.language,
+                                                         pending_field_id=body.pending_field_id)
 
 
 @router.get("/{form_id}/assistant")
