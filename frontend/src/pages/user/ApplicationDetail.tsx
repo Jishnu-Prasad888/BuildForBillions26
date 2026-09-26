@@ -166,7 +166,7 @@ export default function ApplicationDetail() {
             <div className="card space-y-3 p-5">
               {app.conversation.map((m) => (
                 <div key={m.id} className="flex gap-3">
-                  <div className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${m.role === "user" ? "bg-ink-100 text-ink-700" : "bg-ink-800 text-white"}`}>{m.role === "user" ? <UserIcon size={16} /> : <Bot size={16} />}</div>
+                  <div className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${m.role === "user" ? "bg-ink-100 text-ink-700" : "bg-forest-800 text-white"}`}>{m.role === "user" ? <UserIcon size={16} /> : <Bot size={16} />}</div>
                   <div className="min-w-0 flex-1 text-[0.95rem]">
                     <div className="text-xs text-ink-400">{formatDate(m.created_at, true)}</div>
                     <Markdown text={m.content.replace(/\[(chunk|fact)_[a-z0-9_]+\]/g, "")} />

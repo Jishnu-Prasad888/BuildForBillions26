@@ -122,7 +122,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
       <div className="flex min-h-0 flex-1">
         <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-3 py-3" aria-live="polite">
           {messages.map((m) => {
-            if (m.role === "user") return <div key={m.id} className="ml-10 rounded-2xl rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.95rem]">{m.sections[0].text}</div>;
+            if (m.role === "user") return <div key={m.id} className="ml-10 rounded-lg rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.95rem]">{m.sections[0].text}</div>;
             if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-3 py-2 text-sm text-brick">{m.sections[0].text}</div>;
             return (
               <div key={m.id} className="mr-6 space-y-1.5">
@@ -132,7 +132,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
                   const order = citationOrderFrom(s.text, ev.map((e) => e.id));
                   const ordered = order.map((id) => ev.find((e) => e.id === id)!).filter(Boolean);
                   return (
-                    <div key={i} className={`rounded-2xl rounded-tl-sm border px-3.5 py-2.5 text-[0.95rem] ${tag ? "border-paper-300 bg-paper-100" : "border-paper-300 bg-white"}`}>
+                    <div key={i} className={`rounded-lg rounded-tl-sm border px-3.5 py-2.5 text-[0.95rem] ${tag ? "border-paper-300 bg-paper-100" : "border-paper-300 bg-white"}`}>
                       {tag && <span className={`chip mb-1.5 ${tag.cls}`}>{tag.label}</span>}
                       <Markdown text={s.text} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
                       {ordered.length > 0 && <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />}

@@ -192,7 +192,7 @@ export default function FormPage() {
               onResponse={onResponse} onAddNote={addNote} onEnd={() => { setSession(null); setHighlight(null); load(); }} />
           ) : (
             <div className="card flex h-full flex-col items-center justify-center p-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-saffron-50 text-saffron-700"><MonitorSmartphone size={32} /></div>
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><MonitorSmartphone size={32} /></div>
               <h2 className="font-display text-2xl font-bold">Need help with this form?</h2>
               <p className="mt-2 text-ink-600">The assistant can look at the form on your screen, explain each field in your language and fill in what you tell it.</p>
               <button className="btn-accent mt-6 px-6 py-3 text-base" onClick={() => setStartOpen(true)}><Sparkles size={18} /> {t("help_me_fill_this")}</button>
@@ -213,7 +213,7 @@ export default function FormPage() {
           <span className="label">Assistant language</span>
           <div className="grid grid-cols-3 gap-2">
             {(["en", "hi", "kn"] as Lang[]).map((l) => (
-              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-semibold ${assistLang === l ? "border-ink-800 bg-ink-800 text-white" : "border-ink-200 bg-white"}`}>
+              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-semibold ${assistLang === l ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white"}`}>
                 {{ en: "English", hi: "हिन्दी", kn: "ಕನ್ನಡ" }[l]}
               </button>
             ))}

@@ -70,7 +70,7 @@ export default function Documents() {
                   <div className="text-sm text-ink-500">{TYPES[d.doc_type] ?? d.doc_type}</div>
                 </div>
               </div>
-              {d.is_sample && <span className="chip mt-3 w-fit bg-saffron-50 text-saffron-700">Sample (demo data)</span>}
+              {d.is_sample && <span className="chip mt-3 w-fit bg-amber-50 text-amber-700">Sample (demo data)</span>}
               {d.extracted_text && <p className="mt-3 line-clamp-3 rounded bg-paper-100 px-2 py-1.5 font-mono text-xs text-ink-600">{d.extracted_text}</p>}
               <div className="mt-auto flex items-center justify-between pt-4 text-xs text-ink-500">
                 <span>{formatDate(d.created_at)}{d.size ? ` · ${(d.size / 1024).toFixed(0)} KB` : ""}</span>

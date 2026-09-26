@@ -30,8 +30,8 @@ export default function SignUp() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl font-bold">Create your account</h1>
-      <p className="mt-1 text-ink-600">It takes a minute. You can add your details later.</p>
+      <h1 className="font-display text-3xl font-bold">Create account</h1>
+      <p className="mt-1 text-ink-600">Takes a minute. You can add more details later.</p>
       <form onSubmit={submit} className="mt-6 space-y-4">
         <div>
           <label className="label" htmlFor="name">Full name</label>
@@ -48,10 +48,16 @@ export default function SignUp() {
         </div>
         <div>
           <span className="label">Preferred language</span>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1 rounded-lg border border-ink-200 bg-white p-1" role="radiogroup" aria-label="Preferred language">
             {LANGUAGES.map((l) => (
-              <button type="button" key={l.code} onClick={() => setForm({ ...form, preferred_language: l.code })}
-                className={`rounded-lg border px-3 py-2.5 font-semibold ${form.preferred_language === l.code ? "border-ink-800 bg-ink-800 text-white" : "border-ink-200 bg-white text-ink-800 hover:bg-ink-50"}`}>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={form.preferred_language === l.code}
+                key={l.code}
+                onClick={() => setForm({ ...form, preferred_language: l.code })}
+                className={`rounded-md px-3 py-2 font-semibold transition-colors ${form.preferred_language === l.code ? "bg-forest-800 text-white shadow-sm" : "text-ink-700 hover:bg-ink-100"}`}
+              >
                 {l.native}
               </button>
             ))}
@@ -61,7 +67,7 @@ export default function SignUp() {
         <button className="btn-primary w-full py-3" disabled={busy}>{busy && <Spinner />} Create account</button>
       </form>
       <p className="mt-5 text-center text-ink-600">
-        Already registered? <Link to="/signin" className="font-semibold text-ink-900 underline decoration-saffron underline-offset-2">Sign in</Link>
+        Already have an account? <Link to="/signin" className="font-semibold text-forest-700 hover:text-forest-900 hover:underline">Sign in</Link>
       </p>
     </div>
   );

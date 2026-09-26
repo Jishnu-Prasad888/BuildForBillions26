@@ -21,7 +21,7 @@ interface OverviewData {
 }
 
 function Dot({ ok, warn }: { ok: boolean; warn?: boolean }) {
-  return <span className={`inline-block h-2.5 w-2.5 rounded-full ${ok ? "bg-leaf" : warn ? "bg-saffron" : "bg-brick"}`} />;
+  return <span className={`inline-block h-2.5 w-2.5 rounded-full ${ok ? "bg-leaf" : warn ? "bg-amber" : "bg-brick"}`} />;
 }
 
 export default function Overview() {
@@ -58,7 +58,7 @@ export default function Overview() {
         <section className="card min-w-0 p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold">AI system</h2>
-            <span className={`chip ${ai.status === "connected" ? "bg-leaf-50 text-leaf-700" : "bg-saffron-50 text-saffron-700"}`}>{ai.status}</span>
+            <span className={`chip ${ai.status === "connected" ? "bg-leaf-50 text-leaf-700" : "bg-amber-50 text-amber-700"}`}>{ai.status}</span>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-lg border border-paper-300 p-3">

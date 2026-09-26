@@ -76,7 +76,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
       if (f.options.length <= 4) {
         return <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={f.label}>{f.options.map((o) => (
           <button key={o} type="button" role="radio" aria-checked={v === o} onClick={() => commit(f, v === o ? null : o)}
-            className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${v === o ? "border-ink-800 bg-ink-800 text-white" : "border-ink-200 bg-white hover:bg-ink-50"}`}>{o}</button>
+            className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${v === o ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white hover:bg-ink-50"}`}>{o}</button>
         ))}</div>;
       }
       return <select id={id} className="input py-2" value={typeof v === "string" ? v : ""} onChange={(e) => commit(f, e.target.value || null)}><option value="">Select…</option>{f.options.map((o) => <option key={o}>{o}</option>)}</select>;
@@ -127,7 +127,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
                     {errors[f.field_id] && <p id={`af-${f.field_id}-err`} role="alert" className="mt-1 text-sm text-brick">{errors[f.field_id]}</p>}
                     {saving === f.field_id && <p className="mt-1 text-xs text-ink-400">Saving…</p>}
                     {f.confidence < 0.6 && !f.manual && (
-                      <div className="mt-2 rounded-md bg-saffron-50 px-2.5 py-1.5 text-xs text-saffron-700">
+                      <div className="mt-2 rounded-md bg-amber-50 px-2.5 py-1.5 text-xs text-amber-700">
                         {renaming === f.field_id ? (
                           <form className="flex gap-2" onSubmit={async (e) => { e.preventDefault(); const val = (new FormData(e.currentTarget).get("label") as string).trim(); if (val) { await onSave({}, { rename: { [f.field_id]: val } }); } setRenaming(null); }}>
                             <input name="label" defaultValue={f.label} className="input py-1 text-sm" aria-label="Field name" autoFocus />

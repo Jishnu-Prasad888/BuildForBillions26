@@ -172,7 +172,7 @@ export default function FormWorkspace() {
               </div>
             </div>
           </div>
-          <section className="flex min-h-[70vh] flex-col overflow-hidden rounded-xl border border-paper-300 bg-paper-100 lg:min-h-0" aria-label="AutoFill, review and notes">
+          <section className="flex min-h-[70vh] flex-col overflow-hidden rounded-lg border border-paper-300 bg-paper-100 lg:min-h-0" aria-label="AutoFill, review and notes">
             <Tabs<Tab> value={tab} onChange={setTab} tabs={[
               { id: "autofill", label: "AutoFill" },
               { id: "review", label: `Review${sm.required_missing ? ` (${sm.required_missing})` : ""}` },

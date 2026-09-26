@@ -7,7 +7,7 @@ export function Spinner({ className = "h-4 w-4" }: { className?: string }) {
 
 export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: string; title: ReactNode; subtitle?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 border-b border-paper-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
         <h1 className="font-display text-[1.65rem] font-bold leading-tight sm:text-[1.9rem]">{title}</h1>
@@ -52,7 +52,7 @@ export function ProgressBar({ value, className = "" }: { value: number; classNam
 
 export function EmptyState({ icon, title, children }: { icon?: ReactNode; title: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
       {icon && <div className="mb-3 text-ink-400">{icon}</div>}
       <div className="font-semibold text-ink-800">{title}</div>
       {children && <div className="mt-1 text-sm text-ink-600">{children}</div>}

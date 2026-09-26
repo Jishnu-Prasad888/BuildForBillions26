@@ -1,4 +1,4 @@
-import { AlertCircle, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { forwardRef, type Ref } from "react";
 import type { FormDef, Lang } from "@/types";
 import { fieldLabel, isFilled, optionLabel } from "./formUtils";
@@ -25,7 +25,7 @@ const MockGovForm = forwardRef(function MockGovForm(
 ) {
   const title = form.titles?.[lang] || form.title;
   return (
-    <div ref={ref} className="demo-watermark overflow-hidden rounded-xl border-2 border-ink-300 bg-white shadow-card" data-screen-root>
+    <div ref={ref} className="demo-watermark overflow-hidden rounded-lg border-2 border-ink-300 bg-white shadow-card" data-screen-root>
       <div className="flex items-center gap-4 border-b-4 border-saffron bg-ink-800 px-6 py-4 text-white">
         <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full border-2 border-white/70 text-[0.6rem] font-bold leading-tight">DEMO<br />SEAL</div>
         <div className="min-w-0">
@@ -37,9 +37,9 @@ const MockGovForm = forwardRef(function MockGovForm(
           <div>{referenceLabel ?? "Application no.: (assigned on submission)"}</div>
         </div>
       </div>
-      <div className="flex items-center gap-2 border-b border-saffron-100 bg-saffron-50 px-6 py-2 text-sm text-saffron-700" data-warning>
+      {/* <div className="flex items-center gap-2 border-b border-saffron-100 bg-saffron-50 px-6 py-2 text-sm text-saffron-700" data-warning>
         <AlertCircle size={16} className="flex-none" /> <span>Fields marked <b className="text-brick">*</b> are mandatory. This is a DEMO form — nothing is sent to any government portal.</span>
-      </div>
+      </div> */}
 
       <div className="space-y-8 px-6 py-6">
         {form.sections.map((sec, si) => (

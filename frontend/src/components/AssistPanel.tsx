@@ -92,7 +92,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-xl border border-ink-200 bg-white shadow-card">
+    <div className="flex h-full min-h-0 flex-col rounded-lg border border-ink-200 bg-white shadow-card">
       <div className="rounded-t-xl bg-ink-800 px-4 py-3 text-white">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 font-semibold"><Bot size={18} /> AI Form Assistant</div>
@@ -114,7 +114,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
             </button>
           )}
         </div>
-        {!screen.active && screen.error && <p className="mt-2 text-xs text-saffron-100">{screen.error}</p>}
+        {!screen.active && screen.error && <p className="mt-2 text-xs text-amber-100">{screen.error}</p>}
         <div className={screen.active ? "mt-2.5" : "hidden"}>
           <div className={bigPreview ? "" : "flex items-center gap-2.5"}>
             <video ref={screen.videoRef} muted playsInline aria-label="Preview of your shared screen"
@@ -131,13 +131,13 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3.5 py-4" aria-live="polite">
         {messages.map((m) => {
-          if (m.role === "user") return <div key={m.id} className="ml-8 rounded-2xl rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.97rem] text-ink-900">{m.content}</div>;
+          if (m.role === "user") return <div key={m.id} className="ml-8 rounded-lg rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.97rem] text-ink-900">{m.content}</div>;
           if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-3 py-2 text-sm text-brick">{m.content}</div>;
           const order = citationOrderFrom(m.content, m.evidence.map((e) => e.id));
           const ordered = order.map((id) => m.evidence.find((e) => e.id === id)!).filter(Boolean);
           return (
             <div key={m.id} className="mr-3">
-              <div className="rounded-2xl rounded-tl-sm border border-paper-300 bg-paper-100 px-3.5 py-2.5 text-[0.97rem]">
+              <div className="rounded-lg rounded-tl-sm border border-paper-300 bg-paper-100 px-3.5 py-2.5 text-[0.97rem]">
                 <Markdown text={m.content} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
               </div>
               <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
@@ -152,8 +152,8 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
                 </div>
               )}
               {m.suggestions?.map((s) => (
-                <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-dashed border-saffron-100 bg-saffron-50 px-3 py-2 text-sm">
-                  <span className="text-saffron-700">Suggested note: <b>{s.content}</b></span>
+                <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-dashed border-amber-100 bg-amber-50 px-3 py-2 text-sm">
+                  <span className="text-amber-700">Suggested note: <b>{s.content}</b></span>
                   <button disabled={added.includes(s.content)} className="btn-secondary btn-sm whitespace-nowrap py-1"
                     onClick={async () => { await onAddNote(s.content, s.item_type); setAdded((a) => [...a, s.content]); }}>
                     {added.includes(s.content) ? "Added" : <><Plus size={14} /> {t("add_to_notes")}</>}

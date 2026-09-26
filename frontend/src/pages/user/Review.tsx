@@ -45,7 +45,7 @@ export default function Review() {
         <h1 className="font-display text-3xl font-bold">Application recorded</h1>
         <p className="mt-2 text-ink-600">Reference number</p>
         <div className="mt-1 font-mono text-2xl font-bold text-ink-900">{done.reference_number}</div>
-        <p className="mx-auto mt-4 max-w-md rounded-lg border border-saffron-100 bg-saffron-50 px-4 py-3 text-sm text-saffron-700">
+        <p className="mx-auto mt-4 max-w-md rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           Demo mode: this submission is recorded in the prototype only. It was <b>not</b> sent to any government portal.
         </p>
         <div className="mt-6 flex justify-center gap-2">
