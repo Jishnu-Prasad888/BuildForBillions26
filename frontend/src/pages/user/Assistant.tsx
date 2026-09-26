@@ -73,10 +73,10 @@ export default function Assistant() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-12rem)] min-h-[560px] flex-col">
+    <div className="flex h-[calc(100dvh-13.5rem)] min-h-[480px] flex-col lg:h-[calc(100vh-10.5rem)] lg:min-h-[560px]">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div className="eyebrow">Graph-grounded assistant</div>
+          <div className="eyebrow">Ask by voice or text · answers show their sources</div>
           <h1 className="font-display text-[1.8rem] font-bold">{t("assistant")}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
