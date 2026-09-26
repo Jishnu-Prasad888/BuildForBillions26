@@ -1,0 +1,40 @@
+# KCC form bug transcript -- RECONSTRUCTED from the bug list in FORMBOT_FIX_PLAYBOOK.md.
+# Replace with the real chat from the bug report when available (keep the same line format).
+#
+# Format: one turn per line.
+#   BOT <field label>: <what the bot asked>        the field the bot is displaying/asking
+#   USER: <message>                                  what the citizen typed or said
+#   EXPECT <key>: <value>                            assertion for the replay test after the preceding USER line
+# Keys: saved <label> = <value> | not_saved | asks <label> | skipped <label> | explains <label> | never_asked <label>
+#
+# Observed bugs this transcript reproduces:
+#   - the Hindi question on "Branch" was saved as the Branch value
+#   - the reply to "To" was saved to "Branch"; "Skip" then skipped "Branch" while "To" was displayed
+#   - "i do not know" on "Select one" just skipped
+#   - "70 office use" was asked
+
+BOT Branch: I found a field called "Branch". Do you know it?
+USER: Bhaai mujhe account number kaisa janana padega ismein
+EXPECT not_saved
+EXPECT asks: Branch
+USER: branch Jayanagar hai
+EXPECT saved Branch = Jayanagar
+EXPECT asks: To
+USER: The Branch Manager
+EXPECT saved To = The Branch Manager
+EXPECT asks: Select one
+USER: i do not know
+EXPECT explains: Select one
+EXPECT asks: Select one
+USER: skip
+EXPECT skipped: Select one
+EXPECT asks: Name of Applicant
+USER: umm my name is Nithin
+EXPECT saved Name of Applicant = Nithin
+EXPECT asks: Account Number
+USER: account number kaise pata karein?
+EXPECT not_saved
+EXPECT asks: Account Number
+USER: 1234 5678 9012
+EXPECT saved Account Number = 123456789012
+EXPECT never_asked: 70 office use
