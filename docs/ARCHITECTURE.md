@@ -97,6 +97,28 @@ flowchart LR
   OP --> O
 ```
 
+### Production topology (`docker-compose.prod.yml`)
+
+```mermaid
+flowchart LR
+  U[Internet] -->|":80"| PX["proxy (nginx)<br/>SPA + per-IP flood limit"]
+  subgraph pub [public network]
+    PX --> B1[backend #1]
+    PX --> B2[backend #N]
+    W["worker × 1<br/>Telegram + re-embed"]
+  end
+  subgraph priv [private network: internal]
+    P[(postgres)]
+    N[(neo4j)]
+    R[(redis<br/>rate-limit state)]
+  end
+  B1 --> P & N & R
+  B2 --> P & N & R
+  W --> P & N
+```
+
+API replicas run with `RUN_BACKGROUND_TASKS=false`. The single `worker` runs the Telegram poller and the re-embed loop. Startup schema setup and seeding take a Postgres advisory lock, so replicas start concurrently without racing. Requests are rate-limited in two layers: per IP at nginx, and per user in the API with GCRA, whose state is shared through Redis. Details are in [DEPLOYMENT.md](../DEPLOYMENT.md).
+
 ---
 
 ## 3. Frontend
@@ -571,6 +593,6 @@ flowchart TD
 
 ## 14. Design constraints (prototype)
 
-- Single FastAPI process: no Celery, no Telegram webhooks.
+- No Celery and no Telegram webhooks. Production runs several stateless API replicas plus one worker for the bot and re-embedding; ingestion jobs still run in the process that received the upload.
 - No SSO, no production secrets manager, no audit product.
 - Seed data is crop-loss / Karnataka-oriented; **pipeline** is generic: new schemes and documents go through admin APIs, not code changes.

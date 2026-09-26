@@ -139,11 +139,19 @@ Copy `backend/.env.example`. Important variables:
 | `OCR_ENABLED` / `TESSERACT_CMD` | Tesseract fallback for screen reading when no vision model (Docker image includes it) |
 | `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; `pgvector` or `json` cosine fallback |
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
-| `JWT_SECRET_KEY` | Change outside local demo |
+| `JWT_SECRET_KEY` | Change outside local demo (the backend refuses the default when `APP_ENV=production`) |
 | `TELEGRAM_BOT_TOKEN` | Empty disables the bot |
 | `DEMO_MODE` | Mock submit / status; forgot-password returns the reset token |
+| `REDIS_URL`, `RATE_LIMIT_*` | Rate limits (`count/period:burst`); Redis shares them across replicas |
+| `RUN_BACKGROUND_TASKS` | Run the Telegram bot and re-embed loop here; exactly one container in production |
 
-API keys are never returned by the API. Interactive OpenAPI: `/docs`.
+API keys are never returned by the API. Interactive OpenAPI: `/docs` (disabled when `APP_ENV=production`).
+
+---
+
+## Production deployment
+
+`docker-compose.prod.yml` runs a multi-container deployment: an nginx edge proxy, several API replicas, a single background worker, Redis for shared rate limits, and databases on a private network. See [DEPLOYMENT.md](DEPLOYMENT.md) for setup, scaling, rate limits, TLS and backups.
 
 ---
 
@@ -151,6 +159,7 @@ API keys are never returned by the API. Interactive OpenAPI: `/docs`.
 
 - Passwords hashed with bcrypt; JWT on protected routes; admin routes require `ADMIN`.
 - Uploads checked by type and size. Disabled accounts cannot sign in.
+- Requests are rate-limited per user (GCRA, shared through Redis in production), with stricter limits on sign-in and AI endpoints. See [DEPLOYMENT.md](DEPLOYMENT.md#rate-limiting).
 - Screen frames are not stored and are sent only with questions. Aadhaar and account numbers are masked to the last 4 digits, and OTP/PIN/password values are redacted, before messages are stored (web assistant, form assistant, Telegram).
 - Forgot-password surfaces the reset token only when `DEMO_MODE` is true (no email service).
 - Intentionally out of scope: SSO, rich RBAC, queues, production observability.

@@ -44,6 +44,20 @@ FastAPI `HTTPException`: `{ "detail": "<string or validation list>" }`.
 | 409 | Email already registered |
 | 413 | Upload larger than `MAX_UPLOAD_SIZE` (default 50 MB) |
 | 422 | Validation (Pydantic or file type) |
+| 429 | Rate limit exceeded. `Retry-After` gives the seconds to wait. |
+
+### Rate limits
+
+Limited `/api` responses carry `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset`. Requests are counted per signed-in user, or per IP when there is no valid token. Health checks are exempt.
+
+| Tier | Endpoints | Default |
+|---|---|---|
+| auth (per IP) | `POST /api/auth/signin`, `signup`, `forgot-password`, `reset-password` | 20/min, burst 10 |
+| ai | `POST /api/assistant/chat`, `/api/kag/query`, screen-assistance sessions and messages | 20/min, burst 8 |
+| upload | document uploads, admin ingestion and re-embed | 10/min, burst 5 |
+| default | all other `/api` requests | 180/min, burst 60 |
+
+Configured with `RATE_LIMIT_*` settings; see [DEPLOYMENT.md](../DEPLOYMENT.md#rate-limiting).
 
 ### Languages
 
@@ -58,6 +72,8 @@ Wherever `language` or `lang` appears, allowed values are `en`, `hi`, `kn`.
 ```json
 { "name": "Public Service AI Assistant API", "docs": "/docs", "demo_mode": true }
 ```
+
+`/docs`, `/redoc` and `/openapi.json` are disabled when `APP_ENV=production`.
 
 ---
 
@@ -74,6 +90,7 @@ No auth.
 | `vector_backend` | `pgvector` \| `json` |
 | `graph_backend` | `neo4j` \| `memory` |
 | `demo_mode` | from settings |
+| `rate_limit` | `redis` (shared across replicas) \| `memory` (per process) \| `disabled` |
 
 ### `GET /api/health/ai`
 
