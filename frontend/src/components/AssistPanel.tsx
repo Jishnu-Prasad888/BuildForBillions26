@@ -34,6 +34,8 @@ interface Props {
 
 type Msg = ChatMessage & { suggestions?: AssistResponse["suggested_notes"]; pendingFill?: AssistResponse["pending_fill"] };
 
+// Screen frames are only needed to answer questions; keep in sync with QUESTION_RE in backend form_assistant.py.
+const QUESTION_RE = /\?|^\s*(what|where|which|how|why|who|when|do|does|is|are|can|could|should|will|explain|tell me)\b|क्या|कहाँ|कहां|कैसे|क्यों|कौन|मतलब|ಏನು|ಎಲ್ಲಿ|ಹೇಗೆ|ಯಾಕೆ|ಯಾವ|ಬೇಕೆ|ಬೇಕಾ|ಅರ್ಥ/i;
 const YES_WORD: Record<Lang, string> = { en: "Yes", hi: "हाँ", kn: "ಹೌದು" };
 const NO_WORD: Record<Lang, string> = { en: "No", hi: "नहीं", kn: "ಇಲ್ಲ" };
 
@@ -89,7 +91,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
     setMessages((m) => [...m, { id: `u-${Date.now()}`, role: "user", content: msg, evidence: [] }]);
     try {
       const ctx = collectScreen();
-      const frame = screen.active ? screen.grabFrame() : null;
+      const frame = screen.active && QUESTION_RE.test(msg) ? screen.grabFrame() : null;
       const r = await api.post<AssistResponse>(`/api/screen-assistance/sessions/${sessionId}/messages`, { text: msg, language: lang, screen: { ...ctx, frame } });
       setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: r.reply, evidence: r.evidence, suggestions: r.suggested_notes, pendingFill: r.pending_fill }]);
       onResponse(r);
