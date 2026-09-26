@@ -25,7 +25,6 @@ interface Props {
 // Screen frames are only sent with questions (never continuously). Keep in sync with QUESTION_RE in backend assistant.py.
 const QUESTION_RE = /\?|^\s*(what|where|which|how|why|who|when|do|does|is|are|can|could|should|explain|tell me)\b|क्या|कहाँ|कैसे|क्यों|ಏನು|ಎಲ್ಲಿ|ಹೇಗೆ|ಯಾಕೆ/i;
 const TAG: Record<FormAssistSection["kind"], { label: string; cls: string } | null> = {
-  form_observation: { label: "FORM OBSERVATION", cls: "bg-ink-100 text-ink-700" },
   knowledge: { label: "KNOWLEDGE BASE INFORMATION", cls: "bg-saffron-50 text-saffron-700 ring-1 ring-saffron-100" },
   assistant: null,
 };

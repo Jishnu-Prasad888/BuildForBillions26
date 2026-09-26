@@ -175,3 +175,77 @@ class TestReference:
         """When reference_message_id is None, resolve() returns None."""
         from app.services.reference import resolve
         assert resolve(None, None, None) is None  # type: ignore[arg-type]
+
+
+# ---------------------------------------------------------------------------
+# P6: Mid-form questions — scheme scope and portal reminder
+# ---------------------------------------------------------------------------
+
+class TestSchemeScope:
+    def test_detect_kcc_from_name(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        codes = detect_form_scheme("KCC_application_form.pdf", [])
+        assert "KCC" in codes
+
+    def test_detect_pmfby_from_name(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        codes = detect_form_scheme("PMFBY enrollment form.pdf", [])
+        assert "PMFBY" in codes
+
+    def test_detect_pm_kisan_from_name(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        codes = detect_form_scheme("pm_kisan_samman_nidhi_registration.pdf", [])
+        assert "PM_KISAN" in codes
+
+    def test_detect_pmay_from_name(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        codes = detect_form_scheme("PMAY beneficiary form.pdf", [])
+        assert "PMAY" in codes
+
+    def test_empty_unknown_form(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        codes = detect_form_scheme("generic_form.pdf", [])
+        assert isinstance(codes, list)
+
+    def test_multiple_labels_no_name_match(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        labels = ["Applicant name", "Bank account number", "Village"]
+        codes = detect_form_scheme("application_form.pdf", labels)
+        assert isinstance(codes, list)
+
+    def test_returns_list(self):
+        from app.services.formdoc.scheme_scope import detect_form_scheme
+        result = detect_form_scheme("any.pdf", ["field1", "field2"])
+        assert isinstance(result, list)
+
+
+class TestAssistantP6:
+    """Check assistant.py has no form_observation and has _detect_scheme."""
+
+    def test_no_form_observation_in_source(self):
+        import inspect
+        from app.services.formdoc import assistant
+        src = inspect.getsource(assistant)
+        assert "form_observation" not in src
+
+    def test_detect_scheme_method_exists(self):
+        from app.services.formdoc.assistant import FormAssistant
+        assert hasattr(FormAssistant, "_detect_scheme")
+        assert callable(FormAssistant._detect_scheme)
+
+    def test_kag_query_accepts_context_schemes(self):
+        import inspect
+        from app.services.formdoc.assistant import FormAssistant
+        sig = inspect.signature(FormAssistant._kag_query)
+        assert "context_schemes" in sig.parameters
+
+    def test_detect_form_scheme_imported(self):
+        import app.services.formdoc.assistant as mod
+        assert hasattr(mod, "detect_form_scheme")
+
+    def test_portal_line_shown_state_key(self):
+        """portal_line_shown is referenced in assistant source."""
+        import inspect
+        from app.services.formdoc import assistant
+        src = inspect.getsource(assistant)
+        assert "portal_line_shown" in src

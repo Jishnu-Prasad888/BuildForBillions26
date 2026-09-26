@@ -303,7 +303,7 @@ export interface FormSchema {
   profile_suggestions: Record<string, string>;
 }
 
-export interface FormAssistSection { kind: "form_observation" | "knowledge" | "assistant"; text: string; evidence?: Evidence[] }
+export interface FormAssistSection { kind: "knowledge" | "assistant"; text: string; evidence?: Evidence[] }
 export interface FormAssistResponse {
   reply: string;
   /** The one field the server is asking now; echoed back with the next message. */

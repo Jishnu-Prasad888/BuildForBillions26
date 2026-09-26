@@ -366,7 +366,6 @@ class TestAssistant:
         sch = schema(client, alice, fid)
         r = self.say(client, alice, fid, "Where do I find this number?", by_label(sch, "Land Survey")["field_id"])
         kinds = [s["kind"] for s in r["sections"]]
-        assert kinds[0] == "form_observation" and "Land Survey Number" in r["sections"][0]["text"]
         assert "I couldn't verify this from the uploaded form or available official sources." in r["reply"]
         assert "knowledge" not in kinds and not r["evidence"]
 
@@ -376,7 +375,8 @@ class TestAssistant:
         monkeypatch.setattr(mod.agent, "answer", lambda *a, **k: {"answer": "A taluk is an administrative division [chunk_1].", "evidence": ev, "insufficient_evidence": False, "grounded": True})
         fid = ready_form(client, alice)
         r = self.say(client, alice, fid, "What is a taluk?", by_label(schema(client, alice, fid), "Taluk")["field_id"])
-        assert [s["kind"] for s in r["sections"][:2]] == ["form_observation", "knowledge"] and r["evidence"] == ev
+        kinds = [s["kind"] for s in r["sections"]]
+        assert "knowledge" in kinds and r["evidence"] == ev
 
     def test_llm_never_sees_entered_values(self, client, alice, monkeypatch):
         seen = []
@@ -392,7 +392,7 @@ class TestAssistant:
     def test_summary_question_answered_from_form(self, client, alice):
         fid = ready_form(client, alice)
         r = self.say(client, alice, fid, "How many fields are left?")
-        assert r["sections"][0]["kind"] == "form_observation" and "still need information" in r["reply"]
+        assert r["sections"][0]["kind"] == "assistant" and "still need information" in r["reply"]
 
     def test_end_session(self, client, alice):
         fid = ready_form(client, alice)

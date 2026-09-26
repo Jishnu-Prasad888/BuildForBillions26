@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 from app.kag import agent
 from app.models import Form, FormAssistanceSession, FormField, FormValue, User
 from app.services.formdoc import service, turn_router
+from app.services.formdoc.scheme_scope import detect_form_scheme
 from app.services.formdoc.values import ValueError_, is_secret_field, match_options, mask, to_display, validate_value
 from app.services.query_normalizer import answer_normalized
 from app.services.redact import contains_secret, redact
@@ -204,18 +205,30 @@ class FormAssistant:
         """Intent-only LLM check used by the router when its rules are unsure. The message is redacted first."""
         return turn_router.llm_intent(redact(cleaned_text), field)
 
-    def _kag_query(self, question: str, language: str, extra_context: str = "", extra_query: str = "") -> dict | None:
+    def _kag_query(self, question: str, language: str, extra_context: str = "", extra_query: str = "",
+                    context_schemes: list[str] | None = None) -> dict | None:
         """Run a KAG query via answer_normalized. Returns the result or None if no grounded evidence."""
         lang = language if language in ("en", "hi", "kn") else None
         try:
             res = answer_normalized(self.db, question, lang,
                                     input_mode=getattr(self, "_input_mode", "text"),
+                                    context_schemes=context_schemes,
                                     extra_context=extra_context, extra_query=extra_query)
             if res and res.get("evidence") and not res.get("insufficient_evidence") and res.get("grounded"):
                 return res
         except Exception as exc:  # noqa: BLE001
             log.warning("KAG lookup failed: %s", type(exc).__name__)
         return None
+
+    def _detect_scheme(self) -> list[str]:
+        """Detect scheme codes for this form (cached in session state)."""
+        cached = self.state.get("scheme")
+        if cached is not None:
+            return cached
+        labels = [f["label"] for f in self.fields]
+        codes = detect_form_scheme(self.form.original_filename, labels)
+        self.state["scheme"] = codes
+        return codes
 
     def _confirm(self, target: dict, value: str) -> dict:
         """Low-confidence extraction: read the value back before saving anything."""
@@ -247,7 +260,8 @@ class FormAssistant:
                      + " mean" if target["options"] else "") + "?")
             res = self._kag_query(_q, language,
                                   extra_context="Form: " + self.form.original_filename,
-                                  extra_query=target["label"])
+                                  extra_query=target["label"],
+                                  context_schemes=self._detect_scheme() or None)
             if res:
                 sections.append({"kind": "knowledge", "text": res["answer"], "evidence": res["evidence"]})
                 evidence = res["evidence"]
@@ -437,13 +451,14 @@ class FormAssistant:
             body = f"The form has {sm['detected']} fields; {sm['completed']} are filled and {sm['pending']} still need information."
             if missing:
                 body += " Still needed: " + ", ".join(f"“{m}”" for m in missing[:10]) + ("…" if len(missing) > 10 else ".")
-            sections.append({"kind": "form_observation", "text": body})
+            sections.append({"kind": "assistant", "text": body})
             return self._finish_reply(sections, self.state.get("asking"), reask=False)
 
         focus = self._focus_field(text, current_field_id)
-        if focus:
-            sections.append({"kind": "form_observation", "text": self._observe(focus)})
+        field_obs = self._observe(focus) if focus else ""
         ctx = "Uploaded form fields: " + "; ".join(f"{f['label']} ({f['type']})" for f in self.fields[:60])
+        if focus:
+            ctx += "\nField context: " + field_obs
         if focus:
             ctx += f"\nThe citizen is asking about the field: {focus['label']}"
         if frame_b64:
@@ -453,7 +468,10 @@ class FormAssistant:
         query = f"{q} (form field: {focus['label']})" if focus else q
         knowledge = None
         try:
-            res = self._kag_query(query, language, extra_context=ctx, extra_query=focus["label"] if focus else "")
+            schemes = self._detect_scheme()
+            res = self._kag_query(query, language, extra_context=ctx,
+                                  extra_query=focus["label"] if focus else "",
+                                  context_schemes=schemes or None)
             if res and res.get("evidence") and not res.get("insufficient_evidence") and res.get("grounded"):
                 knowledge = res
         except Exception as exc:  # noqa: BLE001
@@ -461,6 +479,9 @@ class FormAssistant:
         if knowledge:
             sections.append({"kind": "knowledge", "text": knowledge["answer"], "evidence": knowledge["evidence"]})
             evidence = knowledge["evidence"]
+            if not self.state.get("portal_line_shown"):
+                sections.append({"kind": "assistant", "text": "Always confirm important details on the official government portal."})
+                self.state["portal_line_shown"] = True
         else:
             sections.append({"kind": "assistant", "text": UNVERIFIED})
         return self._finish_reply(sections, None, ask=None, evidence=evidence, reask=False) if not self.state.get("asking") else self._with_reask(sections, evidence)
