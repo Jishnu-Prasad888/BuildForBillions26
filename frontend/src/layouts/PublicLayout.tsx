@@ -29,12 +29,7 @@ export default function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="tricolor-rule h-[3px]" />
-      <div className="bg-forest-800 text-forest-100">
-        <div className="mx-auto flex h-8 max-w-6xl items-center justify-between px-3 text-xs sm:px-6">
-          <a href="#main" className="font-semibold underline-offset-2 hover:underline">{tr({ en: "Skip to main content", hi: "मुख्य सामग्री पर जाएँ", kn: "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ" })}</a>
-          <span className="hidden sm:inline">{tr({ en: "Public Service Assistant", hi: "जन सेवा सहायक", kn: "ಸಾರ್ವಜನಿಕ ಸೇವಾ ಸಹಾಯಕ" })}</span>
-        </div>
-      </div>
+      
       <header className="sticky top-0 z-30 border-b border-paper-300 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-1 px-3 sm:gap-2 sm:px-6">
           <Link to="/" aria-label="Sahayak home" className="mr-auto shrink-0 rounded-md"><Logo sub={false} /></Link>

@@ -1,10 +1,9 @@
-import { BookOpen, Database, Globe, LayoutDashboard, LogOut, Network, Users, Workflow, ArrowLeft } from "lucide-react";
+import { BookOpen, Database, Globe, LayoutDashboard, Network, Users, Workflow, ArrowLeft } from "lucide-react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
-import { useAuth } from "@/services/auth";
+import UserMenu from "@/components/UserMenu";
 
 export default function AdminLayout() {
-  const { user, signOut } = useAuth();
   const nav = useNavigate();
   const items = [
     { to: "/admin", icon: LayoutDashboard, label: "Overview", end: true },
@@ -41,22 +40,15 @@ export default function AdminLayout() {
             <button className="flex min-h-[40px] w-full items-center gap-2 rounded-md px-3 text-sm font-semibold text-ink-700 hover:bg-forest-50" onClick={() => nav("/")}>
               <ArrowLeft size={16} /> Citizen view
             </button>
-            <div className="rounded-lg border border-paper-300 bg-paper-100 p-3">
-              <div className="truncate text-sm font-semibold text-ink-900">{user?.full_name}</div>
-              <div className="truncate text-xs text-ink-500">{user?.email}</div>
-              <button className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-600 hover:text-brick" onClick={() => { signOut(); nav("/"); }}>
-                <LogOut size={15} /> Sign out
-              </button>
-            </div>
           </div>
         </aside>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="tricolor-rule h-1 lg:hidden" />
-        <header className="flex items-center justify-between gap-3 border-b border-paper-300 bg-white px-4 py-3 lg:hidden">
-          <Link to="/admin"><Logo sub={false} /></Link>
-          <button className="text-sm font-semibold text-ink-700" onClick={() => { signOut(); nav("/"); }}>Sign out</button>
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/90 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
+          <Link to="/admin" className="lg:hidden"><Logo sub={false} /></Link>
+          <UserMenu showProfile={false} />
         </header>
         <nav className="flex gap-1 overflow-x-auto border-b border-paper-300 bg-white px-3 py-2 lg:hidden" aria-label="Admin mobile">
           {items.map(({ to, label, end }) => (

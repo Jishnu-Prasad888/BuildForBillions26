@@ -213,7 +213,7 @@ export default function FormPage() {
           <span className="label">Assistant language</span>
           <div className="grid grid-cols-3 gap-2">
             {(["en", "hi", "kn"] as Lang[]).map((l) => (
-              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-semibold ${assistLang === l ? "border-ink-800 bg-forest-800 text-white" : "border-ink-200 bg-white"}`}>
+              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-semibold ${assistLang === l ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white"}`}>
                 {{ en: "English", hi: "हिन्दी", kn: "ಕನ್ನಡ" }[l]}
               </button>
             ))}

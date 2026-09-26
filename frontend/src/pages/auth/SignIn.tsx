@@ -42,10 +42,10 @@ export default function SignIn() {
 
       <form onSubmit={submit} className="mt-6 space-y-4">
         <div>
-          <label htmlFor="email" className="label">Email</label>
+          <label htmlFor="email" className="label" >Email</label>
           <div className="relative">
             <Mail size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400" />
-            <input id="email" type="email" className="input pl-10" autoComplete="email" required aria-invalid={!!err || undefined} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input id="email" type="email" className="input pl-10" autoComplete="email" placeholder="Email" required aria-invalid={!!err || undefined} value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
         </div>
         <div>
@@ -55,7 +55,7 @@ export default function SignIn() {
           </div>
           <div className="relative">
             <Lock size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400" />
-            <input id="password" type={show ? "text" : "password"} className="input pl-10 pr-11" autoComplete="current-password" required aria-invalid={!!err || undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input id="password" type={show ? "text" : "password"} placeholder="Password" className="input pl-10 pr-11" autoComplete="current-password" required aria-invalid={!!err || undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
             <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700">
               {show ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>

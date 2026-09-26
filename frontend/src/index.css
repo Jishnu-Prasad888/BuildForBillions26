@@ -4,7 +4,7 @@
 
 @layer base {
   html { font-size: 16.5px; scroll-behavior: smooth; }
-  body { @apply bg-paper-100 text-ink-800 antialiased; }
+  body { @apply bg-[#f8fbf9] text-ink-800 antialiased; }
   h1, h2, h3 { @apply text-ink-900; }
   :focus-visible { @apply outline-none ring-2 ring-forest-500 ring-offset-2 ring-offset-white; }
   ::selection { @apply bg-forest-100; }
@@ -61,7 +61,9 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background: url("/government-building.png") left bottom / cover no-repeat;
-  opacity: 0.06;
+  opacity: 0.035;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to right, #000 0%, transparent 70%);
 }
 /* Landing hero and sign-in panel: white to pale green, building fading in from the lower left. */
 .hero-surface { background: linear-gradient(135deg, #ffffff 0%, #f1f8f4 55%, #e3f1ea 100%); }

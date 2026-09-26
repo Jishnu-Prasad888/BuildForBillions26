@@ -61,7 +61,7 @@ export default function UploadModal({ open, onClose, onStarted }: { open: boolea
           <div className="flex flex-wrap gap-2">
             {schemes.map((s) => (
               <button type="button" key={s.code} onClick={() => setCodes((c) => (c.includes(s.code) ? c.filter((x) => x !== s.code) : [...c, s.code]))}
-                className={`rounded-full border px-3 py-1 text-sm font-semibold ${codes.includes(s.code) ? "border-ink-800 bg-forest-800 text-white" : "border-ink-200 bg-white text-ink-700"}`}>
+                className={`rounded-full border px-3 py-1 text-sm font-semibold ${codes.includes(s.code) ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white text-ink-700"}`}>
                 {s.short_name || s.name}
               </button>
             ))}

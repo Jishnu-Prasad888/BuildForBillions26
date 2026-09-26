@@ -3,6 +3,7 @@ import { CircleHelp, FileText, FileUp, FolderOpen, Home, LogOut, Menu, MessageCi
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import UserMenu from "@/components/UserMenu";
 import { useAuth } from "@/services/auth";
 import { useI18n } from "@/i18n";
 
@@ -59,13 +60,6 @@ export default function UserLayout() {
                 <ShieldCheck size={16} /> {t("admin_console")}
               </button>
             )}
-            <div className="rounded-lg border border-paper-300 bg-paper-100 p-3">
-              <div className="truncate text-sm font-semibold text-ink-900">{user?.full_name}</div>
-              <div className="truncate text-xs text-ink-500">{user?.email}</div>
-              <button className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-600 hover:text-brick" onClick={logout}>
-                <LogOut size={15} /> {t("sign_out")}
-              </button>
-            </div>
           </div>
         </aside>
       </div>
@@ -79,6 +73,7 @@ export default function UserLayout() {
               <CircleHelp size={18} /> <span className="hidden sm:inline">{t("how_to_use")}</span>
             </Link>
             <LanguageSwitcher />
+            <UserMenu />
           </div>
         </header>
         <main className="pb-safe mx-auto w-full max-w-6xl flex-1 px-4 pt-6 sm:px-6 sm:pt-8">

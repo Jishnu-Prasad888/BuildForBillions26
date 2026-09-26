@@ -76,7 +76,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
       if (f.options.length <= 4) {
         return <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={f.label}>{f.options.map((o) => (
           <button key={o} type="button" role="radio" aria-checked={v === o} onClick={() => commit(f, v === o ? null : o)}
-            className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${v === o ? "border-ink-800 bg-forest-800 text-white" : "border-ink-200 bg-white hover:bg-ink-50"}`}>{o}</button>
+            className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${v === o ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white hover:bg-ink-50"}`}>{o}</button>
         ))}</div>;
       }
       return <select id={id} className="input py-2" value={typeof v === "string" ? v : ""} onChange={(e) => commit(f, e.target.value || null)}><option value="">Select…</option>{f.options.map((o) => <option key={o}>{o}</option>)}</select>;
