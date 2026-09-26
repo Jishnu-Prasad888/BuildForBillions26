@@ -1,0 +1,125 @@
+{
+  "_note": "DEMO SEED GRAPH. Scheme summaries are representative, prepared for the hackathon prototype. Always verify on the official portal.",
+  "life_events": [
+    {
+      "code": "CROP_DAMAGE",
+      "name": "Crop Damage",
+      "names": {"hi": "फसल नुकसान", "kn": "ಬೆಳೆ ಹಾನಿ"},
+      "description": "Loss or damage to standing or harvested crops due to heavy rain, flood, drought, hailstorm, pests or other natural calamities.",
+      "context": "Farmer",
+      "keywords": {
+        "en": ["crop", "crops", "harvest", "farm", "field", "rain", "heavy rain", "flood", "flooded", "drought", "hailstorm", "hail", "pest", "damaged", "destroyed", "ruined", "loss", "cyclone", "unseasonal", "paddy", "ragi", "maize", "sugarcane"],
+        "hi": ["फसल", "खेत", "बारिश", "वर्षा", "बाढ़", "सूखा", "ओले", "नुकसान", "बर्बाद", "नष्ट", "किसान", "कीट"],
+        "kn": ["ಬೆಳೆ", "ಹೊಲ", "ಮಳೆ", "ಪ್ರವಾಹ", "ನೆರೆ", "ಬರ", "ಆಲಿಕಲ್ಲು", "ಹಾನಿ", "ನಾಶ", "ರೈತ", "ಕೀಟ", "ಭತ್ತ", "ರಾಗಿ"]
+      }
+    }
+  ],
+  "departments": [
+    {"code": "MOAFW", "name": "Ministry of Agriculture & Farmers Welfare", "level": "Central", "category": "Agriculture"},
+    {"code": "KA_AGRI", "name": "Department of Agriculture, Government of Karnataka", "level": "State", "category": "Agriculture"},
+    {"code": "KA_REVENUE_DM", "name": "Revenue Department (Disaster Management), Government of Karnataka", "level": "State", "category": "Disaster Management"},
+    {"code": "BANKS_DFS", "name": "Scheduled Commercial Banks (e.g. SBI) under RBI / Department of Financial Services", "level": "Central", "category": "Banking"}
+  ],
+  "states": [
+    {"code": "KA", "name": "Karnataka"},
+    {"code": "IN", "name": "All India"}
+  ],
+  "portals": [
+    {"code": "PMFBY_PORTAL", "name": "PMFBY official portal", "url": "https://pmfby.gov.in"},
+    {"code": "PMKISAN_PORTAL", "name": "PM-KISAN official portal", "url": "https://pmkisan.gov.in"},
+    {"code": "KA_LANDRECORDS", "name": "Karnataka Land Records (Bhoomi) portal", "url": "https://landrecords.karnataka.gov.in"},
+    {"code": "SBI_PORTAL", "name": "State Bank of India", "url": "https://sbi.co.in"},
+    {"code": "DEMO_PORTAL", "name": "In-app DEMO form (prototype only, nothing is sent to government)", "url": null}
+  ],
+  "document_requirements": [
+    {"code": "IDENTITY_PROOF", "name": "Identity proof (Aadhaar card or Driving Licence)", "names": {"hi": "पहचान प्रमाण (आधार या ड्राइविंग लाइसेंस)", "kn": "ಗುರುತಿನ ಪುರಾವೆ (ಆಧಾರ್ ಅಥವಾ ಚಾಲನಾ ಪರವಾನಗಿ)"}, "wallet_types": ["AADHAAR", "DRIVING_LICENCE"]},
+    {"code": "LAND_RECORD", "name": "Land record (RTC / Pahani) showing survey number", "names": {"hi": "भूमि अभिलेख (RTC / पहणी)", "kn": "ಭೂ ದಾಖಲೆ (ಆರ್‌ಟಿಸಿ / ಪಹಣಿ)"}, "wallet_types": ["LAND_RECORD"]},
+    {"code": "BANK_DETAILS", "name": "Bank account details (passbook first page or cancelled cheque)", "names": {"hi": "बैंक खाता विवरण (पासबुक)", "kn": "ಬ್ಯಾಂಕ್ ಖಾತೆ ವಿವರ (ಪಾಸ್‌ಬುಕ್)"}, "wallet_types": ["BANK"]},
+    {"code": "CROP_LOSS_EVIDENCE", "name": "Photographs / field inspection report of crop damage", "names": {"hi": "फसल नुकसान की तस्वीरें / निरीक्षण रिपोर्ट", "kn": "ಬೆಳೆ ಹಾನಿಯ ಫೋಟೋ / ಪರಿಶೀಲನಾ ವರದಿ"}, "wallet_types": ["CERTIFICATE", "OTHER"]},
+    {"code": "SOWING_DECLARATION", "name": "Sowing certificate / declaration of crop sown", "names": {"hi": "बुवाई प्रमाणपत्र", "kn": "ಬಿತ್ತನೆ ಪ್ರಮಾಣಪತ್ರ"}, "wallet_types": ["CERTIFICATE"]},
+    {"code": "INSURANCE_POLICY", "name": "Crop insurance policy / enrolment receipt", "names": {"hi": "फसल बीमा पॉलिसी / रसीद", "kn": "ಬೆಳೆ ವಿಮೆ ಪಾಲಿಸಿ / ರಸೀದಿ"}, "wallet_types": ["CERTIFICATE", "OTHER"]},
+    {"code": "LOAN_DOCUMENTS", "name": "Kisan Credit Card / crop loan account details", "names": {"hi": "किसान क्रेडिट कार्ड / फसल ऋण विवरण", "kn": "ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ / ಬೆಳೆ ಸಾಲ ವಿವರ"}, "wallet_types": ["BANK"]}
+  ],
+  "schemes": [
+    {
+      "code": "CROP_LOSS_RELIEF_KA",
+      "name": "Crop Loss Input Subsidy (Disaster Relief)",
+      "names": {"hi": "फसल हानि इनपुट सब्सिडी (आपदा राहत)", "kn": "ಬೆಳೆ ನಷ್ಟ ಇನ್‌ಪುಟ್ ಸಬ್ಸಿಡಿ (ವಿಪತ್ತು ಪರಿಹಾರ)"},
+      "short_name": "Crop Damage Assistance",
+      "summary": "Relief (input subsidy) for farmers whose crops are damaged by notified natural calamities, paid under State/National Disaster Response Fund norms.",
+      "benefit": "Input subsidy per hectare of affected area as per the SDRF/NDRF norms in force (see official notification).",
+      "form_id": "crop_relief_form",
+      "life_events": ["CROP_DAMAGE"],
+      "department": "KA_REVENUE_DM",
+      "states": ["KA"],
+      "portal": "KA_LANDRECORDS",
+      "documents": ["IDENTITY_PROOF", "LAND_RECORD", "BANK_DETAILS", "CROP_LOSS_EVIDENCE"],
+      "source_doc": "crop-loss-input-subsidy-karnataka",
+      "rules": [
+        {"code": "CLR_R1", "text": "Applicant must be a farmer cultivating the affected land (owner or recorded cultivator).", "field": "occupation", "supported_by": "crop-loss-input-subsidy-karnataka"},
+        {"code": "CLR_R2", "text": "Crop loss must be caused by a notified natural calamity such as heavy rain, flood, drought or hailstorm.", "field": "damage_cause", "supported_by": "crop-loss-input-subsidy-karnataka"},
+        {"code": "CLR_R3", "text": "Assessed crop loss should be 33% or more for assistance under SDRF/NDRF norms.", "field": "damage_percent", "supported_by": "crop-loss-input-subsidy-karnataka"},
+        {"code": "CLR_R4", "text": "Assistance is limited to a maximum area per farmer as specified in the norms (commonly up to 2 hectares).", "field": "land_extent", "supported_by": "crop-loss-input-subsidy-karnataka"}
+      ]
+    },
+    {
+      "code": "PMFBY",
+      "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY) – Crop Insurance Claim",
+      "names": {"hi": "प्रधानमंत्री फसल बीमा योजना (PMFBY)", "kn": "ಪ್ರಧಾನ ಮಂತ್ರಿ ಫಸಲ್ ಬಿಮಾ ಯೋಜನೆ (PMFBY)"},
+      "short_name": "Crop Insurance Claim",
+      "summary": "Crop insurance for notified crops; insured farmers can claim for localized calamities and post-harvest losses.",
+      "benefit": "Insurance claim for yield loss / localized damage as assessed by the insurance company.",
+      "form_id": null,
+      "life_events": ["CROP_DAMAGE"],
+      "department": "MOAFW",
+      "states": ["IN"],
+      "portal": "PMFBY_PORTAL",
+      "documents": ["IDENTITY_PROOF", "LAND_RECORD", "BANK_DETAILS", "SOWING_DECLARATION", "INSURANCE_POLICY"],
+      "source_doc": "pmfby-crop-insurance",
+      "rules": [
+        {"code": "PMFBY_R1", "text": "Farmer must be enrolled/insured under PMFBY for the notified crop and area in the current season.", "field": "insurance", "supported_by": "pmfby-crop-insurance"},
+        {"code": "PMFBY_R2", "text": "Localized calamity or post-harvest loss should be intimated within 72 hours of occurrence.", "field": "damage_date", "supported_by": "pmfby-crop-insurance"},
+        {"code": "PMFBY_R3", "text": "Post-harvest losses are covered for crops kept in cut-and-spread condition in the field for up to 14 days, for specified perils such as unseasonal rain.", "field": "season", "supported_by": "pmfby-crop-insurance"}
+      ]
+    },
+    {
+      "code": "PM_KISAN",
+      "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+      "names": {"hi": "पीएम-किसान सम्मान निधि", "kn": "ಪಿಎಂ-ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ"},
+      "short_name": "PM-KISAN",
+      "summary": "Income support to eligible landholding farmer families, paid directly to bank accounts.",
+      "benefit": "₹6,000 per year in three equal instalments of ₹2,000 via Direct Benefit Transfer.",
+      "form_id": null,
+      "life_events": ["CROP_DAMAGE"],
+      "department": "MOAFW",
+      "states": ["IN"],
+      "portal": "PMKISAN_PORTAL",
+      "documents": ["IDENTITY_PROOF", "LAND_RECORD", "BANK_DETAILS"],
+      "source_doc": "pm-kisan",
+      "rules": [
+        {"code": "PMK_R1", "text": "Landholding farmer families with cultivable land recorded in their name are eligible, subject to exclusions.", "field": "land", "supported_by": "pm-kisan"},
+        {"code": "PMK_R2", "text": "Excluded categories include income-tax payers, institutional landholders, holders of constitutional posts and certain pensioners and professionals.", "field": "exclusions", "supported_by": "pm-kisan"},
+        {"code": "PMK_R3", "text": "eKYC and Aadhaar-seeded bank account are required to receive instalments.", "field": "ekyc", "supported_by": "pm-kisan"}
+      ]
+    },
+    {
+      "code": "KCC_CALAMITY_RELIEF",
+      "name": "Crop Loan (KCC) Relief in Natural Calamities",
+      "names": {"hi": "प्राकृतिक आपदा में फसल ऋण (KCC) राहत", "kn": "ನೈಸರ್ಗಿಕ ವಿಪತ್ತಿನಲ್ಲಿ ಬೆಳೆ ಸಾಲ (KCC) ಪರಿಹಾರ"},
+      "short_name": "Crop Loan Relief",
+      "summary": "Banks may restructure/reschedule crop loans and provide fresh crop loans to farmers in areas declared affected by natural calamities.",
+      "benefit": "Restructuring/rescheduling of existing crop loan and eligibility for fresh finance, as per RBI relief-measure directions.",
+      "form_id": null,
+      "life_events": ["CROP_DAMAGE"],
+      "department": "BANKS_DFS",
+      "states": ["IN"],
+      "portal": "SBI_PORTAL",
+      "documents": ["IDENTITY_PROOF", "LAND_RECORD", "LOAN_DOCUMENTS", "CROP_LOSS_EVIDENCE"],
+      "source_doc": "kcc-calamity-relief",
+      "rules": [
+        {"code": "KCC_R1", "text": "Applies to borrowers with crop loans in districts/areas declared affected by a natural calamity by the State Government.", "field": "district", "supported_by": "kcc-calamity-relief"},
+        {"code": "KCC_R2", "text": "Relief measures such as restructuring are generally linked to crop loss of 33% or more as assessed by the authorities.", "field": "damage_percent", "supported_by": "kcc-calamity-relief"}
+      ]
+    }
+  ]
+}

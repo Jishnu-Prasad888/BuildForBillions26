@@ -1,0 +1,65 @@
+{
+  "id": "crop_relief_form",
+  "scheme_code": "CROP_LOSS_RELIEF_KA",
+  "title": "Crop Damage Assistance – Application for Input Subsidy",
+  "titles": {"hi": "फसल नुकसान सहायता – इनपुट सब्सिडी हेतु आवेदन", "kn": "ಬೆಳೆ ಹಾನಿ ನೆರವು – ಇನ್‌ಪುಟ್ ಸಬ್ಸಿಡಿ ಅರ್ಜಿ"},
+  "authority": "Revenue Department (Disaster Management) – DEMO FORM",
+  "demo": true,
+  "sections": [
+    {
+      "id": "applicant", "title": "Applicant details", "titles": {"hi": "आवेदक विवरण", "kn": "ಅರ್ಜಿದಾರರ ವಿವರ"},
+      "fields": [
+        {"id": "full_name", "label": "Full name of applicant", "labels": {"hi": "आवेदक का पूरा नाम", "kn": "ಅರ್ಜಿದಾರರ ಪೂರ್ಣ ಹೆಸರು"}, "type": "text", "required": true, "help_query": "applicant name as on Aadhaar", "profile_key": "full_name"},
+        {"id": "father_name", "label": "Father's / Spouse's name", "labels": {"hi": "पिता / पति-पत्नी का नाम", "kn": "ತಂದೆ / ಸಂಗಾತಿಯ ಹೆಸರು"}, "type": "text", "required": true, "help_query": "father's or spouse's name"},
+        {"id": "dob", "label": "Date of birth", "labels": {"hi": "जन्म तिथि", "kn": "ಹುಟ್ಟಿದ ದಿನಾಂಕ"}, "type": "date", "required": true, "help_query": "date of birth Aadhaar card"},
+        {"id": "mobile", "label": "Mobile number", "labels": {"hi": "मोबाइल नंबर", "kn": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"}, "type": "mobile", "required": true, "help_query": "mobile number linked with Aadhaar", "profile_key": "phone"}
+      ]
+    },
+    {
+      "id": "identity", "title": "Identity information", "titles": {"hi": "पहचान जानकारी", "kn": "ಗುರುತಿನ ಮಾಹಿತಿ"},
+      "fields": [
+        {"id": "id_type", "label": "Identity Proof", "labels": {"hi": "पहचान प्रमाण", "kn": "ಗುರುತಿನ ಪುರಾವೆ"}, "type": "select", "required": true, "options": ["Aadhaar", "Driving Licence"], "option_labels": {"hi": ["आधार", "ड्राइविंग लाइसेंस"], "kn": ["ಆಧಾರ್", "ಚಾಲನಾ ಪರವಾನಗಿ"]}, "help_query": "identity document type Aadhaar or Driving Licence"},
+        {"id": "id_number", "label": "Identity document number", "labels": {"hi": "पहचान दस्तावेज़ संख्या", "kn": "ಗುರುತಿನ ದಾಖಲೆ ಸಂಖ್ಯೆ"}, "type": "id_number", "required": true, "depends_on": "id_type",
+         "variants": {
+           "Aadhaar": {"label": "Aadhaar number", "labels": {"hi": "आधार संख्या", "kn": "ಆಧಾರ್ ಸಂಖ್ಯೆ"}, "help_query": "Aadhaar number 12-digit where to find"},
+           "Driving Licence": {"label": "Driving Licence number", "labels": {"hi": "ड्राइविंग लाइसेंस संख्या", "kn": "ಚಾಲನಾ ಪರವಾನಗಿ ಸಂಖ್ಯೆ"}, "help_query": "Driving Licence number format"}
+         }}
+      ]
+    },
+    {
+      "id": "address", "title": "Address", "titles": {"hi": "पता", "kn": "ವಿಳಾಸ"},
+      "fields": [
+        {"id": "address", "label": "Residential address", "labels": {"hi": "निवास का पता", "kn": "ವಾಸದ ವಿಳಾಸ"}, "type": "textarea", "required": true, "help_query": "address district taluk village"},
+        {"id": "district", "label": "District", "labels": {"hi": "ज़िला", "kn": "ಜಿಲ್ಲೆ"}, "type": "select", "required": true, "options": ["Bagalkot", "Belagavi", "Ballari", "Bengaluru Rural", "Chikkamagaluru", "Dharwad", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Mandya", "Mysuru", "Raichur", "Shivamogga", "Tumakuru", "Udupi", "Vijayapura"], "help_query": "district taluk village as on RTC", "profile_key": "district"},
+        {"id": "taluk", "label": "Taluk", "labels": {"hi": "तालुक", "kn": "ತಾಲ್ಲೂಕು"}, "type": "text", "required": true, "help_query": "district taluk village as on RTC", "profile_key": "taluk"},
+        {"id": "village", "label": "Village", "labels": {"hi": "गाँव", "kn": "ಗ್ರಾಮ"}, "type": "text", "required": true, "help_query": "district taluk village as on RTC", "profile_key": "village"}
+      ]
+    },
+    {
+      "id": "land", "title": "Land & crop details", "titles": {"hi": "भूमि और फसल विवरण", "kn": "ಭೂಮಿ ಮತ್ತು ಬೆಳೆ ವಿವರ"},
+      "fields": [
+        {"id": "survey_number", "label": "Land survey number (Sy. No.)", "labels": {"hi": "भूमि सर्वे नंबर", "kn": "ಜಮೀನಿನ ಸರ್ವೆ ನಂಬರ್"}, "type": "survey", "required": true, "help_query": "survey number RTC Pahani where to find"},
+        {"id": "land_extent", "label": "Extent of affected land (acres)", "labels": {"hi": "प्रभावित भूमि का क्षेत्रफल (एकड़)", "kn": "ಹಾನಿಗೊಳಗಾದ ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)"}, "type": "number", "required": true, "help_query": "extent of land acres guntas hectare"},
+        {"id": "crop_name", "label": "Crop damaged", "labels": {"hi": "नष्ट हुई फसल", "kn": "ಹಾನಿಯಾದ ಬೆಳೆ"}, "type": "select", "required": true, "options": ["Paddy", "Ragi", "Maize", "Jowar", "Tur (Red gram)", "Cotton", "Sugarcane", "Groundnut", "Other"], "option_labels": {"hi": ["धान", "रागी", "मक्का", "ज्वार", "अरहर", "कपास", "गन्ना", "मूंगफली", "अन्य"], "kn": ["ಭತ್ತ", "ರಾಗಿ", "ಮೆಕ್ಕೆಜೋಳ", "ಜೋಳ", "ತೊಗರಿ", "ಹತ್ತಿ", "ಕಬ್ಬು", "ಶೇಂಗಾ", "ಇತರೆ"]}, "help_query": "crop season date of damage"},
+        {"id": "season", "label": "Season", "labels": {"hi": "मौसम", "kn": "ಹಂಗಾಮು"}, "type": "select", "required": true, "options": ["Kharif", "Rabi", "Summer"], "option_labels": {"hi": ["खरीफ", "रबी", "जायद / गर्मी"], "kn": ["ಮುಂಗಾರು", "ಹಿಂಗಾರು", "ಬೇಸಿಗೆ"]}, "help_query": "crop season Kharif Rabi"},
+        {"id": "damage_date", "label": "Date of damage", "labels": {"hi": "नुकसान की तारीख", "kn": "ಹಾನಿಯಾದ ದಿನಾಂಕ"}, "type": "date", "required": true, "help_query": "date of damage intimate within 72 hours"},
+        {"id": "damage_cause", "label": "Cause of damage", "labels": {"hi": "नुकसान का कारण", "kn": "ಹಾನಿಯ ಕಾರಣ"}, "type": "select", "required": true, "options": ["Heavy rain / Flood", "Drought", "Hailstorm", "Pest attack", "Other"], "option_labels": {"hi": ["भारी बारिश / बाढ़", "सूखा", "ओलावृष्टि", "कीट प्रकोप", "अन्य"], "kn": ["ಭಾರಿ ಮಳೆ / ಪ್ರವಾಹ", "ಬರ", "ಆಲಿಕಲ್ಲು ಮಳೆ", "ಕೀಟ ಬಾಧೆ", "ಇತರೆ"]}, "help_query": "cause of damage notified calamity"},
+        {"id": "damage_percent", "label": "Estimated crop loss (%)", "labels": {"hi": "अनुमानित फसल हानि (%)", "kn": "ಅಂದಾಜು ಬೆಳೆ ನಷ್ಟ (%)"}, "type": "percent", "required": true, "help_query": "estimated crop loss percentage 33%"}
+      ]
+    },
+    {
+      "id": "bank", "title": "Bank details", "titles": {"hi": "बैंक विवरण", "kn": "ಬ್ಯಾಂಕ್ ವಿವರ"},
+      "fields": [
+        {"id": "account_number", "label": "Bank account number", "labels": {"hi": "बैंक खाता संख्या", "kn": "ಬ್ಯಾಂಕ್ ಖಾತೆ ಸಂಖ್ಯೆ"}, "type": "account", "required": true, "help_query": "bank account number passbook Aadhaar seeded"},
+        {"id": "ifsc", "label": "IFSC code", "labels": {"hi": "IFSC कोड", "kn": "IFSC ಕೋಡ್"}, "type": "ifsc", "required": true, "help_query": "IFSC code 11 character where to find"},
+        {"id": "bank_name", "label": "Bank & branch name", "labels": {"hi": "बैंक और शाखा का नाम", "kn": "ಬ್ಯಾಂಕ್ ಮತ್ತು ಶಾಖೆಯ ಹೆಸರು"}, "type": "text", "required": true, "help_query": "bank name branch passbook"}
+      ]
+    },
+    {
+      "id": "declaration", "title": "Declaration", "titles": {"hi": "घोषणा", "kn": "ಘೋಷಣೆ"},
+      "fields": [
+        {"id": "declaration", "label": "I declare that the information given is true", "labels": {"hi": "मैं घोषणा करता/करती हूँ कि दी गई जानकारी सत्य है", "kn": "ನೀಡಿದ ಮಾಹಿತಿ ಸತ್ಯವೆಂದು ನಾನು ಘೋಷಿಸುತ್ತೇನೆ"}, "type": "checkbox", "required": true, "help_query": "declaration information true false information"}
+      ]
+    }
+  ]
+}
