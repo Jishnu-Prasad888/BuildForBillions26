@@ -190,6 +190,7 @@ export interface AssistResponse {
   screen_understanding: Record<string, any>;
   action?: string | null;
   mode: string;
+  pending_fill?: { field_id: string; label: string; display: string } | null;
 }
 
 export interface AIHealth {

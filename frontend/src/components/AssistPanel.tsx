@@ -1,4 +1,4 @@
-import { Bot, Keyboard, Mic, MicOff, MonitorOff, MonitorUp, PhoneOff, Plus, Send, Volume2, VolumeX } from "lucide-react";
+import { Bot, Check, Keyboard, X, Mic, MicOff, MonitorOff, MonitorUp, PhoneOff, Plus, Send, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
@@ -25,14 +25,19 @@ interface Props {
   initial: AssistResponse;
   lang: Lang;
   setLang: (l: Lang) => void;
-  screen: { active: boolean; start: () => Promise<boolean>; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> };
+  screen: { active: boolean; error: string | null; start: () => Promise<boolean>; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> };
   collectScreen: () => ScreenContext;
   onResponse: (r: AssistResponse) => void;
   onAddNote: (content: string, item_type: "todo" | "question") => Promise<void>;
   onEnd: () => void;
 }
 
-type Msg = ChatMessage & { suggestions?: AssistResponse["suggested_notes"] };
+type Msg = ChatMessage & { suggestions?: AssistResponse["suggested_notes"]; pendingFill?: AssistResponse["pending_fill"] };
+
+// Screen frames are only needed to answer questions; keep in sync with QUESTION_RE in backend form_assistant.py.
+const QUESTION_RE = /\?|^\s*(what|where|which|how|why|who|when|do|does|is|are|can|could|should|will|explain|tell me)\b|क्या|कहाँ|कहां|कैसे|क्यों|कौन|मतलब|ಏನು|ಎಲ್ಲಿ|ಹೇಗೆ|ಯಾಕೆ|ಯಾವ|ಬೇಕೆ|ಬೇಕಾ|ಅರ್ಥ/i;
+const YES_WORD: Record<Lang, string> = { en: "Yes", hi: "हाँ", kn: "ಹೌದು" };
+const NO_WORD: Record<Lang, string> = { en: "No", hi: "नहीं", kn: "ಇಲ್ಲ" };
 
 export default function AssistPanel({ sessionId, initial, lang, setLang, screen, collectScreen, onResponse, onAddNote, onEnd }: Props) {
   const { t } = useI18n();
@@ -45,6 +50,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
   const [micOn, setMicOn] = useState(true);
   const [typing, setTyping] = useState(false);
   const [added, setAdded] = useState<string[]>([]);
+  const [bigPreview, setBigPreview] = useState(true);
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -86,9 +92,9 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
     setMessages((m) => [...m, { id: `u-${Date.now()}`, role: "user", content: msg, evidence: [] }]);
     try {
       const ctx = collectScreen();
-      const frame = screen.active ? screen.grabFrame() : null;
+      const frame = screen.active && QUESTION_RE.test(msg) ? screen.grabFrame() : null;
       const r = await api.post<AssistResponse>(`/api/screen-assistance/sessions/${sessionId}/messages`, { text: msg, language: lang, screen: { ...ctx, frame } });
-      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: r.reply, evidence: r.evidence, suggestions: r.suggested_notes }]);
+      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: r.reply, evidence: r.evidence, suggestions: r.suggested_notes, pendingFill: r.pending_fill }]);
       onResponse(r);
       afterReply(r.reply);
     } catch (e: any) {
@@ -118,17 +124,37 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
           <div className="flex items-center gap-2 font-semibold"><Bot size={18} /> AI Form Assistant</div>
           <LanguageSwitcher compact value={lang} onChange={setLang} />
         </div>
-        <div className="mt-2.5 grid grid-cols-2 gap-1.5 text-xs">
-          <button onClick={() => (screen.active ? screen.stop() : screen.start())} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${screen.active ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
-            {screen.active ? <MonitorUp size={14} /> : <MonitorOff size={14} />} Screen sharing: {screen.active ? "ON" : "OFF"}
-          </button>
-          <button onClick={() => { const v = !micOn; setMicOn(v); if (!v) voice.stop(); }} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${micOn ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
-            {micOn ? <Mic size={14} /> : <MicOff size={14} />} Microphone: {micOn ? "ON" : "OFF"}
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-xs">
+          {screen.active ? (
+            <>
+              <span role="status" className="flex flex-1 items-center gap-1.5 rounded-md bg-leaf px-2 py-1.5 font-semibold">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white" /> Screen sharing active
+              </span>
+              <button onClick={screen.stop} className="flex items-center gap-1.5 rounded-md bg-brick px-2 py-1.5 font-semibold hover:bg-brick/90">
+                <MonitorOff size={14} /> Stop Sharing
+              </button>
+            </>
+          ) : (
+            <button onClick={() => screen.start()} className="flex flex-1 items-center gap-1.5 rounded-md bg-ink-700 px-2 py-1.5 font-semibold text-ink-200 hover:bg-ink-600">
+              <MonitorUp size={14} /> Screen sharing off — share screen
+            </button>
+          )}
+          <button onClick={() => { const v = !micOn; setMicOn(v); if (!v) voice.stop(); }} aria-pressed={micOn} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${micOn ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
+            {micOn ? <Mic size={14} /> : <MicOff size={14} />} Mic {micOn ? "on" : "off"}
           </button>
         </div>
-        <div className={`${screen.active ? "mt-2.5 flex" : "hidden"} items-center gap-2.5`}>
-          <video ref={screen.videoRef} muted playsInline className="h-14 w-24 flex-none rounded border border-ink-600 bg-black object-cover" />
-          <p className="text-[0.7rem] leading-snug text-ink-200">What the AI sees. A frame is captured only when you ask something — nothing is recorded or stored.</p>
+        {!screen.active && screen.error && <p className="mt-2 text-xs text-saffron-100">{screen.error}</p>}
+        <div className={screen.active ? "mt-2.5" : "hidden"}>
+          <div className={bigPreview ? "" : "flex items-center gap-2.5"}>
+            <video ref={screen.videoRef} muted playsInline aria-label="Preview of your shared screen"
+              className={`rounded border border-ink-600 bg-black ${bigPreview ? "aspect-video w-full object-contain" : "h-14 w-24 flex-none object-cover"}`} />
+            <div className={`flex items-start justify-between gap-2 ${bigPreview ? "mt-1.5" : "flex-1"}`}>
+              <p className="text-[0.7rem] leading-snug text-ink-200">What the AI sees. A frame is captured only when you ask a question — nothing is recorded or stored.</p>
+              <button onClick={() => setBigPreview((b) => !b)} className="whitespace-nowrap text-[0.7rem] font-semibold text-ink-200 underline hover:text-white">
+                {bigPreview ? "Shrink" : "Enlarge"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -144,6 +170,16 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
                 <Markdown text={m.content} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
               </div>
               <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
+              {m.pendingFill && m.id === messages[messages.length - 1]?.id && (
+                <div className="mt-2 rounded-lg border border-ink-200 bg-white px-3 py-2.5 text-sm">
+                  <div className="text-ink-600">Fill <b>{m.pendingFill.label}</b> with:</div>
+                  <div className="my-1 font-semibold text-ink-900">“{m.pendingFill.display}”</div>
+                  <div className="mt-2 flex gap-2">
+                    <button className="btn-primary btn-sm" disabled={busy} onClick={() => send(YES_WORD[lang])}><Check size={15} /> Fill field</button>
+                    <button className="btn-secondary btn-sm" disabled={busy} onClick={() => send(NO_WORD[lang])}><X size={15} /> Don't fill</button>
+                  </div>
+                </div>
+              )}
               {m.suggestions?.map((s) => (
                 <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-dashed border-saffron-100 bg-saffron-50 px-3 py-2 text-sm">
                   <span className="text-saffron-700">Suggested note: <b>{s.content}</b></span>

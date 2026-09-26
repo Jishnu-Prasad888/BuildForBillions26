@@ -65,6 +65,26 @@ F = {
     },
     "reask": {"en": "When you're ready, tell me your **{label}**.", "hi": "जब आप तैयार हों, अपनी **{label}** बताइए।", "kn": "ನೀವು ಸಿದ್ಧರಾದಾಗ, ನಿಮ್ಮ **{label}** ತಿಳಿಸಿ."},
     "switched": {"en": "Sure, let's change **{label}**.", "hi": "ठीक है, **{label}** बदलते हैं।", "kn": "ಸರಿ, **{label}** ಬದಲಾಯಿಸೋಣ."},
+    "confirm_fill": {
+        "en": "I can fill **{label}** with **{value}**. Shall I fill it in? Say **yes** to fill it, or tell me the correct value.",
+        "hi": "मैं **{label}** में **{value}** भर सकता हूँ। क्या भर दूँ? भरने के लिए **हाँ** कहें, या सही जानकारी बताएँ।",
+        "kn": "**{label}** ನಲ್ಲಿ **{value}** ತುಂಬಬಹುದು. ತುಂಬಲೇ? ತುಂಬಲು **ಹೌದು** ಎನ್ನಿ, ಅಥವಾ ಸರಿಯಾದ ಮಾಹಿತಿ ತಿಳಿಸಿ.",
+    },
+    "fill_declined": {
+        "en": "Okay, I haven't filled it. Please tell me the correct **{label}**.",
+        "hi": "ठीक है, मैंने नहीं भरा। कृपया सही **{label}** बताइए।",
+        "kn": "ಸರಿ, ನಾನು ತುಂಬಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರಿಯಾದ **{label}** ತಿಳಿಸಿ.",
+    },
+    "no_secrets": {
+        "en": "Please don't share OTPs, PINs or passwords with me — I never need them, and this form doesn't ask for them. Enter an OTP only on the official portal when it asks.",
+        "hi": "कृपया OTP, PIN या पासवर्ड मुझे न बताएँ — मुझे इनकी कभी ज़रूरत नहीं होती, और यह फ़ॉर्म इन्हें नहीं माँगता। OTP केवल आधिकारिक पोर्टल पर माँगे जाने पर ही डालें।",
+        "kn": "ದಯವಿಟ್ಟು OTP, PIN ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ನನಗೆ ಹೇಳಬೇಡಿ — ನನಗೆ ಅವು ಎಂದಿಗೂ ಬೇಕಿಲ್ಲ, ಈ ಫಾರ್ಮ್ ಅವನ್ನು ಕೇಳುವುದಿಲ್ಲ. ಅಧಿಕೃತ ಪೋರ್ಟಲ್ ಕೇಳಿದಾಗ ಮಾತ್ರ OTP ನಮೂದಿಸಿ.",
+    },
+    "ocr_seen": {
+        "en": "I can read these fields on your screen: {labels}.",
+        "hi": "मैं आपकी स्क्रीन पर ये फ़ील्ड पढ़ पा रहा हूँ: {labels}।",
+        "kn": "ನಿಮ್ಮ ಪರದೆಯಲ್ಲಿ ಈ ಕ್ಷೇತ್ರಗಳನ್ನು ಓದಬಲ್ಲೆ: {labels}.",
+    },
     "ask_again": {"en": "Please tell me the **{label}**.", "hi": "कृपया **{label}** बताइए।", "kn": "ದಯವಿಟ್ಟು **{label}** ತಿಳಿಸಿ."},
     "declaration_self": {
         "en": "For your protection, please tick the declaration box yourself after reading it.",

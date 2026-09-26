@@ -20,6 +20,7 @@ from app.kag.query_understanding import QueryContext, understand
 from app.kag.retriever import retrieve
 from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
+from app.services import ocr
 from app.services.ai import get_ai
 from app.services.form_templates import f, fmt
 from app.services.forms import (
@@ -27,6 +28,7 @@ from app.services.forms import (
     resolve_field, section_title,
 )
 from app.services.notes import WALLET_LABELS, build_ai_notes, wallet_types
+from app.services.redact import contains_secret, redact
 
 QUESTION_RE = re.compile(
     r"\?|^\s*(what|where|which|how|why|who|when|do|does|is|are|can|could|should|will|explain|tell me)\b|"
@@ -54,6 +56,8 @@ class FormAssistant:
         self.updates: dict = {}
         self.questions: list[str] = []
         self.action: str | None = None
+        self.pending: dict | None = None
+        self.ocr_text = ""
         self.mode = "rule"
 
     # ------------------------------------------------------------------ helpers
@@ -161,6 +165,14 @@ class FormAssistant:
         return f("pending_left", self.lang, fields=", ".join(self._label(x) for x in pending_req), label=self._label(first))
 
     # ---------------------------------------------------------------- filling
+    def propose(self, fid: str, value) -> str:
+        """Never write a value the user hasn't approved: ask first, fill on 'yes'."""
+        fld = self._field(fid)
+        self.state["current_field"] = fid
+        self.state["pending_fill"] = {"field": fid, "value": value}
+        self.pending = {"field_id": fid, "label": field_label(fld, self.lang), "display": mask(fld, value)}
+        return f("confirm_fill", self.lang, label=field_label(fld, self.lang), value=mask(fld, value))
+
     def fill(self, fid: str, value) -> str:
         prev_section = self.by_id[fid]["section_id"]
         self.values[fid] = value
@@ -168,6 +180,7 @@ class FormAssistant:
         sk = self.skipped - {fid}
         self.state["skipped"] = sorted(sk)
         self.state.pop("suggestion", None)
+        self.state.pop("pending_fill", None)
         self.state.pop("editing", None)
         fld = self._field(fid)
         msg = f("filled", self.lang, value=mask(fld, value), label=field_label(fld, self.lang))
@@ -206,19 +219,36 @@ class FormAssistant:
             "focused_field": screen.get("focused_field_id"),
             "frame_received": bool(screen.get("frame")),
             "vision": None,
+            "ocr": None,
         }
-        if analyse_frame and screen.get("frame") and get_ai().vision_available():
-            out = get_ai().generate_json([
-                {"role": "system", "content": "You read screenshots of government forms. Return JSON with keys: "
-                 "fields (list of {label, required, has_value}), options (list), instructions (list), buttons (list), warnings (list)."},
-                {"role": "user", "content": "Describe the visible form on this screen."},
-            ], images=[screen["frame"]])
+        frame = screen.get("frame") if analyse_frame else None
+        if frame:
+            out = None
+            if get_ai().vision_available():
+                out = get_ai().generate_json([
+                    {"role": "system", "content": "You read screenshots of government forms. Return JSON with keys: "
+                     "fields (list of {label, required, has_value}), options (list), instructions (list), buttons (list), warnings (list). "
+                     "Never copy the values typed into fields."},
+                    {"role": "user", "content": "Describe the visible form on this screen."},
+                ], images=[frame])
             if out:
                 summary["vision"] = out
                 summary["source"] = "vision+form-structure"
                 self.state["vision"] = out
-        elif self.state.get("vision"):
-            summary["vision"] = self.state["vision"]
+                self.state.pop("ocr", None)
+            elif (read := ocr.read_screen(frame, self.lang)):
+                self.ocr_text = read["visible_text"]
+                labels = {"fields": read["fields"], "options": read["options"]}
+                summary["ocr"] = labels
+                summary["source"] = "ocr+form-structure"
+                self.state["ocr"] = labels
+                self.state.pop("vision", None)
+        if not summary["vision"] and not summary["ocr"]:
+            summary["vision"] = self.state.get("vision")
+            summary["ocr"] = self.state.get("ocr")
+        if not visible and summary["ocr"]:
+            summary["fields_detected"] = len(summary["ocr"]["fields"])
+            summary["required_detected"] = sum(1 for x in summary["ocr"]["fields"] if x["required"])
         return summary
 
     def screen_context_text(self, fid: str, screen: dict | None) -> str:
@@ -231,6 +261,14 @@ class FormAssistant:
             lines.append(f"- visible field: {v.get('label')}{' *required' if v.get('required') else ''}{' [filled]' if v.get('filled') else ''}")
         if self.state.get("vision"):
             lines.append(f"Vision model reading of the screenshot: {str(self.state['vision'])[:1200]}")
+        elif self.state.get("ocr"):
+            o = self.state["ocr"]
+            lines.append("OCR reading of the screenshot (may contain recognition errors):")
+            lines += [f"- field on screen: {x['label']}{' *required' if x['required'] else ''}" for x in o["fields"][:25]]
+            if o["options"]:
+                lines.append(f"- options on screen: {', '.join(o['options'][:20])}")
+            if self.ocr_text:
+                lines.append(f"Visible text:\n{self.ocr_text[:1500]}")
         return "\n".join(lines)
 
     # ---------------------------------------------------------------- main turn
@@ -247,7 +285,10 @@ class FormAssistant:
                     last=self._section_title_by_name(self.app.last_completed_section), next=section_title(nsec, self.lang))
         else:
             msg = f("greet_new", self.lang, form=title, sections=len(self.form["sections"]), fields=n_fields, required=n_req)
-        if scr["fields_detected"]:
+        dom_fields = len((screen or {}).get("visible_fields") or [])
+        if not dom_fields and scr["ocr"] and scr["ocr"]["fields"]:
+            msg += " " + f("ocr_seen", self.lang, labels=", ".join(x["label"] for x in scr["ocr"]["fields"][:8]))
+        elif scr["fields_detected"]:
             msg += " " + f("screen_seen", self.lang, n=scr["fields_detected"])
         msg += "\n\n" + self.ask(nxt)
         return self._finish(msg, None, scr)
@@ -276,6 +317,20 @@ class FormAssistant:
 
         if cur_id is None and not is_question:
             return self._finish(self._completion_message(), text, scr)
+
+        if contains_secret(text) and not is_question:
+            return self._finish(f("no_secrets", self.lang), text, scr)
+
+        # 0) approve / decline a value the assistant proposed to fill
+        pend = self.state.get("pending_fill")
+        if pend and not is_question:
+            self.state.pop("pending_fill")
+            if pend["field"] in self.by_id:
+                if re.search(YES, low):
+                    return self._finish(self.fill(pend["field"], pend["value"]), text, scr)
+                if re.fullmatch(NO + r"[\s.!]*", low):
+                    self.state["current_field"] = pend["field"]
+                    return self._finish(f("fill_declined", self.lang, label=self._label(pend["field"])), text, scr)
 
         sugg = self.state.get("suggestion")
         # 1) accept / reject a profile suggestion
@@ -330,7 +385,7 @@ class FormAssistant:
                 return self._finish(f("declaration_self", self.lang), text, scr)
             opts = " / ".join(option_display(fld, self.lang)) if fld.get("options") else ""
             return self._finish(f("invalid", self.lang, label=field_label(fld, self.lang), format=fmt(err, self.lang, options=opts)), text, scr)
-        return self._finish(self.fill(cur_id, value), text, scr)
+        return self._finish(self.propose(cur_id, value), text, scr)
 
     GENERIC = {"name", "number", "date", "details", "code", "type", "information", "given", "true", "declare", "applicant",
                "affected", "land", "crop", "damage", "acres"}
@@ -391,10 +446,12 @@ class FormAssistant:
         ai_notes = build_ai_notes(self.db, self.app, self.form, self.lang, self.questions)
         self.app.updated_at = utcnow()
         if user_text:
-            self.db.add(Message(conversation_id=self.conv.id, role="user", content=user_text,
+            self.db.add(Message(conversation_id=self.conv.id, role="user", content=redact(user_text),
                                 meta={"current_field": cur, "focused_field": scr.get("focused_field")}))
+        masked_updates = {k: mask(self._field(k), v) for k, v in self.updates.items()}
         self.db.add(Message(conversation_id=self.conv.id, role="assistant", content=reply, evidence=self.evidence,
-                            meta={"field_updates": self.updates, "mode": self.mode, "screen": {k: v for k, v in scr.items() if k != "vision"}}))
+                            meta={"field_updates": masked_updates, "mode": self.mode,
+                                  "screen": {k: v for k, v in scr.items() if k not in ("vision", "ocr")}}))
         self.conv.state = self.state
         self.conv.updated_at = utcnow()
         self.db.commit()
@@ -404,5 +461,5 @@ class FormAssistant:
             "current_field": {"id": cur, "label": field_label(cur_f, self.lang), "section": cur_f["section_title"]} if cur_f else None,
             "field_updates": self.updates, "form_data": self.values, "field_status": status, "progress": progress,
             "ai_notes": ai_notes, "suggested_notes": self.suggestions, "evidence": self.evidence,
-            "screen_understanding": scr, "action": self.action, "mode": self.mode,
+            "screen_understanding": scr, "action": self.action, "mode": self.mode, "pending_fill": self.pending,
         }
