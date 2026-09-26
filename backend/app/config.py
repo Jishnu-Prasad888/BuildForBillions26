@@ -60,6 +60,14 @@ class Settings(BaseSettings):
 
     AI_FALLBACK_ENABLED: bool = True
 
+    # Sentry monitoring: off while SENTRY_DSN is empty. Keep sample rates low at scale (cost grows with traffic).
+    SENTRY_DSN: str = ""
+    SENTRY_ENVIRONMENT: str = ""  # defaults to APP_ENV
+    SENTRY_RELEASE: str = ""  # e.g. the git SHA of the deployed image
+    SENTRY_SERVER_NAME: str = ""  # set per replica (e.g. the container name) to tell replicas apart; the SDK falls back to the hostname
+    SENTRY_TRACES_SAMPLE_RATE: float = 0.05
+    SENTRY_PROFILES_SAMPLE_RATE: float = 0.0
+
     JWT_SECRET_KEY: str = "change-this-in-development"
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_MINUTES: int = 1440

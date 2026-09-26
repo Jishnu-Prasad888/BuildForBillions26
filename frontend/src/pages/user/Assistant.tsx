@@ -75,7 +75,7 @@ export default function Assistant() {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="eyebrow">Ask by voice or text · answers show their sources</div>
-          <h1 className="font-display text-[1.8rem] font-bold">{t("assistant")}</h1>
+          <h1 className="page-title">{t("assistant")}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button className={`btn-secondary btn-sm ${tts ? "border-saffron" : ""}`} onClick={() => { const v = !tts; setTts(v); localStorage.setItem("sahayak.tts", v ? "1" : "0"); if (!v) stopSpeaking(); }} aria-pressed={tts} title={t("speak_answers")}>
@@ -89,7 +89,7 @@ export default function Assistant() {
         <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">
           <div className="flex gap-3">
             <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
-            <div className="max-w-2xl rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">{INTRO[lang]}</div>
+            <div className="max-w-2xl rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[0.95rem]">{INTRO[lang]}</div>
           </div>
           {messages.length === 0 && (
             <div className="stagger flex flex-wrap gap-2 pl-12">
@@ -102,7 +102,7 @@ export default function Assistant() {
             if (m.role === "user")
               return (
                 <div key={m.id} className="flex animate-popIn justify-end">
-                  <div className="max-w-xl rounded-lg rounded-tr-sm bg-ink-800 px-4 py-3 text-[1.02rem] text-white">{m.content}</div>
+                  <div className="max-w-xl rounded-lg rounded-tr-sm bg-ink-800 px-4 py-3 text-[0.95rem] text-white">{m.content}</div>
                 </div>
               );
             if (m.role === "system") return <div key={m.id} className="animate-popIn rounded-lg bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
@@ -121,7 +121,7 @@ export default function Assistant() {
               <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-lg" : ""}`}>
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
-                  <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">
+                  <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[0.95rem]">
                     {m.meta?.insufficient_evidence && (
                       <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-amber-700"><AlertTriangle size={16} /> Not verified by available sources</div>
                     )}

@@ -77,7 +77,7 @@ export default function ApplicationDetail() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1 basis-72">
               <div className="eyebrow mb-1">{app.reference_number ? `Reference ${app.reference_number}` : app.form_id ? "Guided form" : "Portal application"}</div>
-              <h1 className="font-display text-[1.65rem] font-bold leading-tight sm:text-[1.9rem]">{app.scheme_name}</h1>
+              <h1 className="page-title">{app.scheme_name}</h1>
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-500">
                 <StatusPill status={app.status} />
                 <span>Started {formatDate(app.created_at)}</span>
@@ -109,7 +109,7 @@ export default function ApplicationDetail() {
       <Tabs<Tab> value={tab} onChange={setTab} tabs={tabs} />
       <div className="mt-6">
         {tab === "overview" && (
-          <div className={`grid gap-6 ${app.ai_notes ? "lg:grid-cols-[1fr_340px]" : "max-w-3xl"}`}>
+          <div className={`grid gap-6 ${app.ai_notes ? "lg:grid-cols-[minmax(0,1fr)_340px]" : "max-w-3xl"}`}>
             <div className="space-y-6">
               {!app.form_id && editable && (
                 <div className="card p-5 text-[0.95rem] text-ink-700">This scheme is applied for on its official portal. Use this page to keep your documents and notes together.</div>
@@ -160,7 +160,7 @@ export default function ApplicationDetail() {
                           {ok ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-leaf" /> : <Circle size={17} className="mt-0.5 flex-none text-ink-300" />}
                           <div className="min-w-0">
                             <dt className="text-xs font-semibold uppercase tracking-wide text-ink-500">{fieldLabel(f, lang, app.form_data)}</dt>
-                            <dd className={`break-words text-[0.97rem] ${ok ? "text-ink-900" : "text-ink-400"}`}>{ok ? displayValue(f, app.form_data[f.id], lang, true) : later ? "Marked for later" : "Not answered yet"}</dd>
+                            <dd className={`break-words text-[0.95rem] ${ok ? "text-ink-900" : "text-ink-400"}`}>{ok ? displayValue(f, app.form_data[f.id], lang, true) : later ? "Marked for later" : "Not answered yet"}</dd>
                           </div>
                         </div>
                       );

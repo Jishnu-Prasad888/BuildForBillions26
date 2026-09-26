@@ -10,7 +10,7 @@ export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: st
     <div className="mb-6 flex flex-col gap-4 border-b border-paper-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-1">{eyebrow}</div>}
-        <h1 className="font-display text-[1.65rem] font-bold leading-tight sm:text-[1.9rem]">{title}</h1>
+        <h1 className="page-title">{title}</h1>
         {subtitle && <p className="mt-1.5 max-w-2xl text-ink-600">{subtitle}</p>}
       </div>
       {actions && <div className="flex flex-none flex-wrap gap-2">{actions}</div>}

@@ -21,7 +21,7 @@ function SchemeFormCard({ scheme, existing, size, busy, onStart }: {
           {guided ? <Sparkles size={20} /> : <Landmark size={20} />}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-[1.05rem] font-bold leading-snug text-ink-900">{scheme.display_name}</h3>
+          <h3 className="text-base font-bold leading-snug text-ink-900">{scheme.display_name}</h3>
           {scheme.department && <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-500"><Building2 size={13} /> {scheme.department}</div>}
         </div>
       </div>

@@ -92,7 +92,7 @@ export default function Dashboard() {
         <Sparkles size={120} className="pointer-events-none absolute -right-4 -top-4 hidden animate-float text-forest-100 sm:block" aria-hidden />
         <div className="relative">
           <div className="eyebrow animate-riseIn">{t("welcome_back")}</div>
-          <h1 className="mt-1 font-display text-[1.9rem] font-bold leading-tight sm:text-[2.5rem]">
+          <h1 className="mt-1 font-display text-[1.75rem] font-bold leading-tight sm:text-[2.1rem]">
             <span className="inline-block animate-riseIn" style={{ animationDelay: "80ms" }}>{t("hello")},</span>{" "}
             <span className={firstVisit
               ? "inline-block animate-greet bg-[linear-gradient(90deg,#0f4a37_30%,#2fbf85_50%,#0f4a37_70%)] bg-[length:200%_100%] bg-clip-text text-transparent"
@@ -101,7 +101,7 @@ export default function Dashboard() {
             </span>{" "}
             <span className={`inline-block origin-[70%_70%] ${firstVisit ? "animate-wave" : ""}`} aria-hidden>👋</span>
           </h1>
-          <p className="mt-2 animate-riseIn text-lg text-ink-600" style={{ animationDelay: "250ms" }}>{t("what_help")}</p>
+          <p className="mt-2 animate-riseIn text-base text-ink-600" style={{ animationDelay: "250ms" }}>{t("what_help")}</p>
 
           <form onSubmit={submitAsk} className="mt-5 flex max-w-2xl animate-riseIn flex-col gap-2 sm:flex-row" style={{ animationDelay: "350ms" }}>
             <div className="relative flex-1">
@@ -158,7 +158,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold">{t("active_apps")}</h2>

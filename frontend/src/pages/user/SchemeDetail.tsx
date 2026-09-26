@@ -20,7 +20,7 @@ export default function SchemeDetail() {
     <div>
       <Link to="/schemes" className="text-sm font-semibold text-ink-600">← All schemes</Link>
       <PageHeader title={s.display_name} subtitle={s.summary} />
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-6">
           <section className="card p-5">
             <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><ListChecks size={20} className="text-saffron-600" /> Eligibility rules</h2>
@@ -38,13 +38,13 @@ export default function SchemeDetail() {
         <div className="space-y-4">
           <SchemeCard scheme={s} compact />
           <section className="card p-5">
-            <h2 className="mb-2 flex items-center gap-2 font-bold"><ShieldCheck size={18} className="text-leaf" /> Sources</h2>
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-leaf" /> Sources</h2>
             <ul className="space-y-2 text-sm">
               {s.sources?.map((d) => (
                 <li key={d.id}>
                   <div className="font-semibold">{d.title}</div>
-                  <div className="text-ink-500">{d.publisher}{d.is_demo && <span className="chip ml-1 bg-amber-50 text-amber-700">demo summary</span>}</div>
-                  {d.url && <a className="inline-flex items-center gap-1 text-ink-700 underline decoration-saffron" href={d.url} target="_blank" rel="noreferrer">{d.url} <ExternalLink size={12} /></a>}
+                  <div className="text-ink-500">{d.publisher}{d.is_demo && <span className="chip ml-1 bg-saffron-50 text-saffron-700">demo summary</span>}</div>
+                  {d.url && <a className="inline-flex max-w-full items-center gap-1 break-all text-ink-700 underline decoration-saffron" href={d.url} target="_blank" rel="noreferrer">{d.url} <ExternalLink size={12} /></a>}
                 </li>
               ))}
             </ul>

@@ -31,7 +31,7 @@ export function WorkCard({ icon, tag, title, titleTo, meta, status, progress, hi
         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-forest-50 text-forest-700">{icon}</div>
         <div className="min-w-0 flex-1">
           {tag && <div className="eyebrow">{tag}</div>}
-          <h3 className="font-display text-[1.05rem] font-bold leading-snug text-ink-900">
+          <h3 className="text-base font-bold leading-snug text-ink-900">
             {titleTo ? <Link to={titleTo} className="hover:text-forest-700 hover:underline">{heading}</Link> : heading}
           </h3>
           {meta && <div className="mt-0.5 text-sm text-ink-500">{meta}</div>}

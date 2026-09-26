@@ -19,7 +19,7 @@ function ResumeBanner({ app }: { app: Application }) {
       <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-200">Pick up where you left off</div>
       <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0 flex-1 basis-64">
-          <h2 className="font-display text-xl font-bold leading-snug text-white sm:text-2xl">{app.scheme_name}</h2>
+          <h2 className="text-xl font-bold leading-snug text-white">{app.scheme_name}</h2>
           <p className="mt-1 text-sm text-forest-100">{na.hint}</p>
           <div className="mt-3 flex max-w-md items-center gap-3">
             <ProgressBar value={app.progress} className="!bg-forest-900" />

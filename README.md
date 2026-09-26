@@ -143,6 +143,7 @@ Copy `backend/.env.example`. Important variables:
 | `LLM_MODEL` / `EMBEDDING_MODEL` / `VISION_MODEL` | Generation, vectors, optional screen vision |
 | `OCR_ENABLED` / `TESSERACT_CMD` | Tesseract fallback for screen reading when no vision model (Docker image includes it) |
 | `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; vectors in `chroma` (default), `pgvector`, or `json` cosine fallback |
+| `SENTRY_DSN` / `SENTRY_TRACES_SAMPLE_RATE` / `SENTRY_RELEASE` | Error and performance monitoring (off when the DSN is empty). Frontend: `FRONTEND_SENTRY_DSN` build arg |
 | `CHROMA_DIR` / `CHROMA_HOST` | Embedded Chroma path, or a shared Chroma server for multi-replica deploys |
 | `SCHEME_DIR` / `SCHEME_AUTO_SYNC` | Scheme library folder ingested into the knowledge base |
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
