@@ -8,6 +8,7 @@ import AdminLayout from "@/layouts/AdminLayout";
 import PublicLayout from "@/layouts/PublicLayout";
 import Landing from "@/pages/public/Landing";
 import Guide from "@/pages/public/Guide";
+import Docs from "@/pages/public/Docs";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
@@ -76,6 +77,7 @@ export default function App() {
       <Route element={<PublicLayout />}>
         <Route path="/welcome" element={<Landing />} />
         <Route path="/guide" element={<Guide />} />
+        <Route path="/docs" element={<Docs />} />
       </Route>
 
       <Route path="/applications/:id/form" element={<Protected><FormPage /></Protected>} />
