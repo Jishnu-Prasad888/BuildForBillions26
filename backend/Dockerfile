@@ -2,7 +2,8 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
     WEB_CONCURRENCY=1 FORWARDED_ALLOW_IPS=127.0.0.1
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-hin tesseract-ocr-kan \
+# fonts-noto-core: Noto Sans + Devanagari + Kannada, so Hindi/Kannada values can be written on generated PDFs.
+RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-hin tesseract-ocr-kan fonts-noto-core \
     && rm -rf /var/lib/apt/lists/*
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

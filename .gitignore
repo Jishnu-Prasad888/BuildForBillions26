@@ -23,3 +23,6 @@ data/users/
 backend/data/users/
 
 .DS_Store
+
+# rendered pages from backend/tests/test_pdf_fill.py
+backend/tests/output/

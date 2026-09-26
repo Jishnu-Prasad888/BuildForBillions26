@@ -7,6 +7,7 @@ import UserLayout from "@/layouts/UserLayout";
 import AdminLayout from "@/layouts/AdminLayout";
 import PublicLayout from "@/layouts/PublicLayout";
 import Landing from "@/pages/public/Landing";
+import LandingV2 from "@/pages/public/LandingV2";
 import Docs from "@/pages/public/Docs";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
@@ -75,9 +76,10 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
 
+      <Route path="/welcome" element={<LandingV2 />} />
+      <Route path="/guide" element={<Navigate to="/welcome#guide" replace />} />
+
       <Route element={<PublicLayout />}>
-        <Route path="/welcome" element={<Landing />} />
-        <Route path="/guide" element={<Navigate to="/welcome#guide" replace />} />
         <Route path="/docs" element={<Docs />} />
       </Route>
 

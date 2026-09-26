@@ -75,3 +75,31 @@ def encrypted_pdf() -> bytes:
 def render_png(pdf: bytes, dpi: int = 170) -> bytes:
     with fitz.open(stream=pdf, filetype="pdf") as d:
         return d[0].get_pixmap(dpi=dpi, alpha=False).tobytes("png")
+
+
+def kcc_form_pdf() -> bytes:
+    """A fillable KCC-style application: the fields from the KCC bug transcript, including an office-use box."""
+    doc = fitz.open()
+    p = doc.new_page(width=595, height=842)
+    p.insert_text((180, 60), "KISAN CREDIT CARD APPLICATION", fontsize=14, fontname="helv")
+    rows = [
+        ("Branch", "branch", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("To", "to", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("Select one", "card_type", fitz.PDF_WIDGET_TYPE_COMBOBOX, ["New Card", "Renewal"]),
+        ("Name of Applicant", "name", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("Account Number", "account", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("IFSC Code", "ifsc", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("Mobile Number", "mobile", fitz.PDF_WIDGET_TYPE_TEXT, None),
+        ("70 office use", "office", fitz.PDF_WIDGET_TYPE_TEXT, None),
+    ]
+    for i, (label, name, wtype, choices) in enumerate(rows):
+        y = 110 + i * 40
+        p.insert_text((50, y), label, fontsize=11, fontname="helv")
+        w = fitz.Widget()
+        w.field_name, w.field_type, w.rect = name, wtype, fitz.Rect(200, y - 14, 480, y + 4)
+        if choices:
+            w.choice_values = choices
+        else:
+            w.field_value = ""
+        p.add_widget(w)
+    return doc.tobytes()

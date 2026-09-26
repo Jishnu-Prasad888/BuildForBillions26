@@ -70,6 +70,48 @@ def _fit_text(page, rect, text: str, multiline: bool, fontfile: str | None, font
     return False
 
 
+# Noto families per script. Devanagari/Kannada need shaping (vowel signs, conjuncts), which insert_textbox doesn't do,
+# so they are drawn with insert_htmlbox. MuPDF falls back to its built-in Noto fonts if these files are missing.
+_NOTO_DIRS = ["/usr/share/fonts/truetype/noto", "/usr/share/fonts/noto", "/usr/local/share/fonts/noto"]
+_SCRIPT_FONT = {"deva": "NotoSansDevanagari-Regular.ttf", "knda": "NotoSansKannada-Regular.ttf", "latn": "NotoSans-Regular.ttf"}
+
+
+def _script(text: str) -> str:
+    """Dominant script of a value: 'deva' (Hindi), 'knda' (Kannada) or 'latn'."""
+    deva = sum(1 for ch in text if "ऀ" <= ch <= "ॿ")
+    knda = sum(1 for ch in text if "ಀ" <= ch <= "೿")
+    if not deva and not knda:
+        return "latn"
+    return "deva" if deva >= knda else "knda"
+
+
+def _noto_dir() -> str | None:
+    dirs = ([str(Path(settings.FORM_FONT_PATH).parent)] if settings.FORM_FONT_PATH else []) + _NOTO_DIRS
+    for d in dirs:
+        if Path(d, _SCRIPT_FONT["deva"]).is_file() or Path(d, _SCRIPT_FONT["knda"]).is_file():
+            return d
+    return None
+
+
+def _fit_indic(page, rect, text: str, multiline: bool, script: str) -> bool:
+    """Shaped text for Hindi/Kannada, shrunk to fit. Returns False if it could not fit."""
+    import fitz
+
+    r = fitz.Rect(rect)
+    if page.rotation:
+        r = (r * page.derotation_matrix).normalize()
+    size = 11.0 if multiline else max(6.0, min(11.0, abs(rect[3] - rect[1]) * 0.72))
+    font_dir = _noto_dir()
+    faces = "".join(f"@font-face {{font-family: {k}; src: url({v});}}" for k, v in _SCRIPT_FONT.items()
+                    if font_dir and Path(font_dir, v).is_file())
+    css = faces + f"body {{font-family: {script}, latn; font-size: {size}px; line-height: 1.15; margin: 0; color: rgb(13, 26, 115);}}"
+    if not multiline and not page.rotation:  # sit on the line like the Latin text does
+        r.y0 = max(r.y0, r.y1 - size * 1.6)
+    kw = {"archive": fitz.Archive(font_dir)} if font_dir else {}
+    spare, _scale = page.insert_htmlbox(r, text, css=css, scale_low=0.45, rotate=page.rotation, **kw)
+    return spare >= 0
+
+
 def _mark(page, rect, rotate_page: bool) -> None:
     import fitz
 
@@ -106,6 +148,12 @@ def _fill_widgets(page, fields: list[dict], values: dict) -> set[str]:
             w = widgets[0]
             maxlen = f["meta"].get("maxlen")
             text = to_display(f, v)
+            if _script(text) != "latn":
+                # Form-field appearances can only use Latin base fonts, so Hindi/Kannada would be invisible. Flatten this
+                # one field: remove the widget and let the caller draw shaped text in its place.
+                log.info("Flattening a form field to write non-Latin text (page %s)", f["page"])
+                page.delete_widget(w)
+                continue
             w.field_value = text[:maxlen] if maxlen else text
             w.update()
         done.add(f["field_id"])
@@ -164,14 +212,18 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                     text = to_display(f, v)
                     if not text:
                         continue
-                    use_font, fname = None, "helv"
-                    if not _latin(text):
-                        if not font_file:
-                            warnings.append(f"“{f['label']}”: I couldn't write this text because no font for its script is installed on the server.")
-                            continue
-                        use_font, fname = font_file, "unifont"
                     multiline = f["type"] == "multiline" or (bbox[3] - bbox[1]) > 26 * max(s, 1e-6) and len(text) > 30
-                    if not _fit_text(page, bbox, text, multiline, use_font, fname, page.rotation):
+                    script = _script(text)
+                    if script != "latn":
+                        ok = _fit_indic(page, bbox, text, multiline, script)
+                    else:
+                        use_font, fname = (None, "helv") if _latin(text) else (font_file, "unifont")
+                        if fname == "unifont" and not font_file:
+                            ok = _fit_indic(page, bbox, text, multiline, "latn")  # accents etc. outside cp1252
+                        else:
+                            ok = _fit_text(page, bbox, text, multiline, use_font, fname, page.rotation)
+                    if not ok:
+                        log.warning("Value for field %s did not fit its box on page %s", f["field_id"], f["page"])
                         warnings.append(f"“{f['label']}”: the text is too long for the space on the form and was not written. Shorten it or write it by hand.")
             doc.save(str(tmp), garbage=3, deflate=True)
         finally:

@@ -1,15 +1,17 @@
-import { AlertTriangle, Bot, Plus, Send, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { AlertTriangle, Bot, Plus, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
-import { speak, stopSpeaking, useSpeechInput } from "@/hooks/useSpeech";
+import { speak, stopSpeaking } from "@/hooks/useSpeech";
 import type { ChatMessage, Evidence, Lang } from "@/types";
 import Markdown, { citationOrderFrom } from "@/components/Markdown";
 import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
 import SchemeCard from "@/components/SchemeCard";
-import VoiceButton from "@/components/VoiceButton";
+import ChatInput, { type InputMode } from "@/components/ChatInput";
 import KagTrace from "@/components/KagTrace";
+import { Spinner } from "@/components/ui";
+import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Reference";
 
 const SUGGESTIONS: Record<Lang, string[]> = {
   en: ["Heavy rain destroyed my crop. What help can I get?", "What documents do I need for crop damage relief?", "How many days do I have to report crop loss for insurance?", "Who is not eligible for PM-KISAN?"],
@@ -28,21 +30,26 @@ export default function Assistant() {
   const [params] = useSearchParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [chatKey, setChatKey] = useState(0); // bumped by "New" to clear the input box
   const [tts, setTts] = useState(() => localStorage.getItem("sahayak.tts") === "1");
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
+  const [reference, setReference] = useState<ReferenceState | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
 
-  const send = async (text: string) => {
+  const send = async (text: string, mode: InputMode = "text") => {
     const msg = text.trim();
     if (!msg || busy) return;
-    setInput("");
     setBusy(true);
     const tmp: ChatMessage = { id: `u-${Date.now()}`, role: "user", content: msg, evidence: [] };
     setMessages((m) => [...m, tmp, { id: "pending", role: "assistant", content: "", evidence: [], pending: true }]);
+    const ref = reference;
+    setReference(null);
     try {
-      const r = await api.post<{ conversation_id: string; message: ChatMessage }>("/api/assistant/chat", { message: msg, conversation_id: conversationId, language: lang });
+      const r = await api.post<{ conversation_id: string; message: ChatMessage }>("/api/assistant/chat", {
+        message: msg, conversation_id: conversationId, language: lang, input_mode: mode,
+        ...(ref ? { reference_message_id: ref.id, reference_text: ref.text.slice(0, 1200) } : {}),
+      });
       setConversationId(r.conversation_id);
       setMessages((m) => [...m.filter((x) => x.id !== "pending"), r.message]);
       if (tts) speak(r.message.content, lang);
@@ -52,8 +59,6 @@ export default function Assistant() {
       setBusy(false);
     }
   };
-
-  const voice = useSpeechInput(lang, (txt) => send(txt));
 
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -66,11 +71,6 @@ export default function Assistant() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    send(input);
-  };
-
   return (
     <div className="flex h-[calc(100dvh-13.5rem)] min-h-[480px] flex-col lg:h-[calc(100vh-10.5rem)] lg:min-h-[560px]">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -82,7 +82,7 @@ export default function Assistant() {
           <button className={`btn-secondary btn-sm ${tts ? "border-saffron" : ""}`} onClick={() => { const v = !tts; setTts(v); localStorage.setItem("sahayak.tts", v ? "1" : "0"); if (!v) stopSpeaking(); }} aria-pressed={tts} title={t("speak_answers")}>
             {tts ? <Volume2 size={16} /> : <VolumeX size={16} />} {t("speak_answers")}
           </button>
-          <button className="btn-secondary btn-sm" onClick={() => { setMessages([]); setConversationId(null); stopSpeaking(); }}><Plus size={16} /> New</button>
+          <button className="btn-secondary btn-sm" onClick={() => { setMessages([]); setConversationId(null); setChatKey((k) => k + 1); stopSpeaking(); }}><Plus size={16} /> New</button>
         </div>
       </div>
 
@@ -117,8 +117,9 @@ export default function Assistant() {
             const order = citationOrderFrom(m.content, m.evidence.map((e) => e.id));
             const ordered = order.map((id) => m.evidence.find((e) => e.id === id)!).filter(Boolean);
             const cards = m.meta?.scheme_cards ?? [];
+            const isRef = reference?.id === m.id;
             return (
-              <div key={m.id} className="flex animate-popIn gap-3">
+              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-2xl" : ""}`}>
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
                   <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">
@@ -130,6 +131,7 @@ export default function Assistant() {
                   <div className="flex flex-wrap items-center gap-3">
                     <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
                     <button className="mt-2 text-sm font-semibold text-ink-500 hover:text-ink-800" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />{t("listen")}</button>
+                    {!m.pending && <QuoteButton messageId={m.id} text={m.content} onSet={setReference} />}
                   </div>
                   <KagTrace meta={{ ...m.meta }} cited={ordered.length} />
                   {cards.length > 0 && (
@@ -146,15 +148,10 @@ export default function Assistant() {
           <div ref={bottom} />
         </div>
 
-        <form onSubmit={submit} className="border-t border-paper-300 bg-white p-3 sm:p-4">
-          {(voice.listening || voice.interim) && <div className="mb-2 text-sm font-semibold text-saffron-700">{t("listening")} {voice.interim}</div>}
-          {voice.error && <div className="mb-2 text-sm text-brick">{voice.error}</div>}
-          <div className="flex items-center gap-2">
-            <VoiceButton listening={voice.listening} onStart={voice.start} onStop={voice.stop} disabled={busy} />
-            <input className="input py-3" value={input} onChange={(e) => setInput(e.target.value)} placeholder={t("ask_placeholder")} aria-label="Message" />
-            <button className="btn-primary h-11" disabled={busy || !input.trim()}><Send size={17} /> <span className="hidden sm:inline">{t("send")}</span></button>
-          </div>
-        </form>
+        <div className="border-t border-paper-300 bg-white p-3 sm:p-4">
+          {reference && <ReferenceChip reference={reference} onClear={() => setReference(null)} />}
+          <ChatInput onSend={send} busy={busy} resetKey={chatKey} />
+        </div>
       </div>
       <EvidenceDrawer open={!!drawer} onClose={() => setDrawer(null)} evidence={drawer?.evidence ?? []} focusId={drawer?.focus} />
     </div>
