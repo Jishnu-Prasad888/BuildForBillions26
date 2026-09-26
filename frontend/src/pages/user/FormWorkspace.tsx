@@ -1,4 +1,4 @@
-import { ArrowLeft, Eye, FileCheck2, MonitorUp, RefreshCw, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Eye, FileCheck2, MonitorUp, RefreshCw, Share2, ShieldCheck } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "@/services/api";
@@ -6,6 +6,7 @@ import { useI18n } from "@/i18n";
 import { useScreenCapture } from "@/hooks/useScreenCapture";
 import type { FormAssistResponse, FormFieldDef, FormSchema, FormValueT, UserForm } from "@/types";
 import AssistantDock, { type AssistantHandle } from "@/components/formassist/AssistantDock";
+import ShareSheet from "@/components/formassist/ShareSheet";
 import AutoFillPanel from "@/components/formassist/AutoFillPanel";
 import FormNotes from "@/components/formassist/FormNotes";
 import FormPreview from "@/components/formassist/FormPreview";
@@ -32,6 +33,7 @@ export default function FormWorkspace() {
   const [flash, setFlash] = useState<string[]>([]);
   const [reviewKey, setReviewKey] = useState("0");
   const [screenModal, setScreenModal] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [dockOpen, setDockOpen] = useState(true);
   const screen = useScreenCapture();
   const dock = useRef<AssistantHandle>(null);
@@ -148,6 +150,7 @@ export default function FormWorkspace() {
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <span className="hidden items-center gap-1 text-xs text-ink-500 lg:flex"><ShieldCheck size={14} className="text-leaf" /> Original file is never modified</span>
           <button className="btn-secondary btn-sm" onClick={() => setScreenModal(true)} disabled={screen.active}><MonitorUp size={15} /> Start Screen Assistance</button>
+          <button className="btn-secondary btn-sm" onClick={() => setShareOpen(true)}><Share2 size={15} /> Share</button>
           <button className="btn-accent btn-sm" onClick={() => setTab("review")}><FileCheck2 size={15} /> Generate PDF</button>
         </div>
       </header>
@@ -199,6 +202,14 @@ export default function FormWorkspace() {
           </div>
         )}
       </div>
+
+      <ShareSheet
+        open={shareOpen} onClose={() => setShareOpen(false)}
+        formId={meta.id} formName={meta.original_filename}
+        outputReady={!!meta.output_ready}
+        fields={schema.fields} values={schema.values}
+        getTranscript={() => dock.current?.getTranscript() ?? ""}
+      />
 
       <Modal open={screenModal} onClose={() => setScreenModal(false)} title="Start AI Screen Assistance">
         <p className="text-ink-700">If you like, I can look at your screen while you fill in a form somewhere else, and help with what I see. Your browser will ask what to share — a tab, a window or your whole screen.</p>

@@ -10,7 +10,7 @@ import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Re
 
 interface Msg { id: string; role: "user" | "assistant" | "system"; sections: FormAssistSection[]; choices?: string[] | null }
 interface Screen { active: boolean; error: string | null; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> }
-export interface AssistantHandle { ask: (text: string, fieldId?: string) => void }
+export interface AssistantHandle { ask: (text: string, fieldId?: string) => void; getTranscript: () => string }
 interface Props {
   formId: string;
   lang: Lang;
@@ -69,7 +69,13 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
     }
   }, [busy, formId, lang, onResponse, screen]);
 
-  useImperativeHandle(ref, () => ({ ask: (t, fid) => send(t, fid) }), [send]);
+  useImperativeHandle(ref, () => ({
+    ask: (t, fid) => send(t, fid),
+    getTranscript: () => messages
+      .filter((m) => m.role !== "system")
+      .map((m) => `${m.role === "user" ? "You" : "Assistant"}: ${m.sections.map((s) => s.text).join(" ")}`)
+      .join("\n"),
+  }), [send, messages]);
 
   useEffect(() => { // greet (or restore the conversation) once
     if (started.current) return;
