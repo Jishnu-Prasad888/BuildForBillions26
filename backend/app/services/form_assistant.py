@@ -27,6 +27,7 @@ from app.services.forms import (
     resolve_field, section_title,
 )
 from app.services.notes import WALLET_LABELS, build_ai_notes, wallet_types
+from app.services.redact import contains_secret, redact
 
 QUESTION_RE = re.compile(
     r"\?|^\s*(what|where|which|how|why|who|when|do|does|is|are|can|could|should|will|explain|tell me)\b|"
@@ -277,6 +278,9 @@ class FormAssistant:
         if cur_id is None and not is_question:
             return self._finish(self._completion_message(), text, scr)
 
+        if contains_secret(text) and not is_question:
+            return self._finish(f("no_secrets", self.lang), text, scr)
+
         sugg = self.state.get("suggestion")
         # 1) accept / reject a profile suggestion
         if sugg and sugg.get("field") == cur_id and not is_question:
@@ -391,10 +395,12 @@ class FormAssistant:
         ai_notes = build_ai_notes(self.db, self.app, self.form, self.lang, self.questions)
         self.app.updated_at = utcnow()
         if user_text:
-            self.db.add(Message(conversation_id=self.conv.id, role="user", content=user_text,
+            self.db.add(Message(conversation_id=self.conv.id, role="user", content=redact(user_text),
                                 meta={"current_field": cur, "focused_field": scr.get("focused_field")}))
+        masked_updates = {k: mask(self._field(k), v) for k, v in self.updates.items()}
         self.db.add(Message(conversation_id=self.conv.id, role="assistant", content=reply, evidence=self.evidence,
-                            meta={"field_updates": self.updates, "mode": self.mode, "screen": {k: v for k, v in scr.items() if k != "vision"}}))
+                            meta={"field_updates": masked_updates, "mode": self.mode,
+                                  "screen": {k: v for k, v in scr.items() if k not in ("vision", "ocr")}}))
         self.conv.state = self.state
         self.conv.updated_at = utcnow()
         self.db.commit()

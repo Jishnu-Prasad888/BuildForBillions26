@@ -10,6 +10,7 @@ from app.kag.templates import t
 from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
 from app.schemas.common import ChatIn, KagQueryIn
+from app.services.redact import redact
 
 router = APIRouter(prefix="/api/assistant", tags=["assistant"])
 kag_router = APIRouter(prefix="/api/kag", tags=["kag"])
@@ -47,7 +48,7 @@ def chat(body: ChatIn, user: User = Depends(get_current_user), db: Session = Dep
 
     q = understand(body.message, lang, context_schemes or last_scheme_ctx or None, _state_code(user))
     q.language = lang
-    db.add(Message(conversation_id=conv.id, role="user", content=body.message, meta={"language": lang}))
+    db.add(Message(conversation_id=conv.id, role="user", content=redact(body.message), meta={"language": lang}))
 
     if q.intent == "why":
         prev = next((m for m in reversed(history_msgs) if m.role == "assistant"), None)

@@ -15,6 +15,7 @@ from app.database.session import SessionLocal
 from app.kag import agent
 from app.models import Conversation, Message, User
 from app.models.common import utcnow
+from app.services.redact import redact
 
 log = logging.getLogger("bot")
 
@@ -212,7 +213,7 @@ def _process_message(telegram_id: str, text: str) -> dict:
         conv.updated_at = utcnow()
 
         # Persist messages
-        db.add(Message(conversation_id=conv.id, role="user", content=text, meta={"language": lang}))
+        db.add(Message(conversation_id=conv.id, role="user", content=redact(text), meta={"language": lang}))
         reply_msg = Message(
             conversation_id=conv.id,
             role="assistant",
