@@ -1,9 +1,13 @@
-import { Camera, FileImage, FileText, Loader2, ShieldCheck, Trash2, UploadCloud } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Camera, FileImage, FileText, Loader2, ShieldCheck, Sparkles, Trash2, UploadCloud } from "lucide-react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
-import type { UserForm } from "@/types";
+import type { Application, UserForm } from "@/types";
 import CameraCapture from "@/components/formassist/CameraCapture";
+import { ApplicationCard, WorkCard } from "@/components/apps/WorkCard";
+import FormCatalog from "@/components/apps/FormCatalog";
+import { CardGridSkeleton, LoadError } from "@/components/apps/Skeleton";
+import { bucketOf } from "@/components/apps/status";
 import { EmptyState, ErrorNote, Modal, PageHeader, Spinner, StatusPill, formatDate } from "@/components/ui";
 
 const ACCEPT = ".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp";
@@ -13,18 +17,30 @@ export function formStatusLabel(f: UserForm): string {
   return f.status === "COMPLETED" ? "COMPLETE" : f.status === "READY" ? "IN_PROGRESS" : f.status === "ANALYZING" ? "EXTRACTING" : f.status;
 }
 
+type Filter = "all" | "open" | "done";
+type Item = { key: string; at: string; open: boolean; node: ReactNode };
+
 export default function Forms() {
   const nav = useNavigate();
   const [forms, setForms] = useState<UserForm[] | null>(null);
+  const [apps, setApps] = useState<Application[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [camera, setCamera] = useState(false);
   const [drag, setDrag] = useState(false);
+  const [filter, setFilter] = useState<Filter>("all");
   const [confirmDelete, setConfirmDelete] = useState<UserForm | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const captureRef = useRef<HTMLInputElement>(null);
 
-  const load = useCallback(() => api.get<UserForm[]>("/api/forms").then(setForms).catch((e) => setError(e.message)), []);
+  const load = useCallback(() => {
+    setLoadError(null);
+    return Promise.all([
+      api.get<UserForm[]>("/api/forms").then(setForms),
+      api.get<Application[]>("/api/applications").then(setApps),
+    ]).catch((e) => setLoadError(e.message));
+  }, []);
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
     if (!forms?.some((f) => f.status === "ANALYZING")) return;
@@ -61,60 +77,102 @@ export default function Forms() {
     }
   };
 
+  const uploadCard = (
+    <div
+      onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
+      onDrop={(e) => { e.preventDefault(); setDrag(false); upload(e.dataTransfer.files?.[0]); }}
+      className={`flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-5 text-center transition-colors ${drag ? "border-forest-500 bg-forest-50" : "border-ink-200 bg-white"}`}
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-forest-50 text-forest-700"><UploadCloud size={24} /></div>
+      <div>
+        <h3 className="font-display text-[1.05rem] font-bold leading-snug text-ink-900">Your own form</h3>
+        <p className="mx-auto mt-0.5 max-w-xs text-sm text-ink-600">Drop a PDF or a photo of any form here. I read it, explain each field and prepare a completed PDF.</p>
+        <p className="mt-1.5 text-xs text-ink-500">PDF, JPG, PNG or WebP · up to {MAX_MB} MB</p>
+      </div>
+      {busy ? (
+        <div className="flex items-center gap-2 font-semibold text-ink-800" role="status"><Spinner /> {busy}</div>
+      ) : (
+        <div className="flex flex-wrap justify-center gap-2">
+          <button className="btn-primary btn-sm" onClick={() => fileRef.current?.click()}><UploadCloud size={15} /> Upload a form</button>
+          <button className="btn-secondary btn-sm" onClick={() => setCamera(true)}><Camera size={15} /> Take photo</button>
+        </div>
+      )}
+      <input ref={fileRef} type="file" accept={ACCEPT} className="hidden" onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ""; }} />
+      <input ref={captureRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ""; }} />
+      <p className="flex items-center gap-1.5 text-xs text-ink-500"><ShieldCheck size={14} className="flex-none text-leaf" /> Private to your account. Your original file is never changed.</p>
+    </div>
+  );
+
+  // Applications and uploads share one list, newest first.
+  const items = useMemo<Item[]>(() => {
+    const fromApps: Item[] = (apps ?? []).map((a) => ({
+      key: `a-${a.id}`, at: a.updated_at, open: bucketOf(a.status) === "active", node: <ApplicationCard app={a} />,
+    }));
+    const fromForms: Item[] = (forms ?? []).map((f) => {
+      const ready = f.status === "READY" || f.status === "COMPLETED";
+      return {
+        key: `f-${f.id}`, at: f.updated_at, open: f.status !== "COMPLETED",
+        node: (
+          <WorkCard
+            icon={f.kind === "pdf" ? <FileText size={20} /> : <FileImage size={20} />}
+            tag="Uploaded form"
+            title={f.original_filename}
+            titleTo={ready ? `/forms/${f.id}` : undefined}
+            meta={`${f.page_count} page${f.page_count === 1 ? "" : "s"} · ${(f.file_size / 1024).toFixed(0)} KB · ${formatDate(f.created_at, true)}`}
+            status={f.status === "ANALYZING"
+              ? <span className="chip bg-amber-50 text-amber-700"><Loader2 size={12} className="animate-spin" /> Reading…</span>
+              : <StatusPill status={formStatusLabel(f)} />}
+            hint={f.status === "FAILED" ? <span className="text-brick">{f.error}</span> : f.output_ready ? "Your completed PDF is ready to download." : f.status === "READY" ? "Read and ready. Open it to fill with the assistant." : undefined}
+            primary={ready ? { label: f.status === "COMPLETED" ? "View form" : "Continue with assistant", to: `/forms/${f.id}`, icon: f.status === "COMPLETED" ? undefined : <Sparkles size={15} /> } : undefined}
+            actions={
+              <>
+                {f.status === "FAILED" && <button className="btn-secondary btn-sm" onClick={async () => { await api.post(`/api/forms/${f.id}/analyze`, { force: true }); load(); }}>Try again</button>}
+                <button className="btn-ghost btn-sm ml-auto text-brick" onClick={() => setConfirmDelete(f)} aria-label={`Delete ${f.original_filename}`}><Trash2 size={16} /></button>
+              </>
+            }
+          />
+        ),
+      };
+    });
+    return [...fromApps, ...fromForms].sort((x, y) => y.at.localeCompare(x.at));
+  }, [apps, forms, load]);
+
+  const shown = items.filter((i) => filter === "all" || (filter === "open" ? i.open : !i.open));
+  const chips: [Filter, string, number][] = [
+    ["all", "All", items.length],
+    ["open", "In progress", items.filter((i) => i.open).length],
+    ["done", "Done", items.filter((i) => !i.open).length],
+  ];
+
   return (
     <div>
-      <PageHeader eyebrow="AI Form Assistant" title="Fill any form with help"
-        subtitle="Upload a PDF or a photo of any form. I read it, explain each field, collect your details and prepare a completed PDF. Your original file is never changed." />
+      <PageHeader eyebrow="AI Form Assistant" title="Fill a form with help"
+        subtitle="Pick a government form or upload your own. The assistant explains every field, takes your answers by voice or typing, and gets it ready to submit." />
 
-      <div
-        onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
-        onDrop={(e) => { e.preventDefault(); setDrag(false); upload(e.dataTransfer.files?.[0]); }}
-        className={`card flex flex-col items-center gap-4 border-2 border-dashed p-8 text-center transition-colors ${drag ? "border-saffron bg-saffron-50" : "border-paper-300"}`}
-      >
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><UploadCloud size={28} /></div>
-        {busy ? (
-          <div className="flex items-center gap-2 font-semibold text-ink-800"><Spinner /> {busy}</div>
-        ) : (
-          <>
-            <div>
-              <div className="font-display text-xl font-bold">Drop a form here</div>
-              <p className="mt-1 text-sm text-ink-600">PDF, JPG, PNG or WebP · up to {MAX_MB} MB · scanned, photographed or digital</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2">
-              <button className="btn-primary" onClick={() => fileRef.current?.click()}><UploadCloud size={17} /> Upload a form</button>
-              <button className="btn-accent" onClick={() => setCamera(true)}><Camera size={17} /> Take Photo</button>
-            </div>
-          </>
+      {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
+
+      <h2 className="mb-3 font-display text-xl font-bold">Start a form</h2>
+      <FormCatalog apps={apps} leading={uploadCard} />
+
+      <div className="mb-3 mt-10 flex flex-wrap items-end justify-between gap-3">
+        <h2 className="font-display text-xl font-bold">Your forms</h2>
+        {items.length > 0 && (
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter your forms">
+            {chips.map(([id, label, n]) => (
+              <button key={id} onClick={() => setFilter(id)} aria-pressed={filter === id}
+                className={`chip px-3 py-1 text-sm ${filter === id ? "bg-forest-800 text-white" : "bg-white text-ink-700 ring-1 ring-ink-200 hover:bg-ink-50"}`}>
+                {label} <span className={filter === id ? "text-forest-200" : "text-ink-400"}>{n}</span>
+              </button>
+            ))}
+          </div>
         )}
-        <input ref={fileRef} type="file" accept={ACCEPT} className="hidden" onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ""; }} />
-        <input ref={captureRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { upload(e.target.files?.[0]); e.target.value = ""; }} />
-        <p className="flex items-center gap-1.5 text-xs text-ink-500"><ShieldCheck size={14} className="text-leaf" /> Private to your account. Only you can open your forms.</p>
       </div>
-      {error && <div className="mt-4"><ErrorNote>{error}</ErrorNote></div>}
-
-      <h2 className="mb-3 mt-8 font-display text-xl font-bold">Your forms</h2>
-      {forms === null ? <Spinner className="h-5 w-5" /> : forms.length === 0 ? (
-        <EmptyState icon={<FileText size={28} />} title="No forms yet">Upload a form to get started.</EmptyState>
+      {loadError ? <LoadError message={loadError} onRetry={load} /> : forms === null || apps === null ? <CardGridSkeleton count={2} /> : items.length === 0 ? (
+        <EmptyState icon={<FileText size={28} />} title="Nothing here yet">Pick a government form above, or upload your own, and it will show up here.</EmptyState>
+      ) : shown.length === 0 ? (
+        <EmptyState title="No forms match this filter" />
       ) : (
-        <ul className="space-y-2.5">
-          {forms.map((f) => (
-            <li key={f.id} className="card flex flex-wrap items-center gap-3 p-4">
-              <div className="text-ink-400">{f.kind === "pdf" ? <FileText size={24} /> : <FileImage size={24} />}</div>
-              <div className="min-w-0 flex-1">
-                {f.status === "READY" || f.status === "COMPLETED" ? (
-                  <Link to={`/forms/${f.id}`} className="block truncate font-semibold text-ink-900 hover:underline">{f.original_filename}</Link>
-                ) : <div className="truncate font-semibold text-ink-900">{f.original_filename}</div>}
-                <div className="text-xs text-ink-500">{f.page_count} page{f.page_count === 1 ? "" : "s"} · {(f.file_size / 1024).toFixed(0)} KB · {formatDate(f.created_at, true)}</div>
-                {f.status === "FAILED" && <div className="mt-1 text-sm text-brick">{f.error}</div>}
-              </div>
-              {f.status === "ANALYZING" ? <span className="chip bg-amber-50 text-amber-700"><Loader2 size={12} className="animate-spin" /> Reading…</span> : <StatusPill status={formStatusLabel(f)} />}
-              {f.output_ready && <span className="chip bg-leaf-50 text-leaf-700 ring-1 ring-leaf-100">PDF ready</span>}
-              {(f.status === "READY" || f.status === "COMPLETED") && <Link to={`/forms/${f.id}`} className="btn-secondary btn-sm">Open</Link>}
-              {f.status === "FAILED" && <button className="btn-secondary btn-sm" onClick={async () => { await api.post(`/api/forms/${f.id}/analyze`, { force: true }); load(); }}>Try again</button>}
-              <button className="btn-ghost btn-sm text-brick" onClick={() => setConfirmDelete(f)} aria-label={`Delete ${f.original_filename}`}><Trash2 size={16} /></button>
-            </li>
-          ))}
-        </ul>
+        <div className="grid gap-4 md:grid-cols-2">{shown.map((i) => <Fragment key={i.key}>{i.node}</Fragment>)}</div>
       )}
 
       {camera && (

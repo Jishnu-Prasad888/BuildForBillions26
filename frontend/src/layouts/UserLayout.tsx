@@ -21,7 +21,7 @@ export default function UserLayout() {
     { to: "/assistant", icon: MessageCircle, label: t("assistant") },
     { to: "/schemes", icon: Search, label: t("schemes") },
     { to: "/applications", icon: FileText, label: t("applications") },
-    { to: "/forms", icon: FileUp, label: "AI Form Assistant" },
+    { to: "/forms", icon: FileUp, label: "Fill a form" },
     { to: "/documents", icon: FolderOpen, label: t("documents") },
     { to: "/notes", icon: NotebookPen, label: t("notes") },
     { to: "/profile", icon: UserRound, label: t("profile") },
