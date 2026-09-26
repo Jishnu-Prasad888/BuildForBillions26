@@ -76,7 +76,7 @@ export default function ApplicationDetail() {
       />
       <div className="mt-6">
         {tab === "overview" && (
-          <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
             <section className="card p-5">
               <h2 className="mb-1 text-lg font-bold">Progress</h2>
               <div className="flex items-center gap-3"><ProgressBar value={app.progress} /><b>{app.progress}%</b></div>
