@@ -114,7 +114,7 @@ export default function UserLayout() {
 
       {moreOpen && (
         <div className="fixed inset-0 z-30 bg-ink-900/30 lg:hidden" onClick={() => setMoreOpen(false)}>
-          <div className="absolute inset-x-0 bottom-[calc(60px+env(safe-area-inset-bottom))] rounded-t-3xl bg-white p-4 shadow-lift" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute inset-x-0 bottom-[calc(60px+env(safe-area-inset-bottom))] rounded-t-lg bg-white p-4 shadow-lift" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 px-2">
               <div className="truncate font-semibold text-ink-900">{user?.full_name}</div>
               <div className="truncate text-xs text-ink-500">{user?.email}</div>

@@ -43,7 +43,7 @@ export default function SchemeDetail() {
               {s.sources?.map((d) => (
                 <li key={d.id}>
                   <div className="font-semibold">{d.title}</div>
-                  <div className="text-ink-500">{d.publisher}{d.is_demo && <span className="chip ml-1 bg-saffron-50 text-saffron-700">demo summary</span>}</div>
+                  <div className="text-ink-500">{d.publisher}{d.is_demo && <span className="chip ml-1 bg-amber-50 text-amber-700">demo summary</span>}</div>
                   {d.url && <a className="inline-flex items-center gap-1 text-ink-700 underline decoration-saffron" href={d.url} target="_blank" rel="noreferrer">{d.url} <ExternalLink size={12} /></a>}
                 </li>
               ))}

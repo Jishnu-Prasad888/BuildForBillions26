@@ -28,7 +28,7 @@ export default function Documents() {
           <tbody className="divide-y divide-paper-300">
             {docs.map((d) => (
               <tr key={d.id} className="cursor-pointer hover:bg-paper-100" onClick={() => setSel(d.id)}>
-                <td className="px-4 py-3 font-semibold text-ink-900">{d.title}{d.is_demo && <span className="chip ml-2 bg-saffron-50 text-saffron-700">demo</span>}</td>
+                <td className="px-4 py-3 font-semibold text-ink-900">{d.title}{d.is_demo && <span className="chip ml-2 bg-amber-50 text-amber-700">demo</span>}</td>
                 <td className="px-4 py-3 text-ink-600">{d.publisher}</td>
                 <td className="px-4 py-3">{d.kind}</td>
                 <td className="px-4 py-3 text-xs">{d.scheme_codes.join(", ")}</td>

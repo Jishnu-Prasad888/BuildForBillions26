@@ -114,7 +114,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
                   <div key={f.field_id} ref={(el) => (refs.current[f.field_id] = el)} data-field-id={f.field_id} onClick={() => onSelect(f.field_id)}
                     className={`rounded-lg border p-3 ${current ? "border-saffron bg-saffron-50/50" : "border-paper-300 bg-white"} ${flashIds.includes(f.field_id) ? "animate-flash" : ""}`}>
                     <div className="mb-1.5 flex items-start gap-2">
-                      {st === "filled" ? <CheckCircle2 size={16} className="mt-0.5 flex-none text-leaf" /> : st === "skipped" ? <CircleDashed size={16} className="mt-0.5 flex-none text-saffron" /> : <Circle size={16} className="mt-0.5 flex-none text-ink-300" />}
+                      {st === "filled" ? <CheckCircle2 size={16} className="mt-0.5 flex-none text-leaf" /> : st === "skipped" ? <CircleDashed size={16} className="mt-0.5 flex-none text-amber" /> : <Circle size={16} className="mt-0.5 flex-none text-ink-300" />}
                       <label htmlFor={`af-${f.field_id}`} className="flex-1 text-sm font-semibold text-ink-800">
                         {f.label}{f.required && st !== "manual" && <span className="text-brick" aria-label="required"> *</span>}
                         {schema.sources[f.field_id] === "assistant" && <span className="ml-1.5 chip bg-saffron-50 text-saffron-700">AI-filled</span>}

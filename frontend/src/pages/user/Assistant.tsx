@@ -103,7 +103,7 @@ export default function Assistant() {
             if (m.role === "user")
               return (
                 <div key={m.id} className="flex justify-end">
-                  <div className="max-w-xl rounded-lg rounded-tr-sm bg-ink-800 px-4 py-3 text-[1.02rem] text-white">{m.content}</div>
+                  <div className="max-w-xl rounded-lg rounded-tr-sm bg-forest-700 px-4 py-3 text-[1.02rem] text-white">{m.content}</div>
                 </div>
               );
             if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
@@ -116,7 +116,7 @@ export default function Assistant() {
             const cards = m.meta?.scheme_cards ?? [];
             const isRef = reference?.id === m.id;
             return (
-              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-2xl" : ""}`}>
+              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-lg" : ""}`}>
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
                   <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">

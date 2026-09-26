@@ -93,7 +93,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border border-ink-200 bg-white shadow-card">
-      <div className="rounded-t-xl bg-ink-800 px-4 py-3 text-white">
+      <div className="rounded-t-lg bg-forest-800 px-4 py-3 text-white">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 font-semibold"><Bot size={18} /> AI Form Assistant</div>
           <LanguageSwitcher compact value={lang} onChange={setLang} />
@@ -109,7 +109,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
               </button>
             </>
           ) : (
-            <button onClick={() => screen.start()} className="flex flex-1 items-center gap-1.5 rounded-md bg-ink-700 px-2 py-1.5 font-semibold text-ink-200 hover:bg-ink-600">
+            <button onClick={() => screen.start()} className="flex flex-1 items-center gap-1.5 rounded-md bg-forest-700 px-2 py-1.5 font-semibold text-forest-100 hover:bg-forest-600">
               <MonitorUp size={14} /> Screen sharing off — share screen
             </button>
           )}

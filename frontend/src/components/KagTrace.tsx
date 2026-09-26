@@ -22,7 +22,7 @@ export default function KagTrace({ meta, cited }: { meta: Record<string, any>; c
         <ol className="mt-2 grid gap-1.5 rounded-lg border border-paper-300 bg-paper-100 p-3 sm:grid-cols-5">
           {steps.map((s, i) => (
             <li key={s.k} className="relative">
-              <div className="flex items-center gap-1.5 font-bold text-ink-700"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-ink-800 text-[0.6rem] text-white">{i + 1}</span>{s.k}</div>
+              <div className="flex items-center gap-1.5 font-bold text-ink-700"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-forest-800 text-[0.6rem] text-white">{i + 1}</span>{s.k}</div>
               <div className="mt-0.5 text-ink-600">{s.v}</div>
             </li>
           ))}

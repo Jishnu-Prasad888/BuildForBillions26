@@ -107,7 +107,7 @@ export default function Forms() {
                 <div className="text-xs text-ink-500">{f.page_count} page{f.page_count === 1 ? "" : "s"} · {(f.file_size / 1024).toFixed(0)} KB · {formatDate(f.created_at, true)}</div>
                 {f.status === "FAILED" && <div className="mt-1 text-sm text-brick">{f.error}</div>}
               </div>
-              {f.status === "ANALYZING" ? <span className="chip bg-saffron-50 text-saffron-700"><Loader2 size={12} className="animate-spin" /> Reading…</span> : <StatusPill status={formStatusLabel(f)} />}
+              {f.status === "ANALYZING" ? <span className="chip bg-amber-50 text-amber-700"><Loader2 size={12} className="animate-spin" /> Reading…</span> : <StatusPill status={formStatusLabel(f)} />}
               {f.output_ready && <span className="chip bg-leaf-50 text-leaf-700 ring-1 ring-leaf-100">PDF ready</span>}
               {(f.status === "READY" || f.status === "COMPLETED") && <Link to={`/forms/${f.id}`} className="btn-secondary btn-sm">Open</Link>}
               {f.status === "FAILED" && <button className="btn-secondary btn-sm" onClick={async () => { await api.post(`/api/forms/${f.id}/analyze`, { force: true }); load(); }}>Try again</button>}

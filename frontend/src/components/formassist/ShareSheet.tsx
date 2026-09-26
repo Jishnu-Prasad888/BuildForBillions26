@@ -121,7 +121,7 @@ export default function ShareSheet({ open, onClose, formId, formName, outputRead
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center" role="dialog" aria-modal="true" aria-label="Share your form">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-sm rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
+      <div className="relative z-10 w-full max-w-sm rounded-t-lg bg-white p-5 shadow-xl sm:rounded-lg">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-display text-xl font-bold text-ink-800">Share</h2>
           <button onClick={onClose} className="rounded-full p-1 text-ink-500 hover:bg-paper-100"><X size={20} /></button>
@@ -129,7 +129,7 @@ export default function ShareSheet({ open, onClose, formId, formName, outputRead
 
         <div className="space-y-2.5">
           <button
-            className="flex w-full items-center gap-3 rounded-xl border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-paper-50 disabled:opacity-50"
+            className="flex w-full items-center gap-3 rounded-lg border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-ink-50 disabled:opacity-50"
             onClick={handleSharePdf} disabled={busy || !outputReady}
           >
             <Share2 size={18} className="flex-none text-saffron-600" />
@@ -140,7 +140,7 @@ export default function ShareSheet({ open, onClose, formId, formName, outputRead
           </button>
 
           <button
-            className="flex w-full items-center gap-3 rounded-xl border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-paper-50 disabled:opacity-50"
+            className="flex w-full items-center gap-3 rounded-lg border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-ink-50 disabled:opacity-50"
             onClick={handleDownload} disabled={busy || !outputReady}
           >
             <Download size={18} className="flex-none text-ink-600" />
@@ -151,7 +151,7 @@ export default function ShareSheet({ open, onClose, formId, formName, outputRead
           </button>
 
           <button
-            className="flex w-full items-center gap-3 rounded-xl border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-paper-50"
+            className="flex w-full items-center gap-3 rounded-lg border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-ink-50"
             onClick={handleCopySummary}
           >
             <Copy size={18} className="flex-none text-ink-600" />
@@ -162,7 +162,7 @@ export default function ShareSheet({ open, onClose, formId, formName, outputRead
           </button>
 
           <button
-            className="flex w-full items-center gap-3 rounded-xl border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-paper-50"
+            className="flex w-full items-center gap-3 rounded-lg border border-paper-300 bg-white px-4 py-3 text-left font-medium text-ink-700 hover:bg-ink-50"
             onClick={handleCopyTranscript}
           >
             <Copy size={18} className="flex-none text-ink-600" />
