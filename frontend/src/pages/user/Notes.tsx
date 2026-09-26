@@ -4,7 +4,8 @@ import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
 import type { AINotes, Application, Note } from "@/types";
 import { AINotesPanel, UserNotesPanel } from "@/components/Notes";
-import { PageHeader } from "@/components/ui";
+import { Sparkles } from "lucide-react";
+import { EmptyState, PageHeader } from "@/components/ui";
 
 export default function Notes() {
   const { t } = useI18n();
@@ -22,7 +23,7 @@ export default function Notes() {
       <div className="grid gap-6 lg:grid-cols-2">
         <UserNotesPanel notes={user} onChange={(u) => setNotes([...u, ...ai])} />
         <div className="space-y-4">
-          {ai.length === 0 && <p className="text-sm text-ink-500">AI notes appear once you start an application.</p>}
+          {ai.length === 0 && <EmptyState icon={<Sparkles />} title={t("ai_notes")}>They appear here once you start an application.</EmptyState>}
           {ai.map((n) => {
             const a = apps.find((x) => x.id === n.application_id);
             return (

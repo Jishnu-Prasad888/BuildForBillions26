@@ -76,7 +76,7 @@ export default function Documents() {
                 <span>{formatDate(d.created_at)}{d.size ? ` · ${(d.size / 1024).toFixed(0)} KB` : ""}</span>
                 <span className="flex gap-1">
                   {d.has_file && <button className="btn-ghost btn-sm" onClick={() => download(d)} aria-label="Download"><Download size={15} /></button>}
-                  <button className="btn-ghost btn-sm hover:text-brick" onClick={async () => { await api.del(`/api/documents/${d.id}`); load(); }} aria-label="Delete"><Trash2 size={15} /></button>
+                  <button className="btn-ghost btn-sm hover:text-brick" onClick={async () => { if (!window.confirm(`Delete "${d.title}" from your wallet?`)) return; await api.del(`/api/documents/${d.id}`); load(); }} aria-label={`Delete ${d.title}`}><Trash2 size={15} /></button>
                 </span>
               </div>
             </div>

@@ -39,21 +39,24 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="eyebrow">{t("welcome_back")}</div>
-        <h1 className="font-display text-[2.2rem] font-bold leading-tight">{user?.full_name?.split(" ")[0]}, {t("what_help").charAt(0).toLowerCase() + t("what_help").slice(1)}</h1>
+        <h1 className="font-display text-[1.75rem] font-bold leading-tight sm:text-[2.2rem]">{user?.full_name?.split(" ")[0]}, {t("what_help").charAt(0).toLowerCase() + t("what_help").slice(1)}</h1>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Phones: one compact row per action. Wider screens: a row of tall tiles. */}
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         {actions.map(({ icon: Icon, title, sub, onClick, primary }) => (
           <button key={title} onClick={onClick}
-            className={`group flex flex-col rounded-2xl border p-5 text-left transition-all hover:-translate-y-0.5 hover:shadow-lift ${primary ? "border-ink-800 bg-ink-800 text-white" : "border-paper-300 bg-white"}`}>
-            <span className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl ${primary ? "bg-saffron text-white" : "bg-saffron-50 text-saffron-700"}`}>
-              <Icon size={22} />
+            className={`group flex items-center gap-4 rounded-2xl border p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-lift sm:flex-col sm:items-start sm:p-5 ${primary ? "border-ink-800 bg-ink-800 text-white" : "border-paper-300 bg-white"}`}>
+            <span className={`flex h-12 w-12 flex-none items-center justify-center rounded-xl sm:mb-1 ${primary ? "bg-saffron text-white" : "bg-saffron-50 text-saffron-700"}`}>
+              <Icon size={24} />
             </span>
-            <span className={`text-lg font-semibold leading-snug ${primary ? "text-white" : "text-ink-900"}`}>{title}</span>
-            <span className={`mt-1 text-sm ${primary ? "text-ink-200" : "text-ink-600"}`}>{sub}</span>
-            <ArrowRight size={18} className={`mt-4 transition-transform group-hover:translate-x-1 ${primary ? "text-saffron" : "text-ink-400"}`} />
+            <span className="min-w-0 flex-1">
+              <span className={`block text-lg font-semibold leading-snug ${primary ? "text-white" : "text-ink-900"}`}>{title}</span>
+              <span className={`mt-0.5 block text-sm ${primary ? "text-ink-200" : "text-ink-600"}`}>{sub}</span>
+            </span>
+            <ArrowRight size={20} className={`flex-none transition-transform group-hover:translate-x-1 sm:mt-auto ${primary ? "text-saffron" : "text-ink-400"}`} />
           </button>
         ))}
       </div>
@@ -67,9 +70,9 @@ export default function Dashboard() {
           <div className="space-y-3">
             {apps.length === 0 && <EmptyState icon={<FileText />} title="No applications yet">Ask the assistant about your situation to get started.</EmptyState>}
             {apps.slice(0, 4).map((a) => (
-              <Link key={a.id} to={`/applications/${a.id}`} className="card block p-4 transition-shadow hover:shadow-lift">
+              <Link key={a.id} to={`/applications/${a.id}`} className="card-link p-4">
                 <div className="flex items-start justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <div className="font-semibold text-ink-900">{a.scheme_name}</div>
                     <div className="text-sm text-ink-500">{a.reference_number ? `Ref ${a.reference_number}` : `Started ${formatDate(a.created_at)}`}{a.next_section && a.progress < 100 ? ` · Next: ${a.next_section}` : ""}</div>
                   </div>
