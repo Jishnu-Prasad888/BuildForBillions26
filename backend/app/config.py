@@ -68,6 +68,13 @@ class Settings(BaseSettings):
 
     TELEGRAM_BOT_TOKEN: str = ""
 
+    # WhatsApp Cloud API (Meta). Leave token/phone id empty to disable.
+    WHATSAPP_TOKEN: str = ""
+    WHATSAPP_PHONE_NUMBER_ID: str = ""
+    WHATSAPP_VERIFY_TOKEN: str = ""
+    WHATSAPP_APP_SECRET: str = ""
+    WHATSAPP_GRAPH_VERSION: str = "v21.0"
+
     # Run the re-embed loop and Telegram bot in this process. Enable in exactly one
     # container when running several API replicas (the bot allows only one poller).
     RUN_BACKGROUND_TASKS: bool = True

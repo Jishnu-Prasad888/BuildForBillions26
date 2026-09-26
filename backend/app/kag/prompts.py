@@ -39,6 +39,8 @@ ANSWER_FORMAT = """Respond ONLY with a JSON object:
 CHANNEL_NOTES = {
     "telegram": ("The answer is shown in a Telegram chat on a phone: short paragraphs, '-' bullets or numbered steps, "
                  "**bold** for scheme names only, no headings or tables, at most about 150 words."),
+    "whatsapp": ("The answer is shown in a WhatsApp chat on a phone: short paragraphs, '-' bullets or numbered steps, "
+                 "**bold** for scheme names only, no headings or tables, at most about 150 words."),
 }
 
 

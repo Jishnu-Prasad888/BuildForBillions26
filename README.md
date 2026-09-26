@@ -14,6 +14,7 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 | [docs/API.md](docs/API.md) | REST API: auth, schemes, assistant, applications, admin, health |
 | [docs/FORM_ASSISTANT.md](docs/FORM_ASSISTANT.md) | AI Form Assistant: upload any form, detect fields, AutoFill, completed PDF |
 | [TELEGRAM_SETUP.md](TELEGRAM_SETUP.md) | End-to-end Telegram bot setup |
+| [WHATSAPP_SETUP.md](WHATSAPP_SETUP.md) | End-to-end WhatsApp bot setup (Meta Cloud API) |
 | [whisper-chat-app/README.md](whisper-chat-app/README.md) | Optional on-device Whisper STT companion app |
 
 ---
@@ -146,6 +147,7 @@ Copy `backend/.env.example`. Important variables:
 | `JWT_SECRET_KEY` | Change outside local demo (the backend refuses the default when `APP_ENV=production`) |
 | `FORMS_DIR`, `MAX_FORM_SIZE_MB`, `MAX_FORM_PAGES` | Private storage and limits for the AI Form Assistant |
 | `TELEGRAM_BOT_TOKEN` | Empty disables the bot |
+| `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET` | WhatsApp Cloud API bot (webhook at `/api/webhooks/whatsapp`); empty token disables it |
 | `DEMO_MODE` | Mock submit / status; forgot-password returns the reset token |
 | `REDIS_URL`, `RATE_LIMIT_*` | Rate limits (`count/period:burst`); Redis shares them across replicas |
 | `RUN_BACKGROUND_TASKS` | Run the Telegram bot and re-embed loop here; exactly one container in production |
