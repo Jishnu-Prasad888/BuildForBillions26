@@ -150,8 +150,10 @@ def keyword_search(db: Session, query: str, limit: int = 20) -> list[tuple[str, 
         {"q": " | ".join(toks)}).all()
     if not rows:
         return []
-    total = db.scalar(text("SELECT count(*) FROM knowledge_chunks")) or 1
-    df = {t: db.scalar(text(f"SELECT count(*) FROM knowledge_chunks WHERE {vec_sql} @@ to_tsquery('simple', :t)"), {"t": t}) or 0 for t in toks}
+    counts = ", ".join(f"count(*) FILTER (WHERE {vec_sql} @@ to_tsquery('simple', :t{i}))" for i in range(len(toks)))
+    row = db.execute(text(f"SELECT count(*), {counts} FROM knowledge_chunks"), {f"t{i}": t for i, t in enumerate(toks)}).one()
+    total = row[0] or 1
+    df = {t: row[i + 1] or 0 for i, t in enumerate(toks)}
     idf = {t: math.log(1 + total / (1 + df[t])) for t in toks}
     scored = []
     for r in rows:
@@ -258,6 +260,7 @@ def _chunk_evidence(chunk, doc, src, score: float, methods: list[str], sim: floa
 
 ANCHOR_SECTIONS = {
     "documents": ("document",), "eligibility": ("eligib",), "how_to_apply": ("apply", "intimate", "should do", "registration"),
+    "amount": ("amount", "benefit", "premium", "claim settlement"),
 }
 
 

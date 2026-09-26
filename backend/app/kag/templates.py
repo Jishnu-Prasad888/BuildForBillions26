@@ -42,14 +42,71 @@ T = {
         "kn": "ಅರ್ಜಿ ಸಲ್ಲಿಸುವ ಮೊದಲು ಅಂತಿಮ ವಿವರಗಳನ್ನು ಅಧಿಕೃತ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ದೃಢೀಕರಿಸಿ.",
     },
     "why_answer": {
-        "en": "I told you this because of the following sources. Open **Sources used** to read the exact evidence text:",
-        "hi": "मैंने यह इन स्रोतों के आधार पर बताया। सटीक पाठ पढ़ने के लिए **उपयोग किए गए स्रोत** खोलें:",
-        "kn": "ಈ ಮೂಲಗಳ ಆಧಾರದ ಮೇಲೆ ನಾನು ಇದನ್ನು ಹೇಳಿದೆ. ನಿಖರವಾದ ಪಠ್ಯವನ್ನು ಓದಲು **ಬಳಸಿದ ಮೂಲಗಳು** ತೆರೆಯಿರಿ:",
+        "en": "I told you this because of the following sources. You can read the exact evidence text in the sources:",
+        "hi": "मैंने यह इन स्रोतों के आधार पर बताया। सटीक पाठ स्रोतों में पढ़ा जा सकता है:",
+        "kn": "ಈ ಮೂಲಗಳ ಆಧಾರದ ಮೇಲೆ ನಾನು ಇದನ್ನು ಹೇಳಿದೆ. ನಿಖರವಾದ ಪಠ್ಯವನ್ನು ಮೂಲಗಳಲ್ಲಿ ಓದಬಹುದು:",
     },
     "why_none": {
         "en": "My previous answer did not rely on any official source.",
         "hi": "मेरा पिछला उत्तर किसी आधिकारिक स्रोत पर आधारित नहीं था।",
         "kn": "ನನ್ನ ಹಿಂದಿನ ಉತ್ತರ ಯಾವುದೇ ಅಧಿಕೃತ ಮೂಲವನ್ನು ಆಧರಿಸಿರಲಿಲ್ಲ.",
+    },
+    "greeting": {
+        "en": "Namaste! I'm Sahayak. Tell me what happened in your own words, for example *\"Heavy rain destroyed my crop\"*, "
+              "or ask about a scheme such as PM-KISAN or crop insurance. I'll find schemes that may help and show the official sources.",
+        "hi": "नमस्ते! मैं सहायक हूँ। अपने शब्दों में बताइए क्या हुआ, जैसे *\"भारी बारिश से मेरी फसल नष्ट हो गई\"*, "
+              "या PM-KISAN, फसल बीमा जैसी किसी योजना के बारे में पूछिए। मैं मदद करने वाली योजनाएँ और उनके आधिकारिक स्रोत दिखाऊँगा।",
+        "kn": "ನಮಸ್ಕಾರ! ನಾನು ಸಹಾಯಕ. ಏನಾಯಿತು ಎಂದು ನಿಮ್ಮ ಮಾತುಗಳಲ್ಲಿ ಹೇಳಿ, ಉದಾ. *\"ಭಾರಿ ಮಳೆಯಿಂದ ನನ್ನ ಬೆಳೆ ನಾಶವಾಯಿತು\"*, "
+              "ಅಥವಾ PM-KISAN, ಬೆಳೆ ವಿಮೆಯಂತಹ ಯೋಜನೆಯ ಬಗ್ಗೆ ಕೇಳಿ. ಸಹಾಯ ಮಾಡಬಹುದಾದ ಯೋಜನೆಗಳು ಮತ್ತು ಅಧಿಕೃತ ಮೂಲಗಳನ್ನು ತೋರಿಸುತ್ತೇನೆ.",
+    },
+    "thanks": {
+        "en": "You're welcome! Ask me anything else about schemes, documents or how to apply.",
+        "hi": "आपका स्वागत है! योजनाओं, दस्तावेज़ों या आवेदन के बारे में और कुछ भी पूछिए।",
+        "kn": "ಸ್ವಾಗತ! ಯೋಜನೆಗಳು, ದಾಖಲೆಗಳು ಅಥವಾ ಅರ್ಜಿ ಸಲ್ಲಿಸುವ ಬಗ್ಗೆ ಇನ್ನೇನಾದರೂ ಕೇಳಿ.",
+    },
+    "about": {
+        "en": "I'm Sahayak, an assistant for government schemes. I can:\n"
+              "- find schemes that fit your situation\n- explain who is eligible and how much you may get\n"
+              "- list the documents you need and how to apply\n\n"
+              "Every answer comes from official sources, which I show you. Try: *\"Heavy rain destroyed my crop.\"*",
+        "hi": "मैं सहायक हूँ, सरकारी योजनाओं का सहायक। मैं:\n"
+              "- आपकी स्थिति के अनुसार योजनाएँ खोज सकता हूँ\n- पात्रता और मिलने वाली राशि बता सकता हूँ\n"
+              "- ज़रूरी दस्तावेज़ और आवेदन का तरीका बता सकता हूँ\n\n"
+              "हर उत्तर आधिकारिक स्रोतों पर आधारित होता है। आज़माइए: *\"भारी बारिश से मेरी फसल नष्ट हो गई।\"*",
+        "kn": "ನಾನು ಸಹಾಯಕ, ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಸಹಾಯಕ. ನಾನು:\n"
+              "- ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಗೆ ಹೊಂದುವ ಯೋಜನೆಗಳನ್ನು ಹುಡುಕುತ್ತೇನೆ\n- ಅರ್ಹತೆ ಮತ್ತು ಸಿಗುವ ಮೊತ್ತವನ್ನು ವಿವರಿಸುತ್ತೇನೆ\n"
+              "- ಬೇಕಾದ ದಾಖಲೆಗಳು ಮತ್ತು ಅರ್ಜಿ ವಿಧಾನ ತಿಳಿಸುತ್ತೇನೆ\n\n"
+              "ಪ್ರತಿ ಉತ್ತರ ಅಧಿಕೃತ ಮೂಲಗಳನ್ನು ಆಧರಿಸಿದೆ. ಪ್ರಯತ್ನಿಸಿ: *\"ಭಾರಿ ಮಳೆಯಿಂದ ನನ್ನ ಬೆಳೆ ನಾಶವಾಯಿತು.\"*",
+    },
+    "out_of_scope_hint": {
+        "en": "I can answer questions about government schemes: which schemes fit your situation, eligibility, benefits, documents and how to apply.",
+        "hi": "मैं सरकारी योजनाओं से जुड़े सवालों के जवाब दे सकता हूँ: कौन-सी योजना आपके लिए है, पात्रता, लाभ, दस्तावेज़ और आवेदन का तरीका।",
+        "kn": "ನಾನು ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಕುರಿತ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಬಲ್ಲೆ: ಯಾವ ಯೋಜನೆ ನಿಮಗೆ ಸೂಕ್ತ, ಅರ್ಹತೆ, ಪ್ರಯೋಜನ, ದಾಖಲೆಗಳು ಮತ್ತು ಅರ್ಜಿ ವಿಧಾನ.",
+    },
+    "next_apply_chat": {
+        "en": "Tap a scheme below to see its documents, eligibility and how to apply.",
+        "hi": "दस्तावेज़, पात्रता और आवेदन का तरीका देखने के लिए नीचे किसी योजना पर टैप करें।",
+        "kn": "ದಾಖಲೆಗಳು, ಅರ್ಹತೆ ಮತ್ತು ಅರ್ಜಿ ವಿಧಾನ ನೋಡಲು ಕೆಳಗಿನ ಯೋಜನೆಯನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.",
+    },
+    "amount_intro": {
+        "en": "Benefit under **{scheme}**:",
+        "hi": "**{scheme}** के तहत लाभ:",
+        "kn": "**{scheme}** ಅಡಿಯಲ್ಲಿ ಪ್ರಯೋಜನ:",
+    },
+    "apply_intro": {
+        "en": "How to apply for **{scheme}**:",
+        "hi": "**{scheme}** के लिए आवेदन कैसे करें:",
+        "kn": "**{scheme}** ಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸುವುದು ಹೇಗೆ:",
+    },
+    "apply_portal": {
+        "en": "Apply through: {portal}",
+        "hi": "आवेदन यहाँ करें: {portal}",
+        "kn": "ಅರ್ಜಿ ಸಲ್ಲಿಸುವ ಸ್ಥಳ: {portal}",
+    },
+    "other_schemes": {
+        "en": "I answered for {scheme}. You can also ask about: {others}.",
+        "hi": "मैंने {scheme} के लिए बताया। आप इनके बारे में भी पूछ सकते हैं: {others}।",
+        "kn": "ನಾನು {scheme} ಬಗ್ಗೆ ಹೇಳಿದೆ. ಇವುಗಳ ಬಗ್ಗೆಯೂ ಕೇಳಬಹುದು: {others}.",
     },
     "unverified": {
         "en": "_Note: I could not link this answer to a specific official source. Please verify it._",

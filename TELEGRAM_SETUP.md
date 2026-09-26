@@ -128,57 +128,72 @@ Heavy rain destroyed my crop.
 ```
 
 The bot will:
-1. Identify the life event (`crop_damage`).
+1. Identify the life event (`CROP_DAMAGE`).
 2. Query the Neo4j knowledge graph for matching schemes.
 3. Retrieve supporting evidence chunks from PostgreSQL/pgvector.
-4. Ask the LLM to explain the result using only retrieved facts.
-5. Reply with a grounded answer and a **Show Evidence** button.
+4. Ask the LLM to explain the result using only retrieved facts (or compose a deterministic, cited answer if no LLM is running).
+5. Reply with a short answer, one button per scheme, and a **📚 Sources** button.
+
+You can then keep chatting. The bot remembers the last few messages, so follow-ups like *"how do I apply for it?"* or *"why did you tell me this?"* work. Messages typed in Hindi or Kannada are answered in that language.
 
 ### Available commands
 
 | Command | What it does |
 |---|---|
-| `/start` | Welcome message and usage instructions |
+| `/start` | Welcome message and example questions |
 | `/help` | Detailed help |
 | `/language` | Switch between English, Hindi (हिन्दी), Kannada (ಕನ್ನಡ) |
+| `/new` | Start a fresh conversation (forget earlier schemes) |
 | `/sources` | Show the sources cited in the last answer |
+
+The command menu is registered with Telegram automatically in all three languages when the bot starts.
 
 ### Example conversation
 
 ```
 You:   Heavy rain destroyed my crop.
 
-Bot:   🌧️ I understand you're dealing with crop damage caused by heavy rain.
-       I can check the available government information.
-       Which state are you in?
-       [ Karnataka ]  [ Other State ]
+Bot:   I'm sorry to hear that. It sounds like you are dealing with Crop Damage.
+       Based on the official sources available to me, these schemes may help:
 
-You:   Karnataka
+       Crop Loss Input Subsidy (Disaster Relief) — Relief for farmers whose crops
+       are damaged by notified natural calamities…
+       • Benefit: Input subsidy per hectare of affected area…
 
-Bot:   🌾 I found information about schemes and assistance related to
-       crop loss in Karnataka. To determine which ones may apply,
-       I need to know what type of crop was affected.
-       What crop was damaged?
+       Pradhan Mantri Fasal Bima Yojana (PMFBY) — Crop insurance for notified crops…
+       …
 
-You:   Paddy
+       Tap a scheme below to see its documents, eligibility and how to apply.
 
-Bot:   Based on the available information, I found 2 potentially
-       relevant schemes.
+       [ ℹ️ Crop Damage Assistance ]
+       [ ℹ️ Crop Insurance Claim ]
+       [ ℹ️ PM-KISAN ]
+       [ ℹ️ Crop Loan Relief ]
+       [ 📚 Sources (8) ]
 
-       1️⃣ PMFBY – Pradhan Mantri Fasal Bima Yojana
-       Possible relevance: crop damage caused by rainfall
+(tap "Crop Insurance Claim")
 
-       2️⃣ Crop Damage Assistance (Karnataka SDRF)
-       Possible relevance: agricultural loss assistance
+Bot:   Pradhan Mantri Fasal Bima Yojana (PMFBY) – Crop Insurance Claim
+       💰 Benefit: Insurance claim for yield loss / localized damage…
+       🌐 Apply at: PMFBY official portal
+       What would you like to know?
+       [ 📄 Documents ] [ ✅ Eligibility ]
+       [ 📝 How to apply ] [ 💰 Benefit ]
 
+(tap "How to apply")
+
+Bot:   ❓ How do I apply for Crop Insurance Claim?
+       1. An insured farmer should intimate the loss within 72 hours…
+       2. The loss can be reported through the Crop Insurance mobile app, …
        🔎 Sources used: 2
-       1. Karnataka Agriculture Department
-       2. Government Agriculture Guidelines
+       [ 📚 Sources (2) ]
 
-       [ 📚 Show Evidence (2) ]
+You:   why did you tell me this?
+
+Bot:   I told you this because of the following sources…
 ```
 
-Tapping **Show Evidence** sends a follow-up message with the exact text chunks that were retrieved, including publisher, document title, section, and chunk ID.
+Tapping **📚 Sources** sends the exact text chunks behind that answer, with publisher, document title, section, link and chunk ID.
 
 ---
 

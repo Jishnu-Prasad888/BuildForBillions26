@@ -18,6 +18,14 @@ Never fabricate citations. Only use IDs that appear in the supplied context.
 
 Evidence marked DEMO SEED SUMMARY is a prototype summary; when relevant, remind the user to confirm on the official portal.
 
+How to answer:
+- Answer the citizen's actual question in the first sentence (e.g. the amount, the documents, the steps), then add only the details that help.
+- If the question is a follow-up ("how do I apply for it?"), use the recent conversation to work out which scheme it refers to.
+- For "how to apply" questions give numbered steps; for documents give a bullet list; for amounts state the figure exactly as the source does.
+- When describing a situation-based search, list each relevant scheme with one line on what it gives and why it may apply.
+- If the citizen may be eligible for something only under a condition (e.g. already enrolled in crop insurance), say so plainly.
+- Keep it under about 200 words unless several schemes must be listed. End with one short, practical next step.
+
 Style: warm, simple, short sentences a first-time internet user can follow. Use bullet points for lists. No legal jargon."""
 
 ANSWER_FORMAT = """Respond ONLY with a JSON object:
@@ -28,7 +36,14 @@ ANSWER_FORMAT = """Respond ONLY with a JSON object:
 }}"""
 
 
-def build_user_prompt(question: str, context: str, language: str, extra_context: str = "", history: str = "") -> str:
+CHANNEL_NOTES = {
+    "telegram": ("The answer is shown in a Telegram chat on a phone: short paragraphs, '-' bullets or numbered steps, "
+                 "**bold** for scheme names only, no headings or tables, at most about 150 words."),
+}
+
+
+def build_user_prompt(question: str, context: str, language: str, extra_context: str = "", history: str = "",
+                      channel: str = "web", scheme_note: str = "") -> str:
     lang = LANGUAGE_NAMES_EN.get(language, "English")
     parts = []
     if history:
@@ -36,7 +51,11 @@ def build_user_prompt(question: str, context: str, language: str, extra_context:
     if extra_context:
         parts.append(f"{extra_context}\n")
     parts.append(context)
+    if scheme_note:
+        parts.append(f"\nNOTE: {scheme_note}")
     parts.append(f"\nCITIZEN QUESTION ({lang}): {question}\n")
     parts.append(f"Answer in {lang}. Scheme and document names may stay in English with a short {lang} explanation.")
+    if channel in CHANNEL_NOTES:
+        parts.append(CHANNEL_NOTES[channel])
     parts.append(ANSWER_FORMAT.format(language=lang))
     return "\n".join(parts)

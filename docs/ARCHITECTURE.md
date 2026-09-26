@@ -339,10 +339,11 @@ flowchart TD
 - Language: `en` / `hi` / `kn` from script, request, or profile.
 - Retrieval language: LLM translation when available, else glossary.
 - Life event from multilingual keywords on the graph.
-- Intent: discover, documents, eligibility, how-to-apply, amount, why.
+- Intent: discover, documents, eligibility, how-to-apply, amount, why, plus small talk (greeting, thanks, about).
 - Mentioned scheme names; state filter from profile (`Karnataka` → `KA`).
+- Follow-ups ("how do I apply for it?") inherit the conversation's schemes (`from_context`); with one or two of them, their names are added to the retrieval query so document search finds the right text.
 
-**Why** intent in `/api/assistant/chat` does not re-retrieve: it restates evidence from the last assistant message.
+`agent.answer` short-circuits two cases without retrieval: small talk gets a localized template reply, and **why** (when the caller passes `previous_evidence`) restates the evidence of the last assistant message. Web chat and Telegram share this. `channel="telegram"` makes the LLM prompt and the deterministic fallback shorter (scheme details move to buttons). The deterministic fallback composes discover, documents, eligibility, amount and how-to-apply answers from graph facts plus the scheme's own linked document chunk.
 
 ### 6.2 Retrieval
 
@@ -473,7 +474,14 @@ Typical Compose: `LLM_PROVIDER=ollama`, `LLM_MODEL=qwen3:8b`, `EMBEDDING_MODEL=n
 
 `backend/app/bot/`: `telegram.py` (lifespan polling), `handlers.py`, `keyboards.py`, `formatter.py`.
 
-Users keyed by `telegram_id`. Empty token disables the bot; API still runs.
+Users keyed by `telegram_id` (language preset from the Telegram client language). Empty token disables the bot; API still runs.
+
+- Every text message runs `agent.answer(..., channel="telegram")` with the last six messages as history, the conversation's schemes as follow-up context, and the previous reply's evidence for "why" questions.
+- The reply language follows the script the citizen typed (Hindi/Kannada), otherwise their `/language` choice.
+- Answers carry one button per suggested scheme. A scheme button opens a card (benefit, department, portal) with **Documents / Eligibility / How to apply / Benefit** buttons, each of which asks KAG a focused question about that scheme.
+- **Sources** buttons only return evidence of messages that belong to the tapping user.
+- `concurrent_updates` is on so one slow LLM answer does not block other citizens; a per-user lock keeps each user's own turns in order. A typing indicator stays on while the pipeline runs, long replies are split at paragraph boundaries, and failures return a friendly message instead of silence.
+- Commands: `/start`, `/help`, `/language`, `/new` (fresh conversation), `/sources`. Voice notes, photos and files get a "please type" reply.
 
 ```mermaid
 flowchart TB
