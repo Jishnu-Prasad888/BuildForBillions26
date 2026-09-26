@@ -42,9 +42,9 @@ export default function Review() {
     return (
       <div className="mx-auto max-w-xl py-10 text-center">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-leaf-50 text-leaf"><PartyPopper size={32} /></div>
-        <h1 className="font-display text-3xl font-bold">Application recorded</h1>
+        <h1 className="page-title">Application recorded</h1>
         <p className="mt-2 text-ink-600">Reference number</p>
-        <div className="mt-1 font-mono text-2xl font-bold text-ink-900">{done.reference_number}</div>
+        <div className="mt-1 font-mono text-xl font-bold text-ink-900">{done.reference_number}</div>
         <p className="mx-auto mt-4 max-w-md rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           Demo mode: this submission is recorded in the prototype only. It was <b>not</b> sent to any government portal.
         </p>
@@ -74,7 +74,7 @@ export default function Review() {
                 return (
                   <div key={f.id}>
                     <dt className="text-xs font-semibold uppercase tracking-wide text-ink-500">{fieldLabel(f, lang, app.form_data)}</dt>
-                    <dd className={`mt-0.5 flex items-center gap-1.5 text-[1.02rem] ${ok ? "text-ink-900" : "text-brick"}`}>
+                    <dd className={`mt-0.5 flex items-center gap-1.5 text-[0.95rem] ${ok ? "text-ink-900" : "text-brick"}`}>
                       {ok && <CheckCircle2 size={15} className="text-leaf" />}{ok ? displayValue(f, v, lang, !reveal) : "Missing"}
                     </dd>
                   </div>
@@ -89,7 +89,7 @@ export default function Review() {
           <ErrorNote>Please complete {missing.length} required field(s) before submitting: {missing.map((f) => f.label).join(", ")}.</ErrorNote>
         ) : (
           <>
-            <label className="flex items-start gap-3 text-[1.02rem]">
+            <label className="flex items-start gap-3 text-[0.95rem]">
               <input type="checkbox" className="mt-1 h-5 w-5 accent-ink-800" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
               <span>I have checked the information above and confirm it is correct. I understand this is a <b>demo</b> and the application is <b>not</b> sent to any government portal.</span>
             </label>

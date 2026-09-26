@@ -70,7 +70,7 @@ export function UserNotesPanel({ notes, applicationId, onChange, title, bare = f
       {!bare && (
         <div className="mb-2 flex items-center gap-2">
           <StickyNote size={18} className="text-saffron-600" />
-          <h3 className="font-semibold uppercase tracking-wide text-ink-800">{title ?? t("my_notes")}</h3>
+          <h3 className="panel-title">{title ?? t("my_notes")}</h3>
         </div>
       )}
       <div className={`eyebrow ${bare ? "" : "mt-2"}`}>Things I need</div>
@@ -97,7 +97,7 @@ export function AINotesPanel({ data, flash }: { data?: AINotes | null; flash?: b
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Bot size={18} className="text-ink-600" />
-          <h3 className="font-semibold uppercase tracking-wide text-ink-800">{t("ai_notes")}</h3>
+          <h3 className="panel-title">{t("ai_notes")}</h3>
         </div>
         <span className="text-[0.7rem] text-ink-400">auto · {formatDate(data.updated_at, true)}</span>
       </div>

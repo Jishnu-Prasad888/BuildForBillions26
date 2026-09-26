@@ -77,7 +77,7 @@ export default function Forms() {
         ) : (
           <>
             <div>
-              <div className="font-display text-xl font-bold">Drop a form here</div>
+              <div className="text-lg font-bold">Drop a form here</div>
               <p className="mt-1 text-sm text-ink-600">PDF, JPG, PNG or WebP · up to {MAX_MB} MB · scanned, photographed or digital</p>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
@@ -92,7 +92,7 @@ export default function Forms() {
       </div>
       {error && <div className="mt-4"><ErrorNote>{error}</ErrorNote></div>}
 
-      <h2 className="mb-3 mt-8 font-display text-xl font-bold">Your forms</h2>
+      <h2 className="mb-3 mt-8 text-lg font-bold">Your forms</h2>
       {forms === null ? <SkeletonList rows={2} className="h-16" /> : forms.length === 0 ? (
         <EmptyState icon={<FileText size={28} />} title="No forms yet">Upload a form to get started.</EmptyState>
       ) : (

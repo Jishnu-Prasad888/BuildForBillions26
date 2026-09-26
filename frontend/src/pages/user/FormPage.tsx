@@ -157,7 +157,7 @@ export default function FormPage() {
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_410px]">
         <aside className="hidden min-h-0 space-y-4 overflow-y-auto pb-6 lg:block">
           <section className="card p-4">
-            <h3 className="mb-2 font-semibold uppercase tracking-wide text-ink-800">{t("form_progress")}</h3>
+            <h3 className="panel-title mb-2">{t("form_progress")}</h3>
             <ProgressBar value={progress} />
             <ul className="mt-3 space-y-0.5 text-[0.88rem]">
               {fields.map((f) => {
@@ -193,7 +193,7 @@ export default function FormPage() {
           ) : (
             <div className="card flex h-full flex-col items-center justify-center p-8 text-center">
               <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><MonitorSmartphone size={32} /></div>
-              <h2 className="font-display text-2xl font-bold">Need help with this form?</h2>
+              <h2 className="text-xl font-bold">Need help with this form?</h2>
               <p className="mt-2 text-ink-600">The assistant can look at the form on your screen, explain each field in your language and fill in what you tell it.</p>
               <button className="btn-accent mt-6 px-6 py-3 text-base" onClick={() => setStartOpen(true)}><Sparkles size={18} /> {t("help_me_fill_this")}</button>
               {app.progress > 0 && <p className="mt-3 text-sm text-ink-500">You're {app.progress}% done{app.last_completed_section ? ` · last completed: ${app.last_completed_section}` : ""}.</p>}

@@ -38,7 +38,7 @@ export default function SchemeDetail() {
         <div className="space-y-4">
           <SchemeCard scheme={s} compact />
           <section className="card p-5">
-            <h2 className="mb-2 flex items-center gap-2 font-bold"><ShieldCheck size={18} className="text-leaf" /> Sources</h2>
+            <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><ShieldCheck size={18} className="text-leaf" /> Sources</h2>
             <ul className="space-y-2 text-sm">
               {s.sources?.map((d) => (
                 <li key={d.id}>
