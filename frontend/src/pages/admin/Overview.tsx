@@ -44,7 +44,7 @@ export default function Overview() {
   return (
     <div>
       <PageHeader eyebrow="Admin" title="Knowledge base overview" subtitle={`Last indexed: ${formatDate(d.last_indexed, true)} · Vector store: PostgreSQL ${d.vector_backend} · Graph: ${d.graph.backend}`} />
-      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {stats.map(({ icon: Icon, label, value, to }) => (
           <Link key={label} to={to} className="card p-4 hover:shadow-lift">
             <Icon size={18} className="text-saffron-600" />
@@ -54,8 +54,8 @@ export default function Overview() {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
-        <section className="card p-5">
+      <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <section className="card min-w-0 p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold">AI system</h2>
             <span className={`chip ${ai.status === "connected" ? "bg-leaf-50 text-leaf-700" : "bg-saffron-50 text-saffron-700"}`}>{ai.status}</span>
@@ -64,13 +64,13 @@ export default function Overview() {
             <div className="rounded-lg border border-paper-300 p-3">
               <div className="eyebrow flex items-center gap-1.5"><Bot size={13} /> LLM</div>
               <div className="mt-1 font-semibold capitalize">{ai.llm_provider}</div>
-              <div className="font-mono text-sm text-ink-600">{ai.llm_model}</div>
+              <div className="break-all font-mono text-sm text-ink-600">{ai.llm_model}</div>
               <div className="mt-1 flex items-center gap-1.5 text-sm"><Dot ok={ai.llm_status === "connected"} warn={ai.fallback_active.llm} /> {ai.llm_status === "connected" ? "Connected" : ai.fallback_active.llm ? "Offline · deterministic fallback" : "Unavailable"}</div>
             </div>
             <div className="rounded-lg border border-paper-300 p-3">
               <div className="eyebrow flex items-center gap-1.5"><Cpu size={13} /> Embeddings</div>
               <div className="mt-1 font-semibold capitalize">{ai.embedding_provider}</div>
-              <div className="font-mono text-sm text-ink-600">{ai.embedding_model} · {ai.embedding_dim}d</div>
+              <div className="break-all font-mono text-sm text-ink-600">{ai.embedding_model} · {ai.embedding_dim}d</div>
               <div className="mt-1 flex items-center gap-1.5 text-sm"><Dot ok={ai.embedding_status === "connected"} warn={ai.fallback_active.embeddings} /> {ai.embedding_status === "connected" ? "Connected" : ai.fallback_active.embeddings ? "Offline · lexical fallback" : "Unavailable"}</div>
             </div>
             <div className="rounded-lg border border-paper-300 p-3 sm:col-span-2">
@@ -90,7 +90,7 @@ export default function Overview() {
           <p className="mt-3 text-xs text-ink-500">Switch providers (Ollama / OpenAI / Kimi) by editing <code>backend/.env</code> — no code changes. API keys are never shown here.</p>
         </section>
 
-        <section className="card p-5">
+        <section className="card min-w-0 p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-bold">Recent ingestion</h2>
             <Link to="/admin/ingestion" className="text-sm font-semibold text-ink-600">All jobs →</Link>

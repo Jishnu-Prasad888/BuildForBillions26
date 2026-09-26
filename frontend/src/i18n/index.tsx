@@ -51,6 +51,14 @@ const D: Dict = {
   add_to_notes: { en: "Add to my notes", hi: "मेरे नोट्स में जोड़ें", kn: "ನನ್ನ ಟಿಪ್ಪಣಿಗಳಿಗೆ ಸೇರಿಸಿ" },
   language: { en: "Language", hi: "भाषा", kn: "ಭಾಷೆ" },
   speak_answers: { en: "Read answers aloud", hi: "उत्तर पढ़कर सुनाएँ", kn: "ಉತ್ತರಗಳನ್ನು ಓದಿ ಹೇಳಿ" },
+  home: { en: "Home", hi: "होम", kn: "ಮುಖಪುಟ" },
+  more: { en: "More", hi: "और", kn: "ಇನ್ನಷ್ಟು" },
+  how_to_use: { en: "How to use", hi: "कैसे इस्तेमाल करें", kn: "ಹೇಗೆ ಬಳಸುವುದು" },
+  admin_console: { en: "Admin console", hi: "एडमिन कंसोल", kn: "ಆಡ್ಮಿನ್ ಕನ್ಸೋಲ್" },
+  close: { en: "Close", hi: "बंद करें", kn: "ಮುಚ್ಚಿ" },
+  listen: { en: "Listen", hi: "सुनें", kn: "ಕೇಳಿ" },
+  fill_field: { en: "Fill field", hi: "भरें", kn: "ತುಂಬಿ" },
+  dont_fill: { en: "Don't fill", hi: "न भरें", kn: "ತುಂಬಬೇಡಿ" },
 };
 
 interface I18nCtx {
@@ -77,3 +85,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
 export const useI18n = () => useContext(Ctx);
 export const speechLang = (l: Lang) => LANGUAGES.find((x) => x.code === l)?.speech ?? "en-IN";
+
+/** Inline trilingual text for long-form pages (landing, guide) that would bloat the shared dictionary. */
+export type Tri = Record<Lang, string>;
+export const useTr = () => {
+  const { lang } = useI18n();
+  return (v: Tri) => v[lang] ?? v.en;
+};

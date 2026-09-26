@@ -24,9 +24,9 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
   };
 
   return (
-    <div className="card flex flex-col p-4">
+    <div className="card flex flex-col p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <div className="font-semibold leading-snug text-ink-900">{scheme.display_name}</div>
           {scheme.department && (
             <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-500">
@@ -59,13 +59,14 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
           </ul>
         </div>
       )}
-      <div className="mt-4 flex flex-wrap items-center gap-2 pt-1">
-        <button className="btn-accent btn-sm" onClick={apply} disabled={busy}>
+      {/* mt-auto pins the actions to the bottom so buttons line up across a row of cards. */}
+      <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
+        <button className="btn-accent" onClick={apply} disabled={busy}>
           {busy ? <Spinner /> : null}
-          {scheme.form_id ? t("apply") : t("track")} <ArrowRight size={15} />
+          {scheme.form_id ? t("apply") : t("track")} <ArrowRight size={16} />
         </button>
-        <button className="btn-ghost btn-sm" onClick={() => nav(`/schemes/${scheme.code}`)}>
-          Details
+        <button className="btn-secondary" onClick={() => nav(`/schemes/${scheme.code}`)}>
+          See details
         </button>
         {scheme.form_id && <span className="text-xs text-ink-500">Guided form available (demo)</span>}
       </div>

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  html { font-size: 16.5px; }
+  html { font-size: 16.5px; scroll-behavior: smooth; }
   body { @apply bg-paper text-ink-800 antialiased; }
   h1, h2, h3 { @apply text-ink-900; }
   :focus-visible { @apply outline-none ring-2 ring-saffron ring-offset-2 ring-offset-paper; }
@@ -11,25 +11,47 @@
 }
 
 @layer components {
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[0.95rem] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed; }
+  /* Buttons: every size keeps at least a 44px touch target except btn-sm (36px) for dense rows. */
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[0.95rem] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-primary { @apply btn bg-ink-800 text-white hover:bg-ink-700; }
   .btn-accent { @apply btn bg-saffron text-white hover:bg-saffron-600; }
   .btn-secondary { @apply btn border border-ink-200 bg-white text-ink-800 hover:bg-ink-50; }
   .btn-ghost { @apply btn text-ink-700 hover:bg-ink-100; }
   .btn-danger { @apply btn border border-brick-100 bg-white text-brick hover:bg-brick-50; }
-  .btn-sm { @apply px-3 py-1.5 text-sm; }
-  .card { @apply rounded-xl border border-paper-300 bg-white shadow-card; }
-  .input { @apply w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-[0.98rem] text-ink-900 placeholder:text-ink-400 focus:border-ink-500 focus:outline-none focus:ring-2 focus:ring-ink-200; }
+  .btn-sm { @apply min-h-[36px] rounded-lg px-3 py-1.5 text-sm; }
+  .btn-lg { @apply min-h-[54px] rounded-2xl px-6 py-3.5 text-lg; }
+
+  .card { @apply rounded-2xl border border-paper-300 bg-white shadow-card; }
+  .card-link { @apply card block transition-all hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-lift; }
+  .input { @apply min-h-[44px] w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-[0.98rem] text-ink-900 placeholder:text-ink-400 focus:border-ink-500 focus:outline-none focus:ring-2 focus:ring-ink-200; }
   .label { @apply mb-1.5 block text-sm font-semibold text-ink-700; }
-  .chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+  .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold; }
   .eyebrow { @apply text-xs font-bold uppercase tracking-[0.08em] text-ink-500; }
+  .link { @apply font-semibold text-ink-900 underline decoration-saffron decoration-2 underline-offset-4 hover:text-saffron-700; }
+  .section-title { @apply text-lg font-bold text-ink-900; }
   .cite { @apply mx-0.5 inline-flex h-[1.25rem] min-w-[1.25rem] -translate-y-[1px] cursor-pointer items-center justify-center rounded bg-saffron-50 px-1 align-middle text-[0.7rem] font-bold text-saffron-700 ring-1 ring-saffron-100 hover:bg-saffron-100; }
   .prose-chat p { @apply my-1.5 leading-relaxed; }
   .prose-chat ul { @apply my-1.5 list-disc space-y-1 pl-5; }
   .prose-chat ol { @apply my-1.5 list-decimal space-y-1 pl-5; }
   .prose-chat blockquote { @apply my-2 border-l-4 border-paper-300 bg-paper-100 px-3 py-1.5 text-ink-700; }
   .prose-chat strong { @apply font-semibold text-ink-900; }
+
+  /* Long-form reading pages (docs, guide). */
+  .prose-doc { @apply max-w-none text-[1.02rem] leading-relaxed text-ink-700; }
+  .prose-doc h2 { @apply mb-3 mt-12 scroll-mt-24 font-display text-2xl font-bold text-ink-900 first:mt-0; }
+  .prose-doc h3 { @apply mb-2 mt-7 text-lg font-bold text-ink-900; }
+  .prose-doc p { @apply my-3; }
+  .prose-doc ul { @apply my-3 list-disc space-y-1.5 pl-6; }
+  .prose-doc ol { @apply my-3 list-decimal space-y-1.5 pl-6; }
+  .prose-doc code { @apply rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.88em] text-ink-800; }
+  .prose-doc a { @apply link; }
+  .prose-doc table { @apply my-4 w-full border-collapse text-sm; }
+  .prose-doc th { @apply border-b-2 border-paper-300 px-3 py-2 text-left font-semibold text-ink-900; }
+  .prose-doc td { @apply border-b border-paper-300 px-3 py-2 align-top; }
 }
 
 .tricolor-rule { background: linear-gradient(90deg, #d9731a 0 33.3%, #ffffff 33.3% 66.6%, #1f7a4d 66.6% 100%); }
 .demo-watermark { background-image: repeating-linear-gradient(-45deg, rgba(217,115,26,.035) 0 18px, transparent 18px 36px); }
+/* Keeps content clear of the fixed mobile tab bar and the phone's home indicator. */
+.pb-safe { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+@media (min-width: 1024px) { .pb-safe { padding-bottom: 2.5rem; } }

@@ -175,8 +175,8 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
                   <div className="text-ink-600">Fill <b>{m.pendingFill.label}</b> with:</div>
                   <div className="my-1 font-semibold text-ink-900">“{m.pendingFill.display}”</div>
                   <div className="mt-2 flex gap-2">
-                    <button className="btn-primary btn-sm" disabled={busy} onClick={() => send(YES_WORD[lang])}><Check size={15} /> Fill field</button>
-                    <button className="btn-secondary btn-sm" disabled={busy} onClick={() => send(NO_WORD[lang])}><X size={15} /> Don't fill</button>
+                    <button className="btn-primary btn-sm" disabled={busy} onClick={() => send(YES_WORD[lang])}><Check size={15} /> {t("fill_field")}</button>
+                    <button className="btn-secondary btn-sm" disabled={busy} onClick={() => send(NO_WORD[lang])}><X size={15} /> {t("dont_fill")}</button>
                   </div>
                 </div>
               )}
