@@ -25,7 +25,7 @@ interface Props {
   initial: AssistResponse;
   lang: Lang;
   setLang: (l: Lang) => void;
-  screen: { active: boolean; start: () => Promise<boolean>; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> };
+  screen: { active: boolean; error: string | null; start: () => Promise<boolean>; stop: () => void; grabFrame: () => string | null; videoRef: React.MutableRefObject<HTMLVideoElement | null> };
   collectScreen: () => ScreenContext;
   onResponse: (r: AssistResponse) => void;
   onAddNote: (content: string, item_type: "todo" | "question") => Promise<void>;
@@ -50,6 +50,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
   const [micOn, setMicOn] = useState(true);
   const [typing, setTyping] = useState(false);
   const [added, setAdded] = useState<string[]>([]);
+  const [bigPreview, setBigPreview] = useState(true);
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -123,17 +124,37 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
           <div className="flex items-center gap-2 font-semibold"><Bot size={18} /> AI Form Assistant</div>
           <LanguageSwitcher compact value={lang} onChange={setLang} />
         </div>
-        <div className="mt-2.5 grid grid-cols-2 gap-1.5 text-xs">
-          <button onClick={() => (screen.active ? screen.stop() : screen.start())} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${screen.active ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
-            {screen.active ? <MonitorUp size={14} /> : <MonitorOff size={14} />} Screen sharing: {screen.active ? "ON" : "OFF"}
-          </button>
-          <button onClick={() => { const v = !micOn; setMicOn(v); if (!v) voice.stop(); }} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${micOn ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
-            {micOn ? <Mic size={14} /> : <MicOff size={14} />} Microphone: {micOn ? "ON" : "OFF"}
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-xs">
+          {screen.active ? (
+            <>
+              <span role="status" className="flex flex-1 items-center gap-1.5 rounded-md bg-leaf px-2 py-1.5 font-semibold">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white" /> Screen sharing active
+              </span>
+              <button onClick={screen.stop} className="flex items-center gap-1.5 rounded-md bg-brick px-2 py-1.5 font-semibold hover:bg-brick/90">
+                <MonitorOff size={14} /> Stop Sharing
+              </button>
+            </>
+          ) : (
+            <button onClick={() => screen.start()} className="flex flex-1 items-center gap-1.5 rounded-md bg-ink-700 px-2 py-1.5 font-semibold text-ink-200 hover:bg-ink-600">
+              <MonitorUp size={14} /> Screen sharing off — share screen
+            </button>
+          )}
+          <button onClick={() => { const v = !micOn; setMicOn(v); if (!v) voice.stop(); }} aria-pressed={micOn} className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 font-semibold ${micOn ? "bg-leaf text-white" : "bg-ink-700 text-ink-200"}`}>
+            {micOn ? <Mic size={14} /> : <MicOff size={14} />} Mic {micOn ? "on" : "off"}
           </button>
         </div>
-        <div className={`${screen.active ? "mt-2.5 flex" : "hidden"} items-center gap-2.5`}>
-          <video ref={screen.videoRef} muted playsInline className="h-14 w-24 flex-none rounded border border-ink-600 bg-black object-cover" />
-          <p className="text-[0.7rem] leading-snug text-ink-200">What the AI sees. A frame is captured only when you ask something — nothing is recorded or stored.</p>
+        {!screen.active && screen.error && <p className="mt-2 text-xs text-saffron-100">{screen.error}</p>}
+        <div className={screen.active ? "mt-2.5" : "hidden"}>
+          <div className={bigPreview ? "" : "flex items-center gap-2.5"}>
+            <video ref={screen.videoRef} muted playsInline aria-label="Preview of your shared screen"
+              className={`rounded border border-ink-600 bg-black ${bigPreview ? "aspect-video w-full object-contain" : "h-14 w-24 flex-none object-cover"}`} />
+            <div className={`flex items-start justify-between gap-2 ${bigPreview ? "mt-1.5" : "flex-1"}`}>
+              <p className="text-[0.7rem] leading-snug text-ink-200">What the AI sees. A frame is captured only when you ask a question — nothing is recorded or stored.</p>
+              <button onClick={() => setBigPreview((b) => !b)} className="whitespace-nowrap text-[0.7rem] font-semibold text-ink-200 underline hover:text-white">
+                {bigPreview ? "Shrink" : "Enlarge"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
