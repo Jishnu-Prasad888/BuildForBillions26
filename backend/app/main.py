@@ -11,6 +11,7 @@ from app.api import admin, applications, assistant, auth, documents, health, not
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.database.session import ensure_extensions, ensure_migrations
+from app.ratelimit import RateLimitMiddleware
 from app.services.seed import maybe_reembed, run_all
 
 logging.basicConfig(level=logging.DEBUG if settings.DEBUG else logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -88,6 +89,7 @@ async def lifespan(_: FastAPI):
 
 docs = {} if settings.APP_ENV != "production" else {"docs_url": None, "redoc_url": None, "openapi_url": None}
 app = FastAPI(title="Public Service AI Assistant (Build for Billions prototype)", version="0.1.0", lifespan=lifespan, **docs)
+app.add_middleware(RateLimitMiddleware)  # added first, so CORS wraps it and 429s carry CORS headers
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 for r in (auth.router, auth.users_router, health.router, schemes.router, assistant.router, assistant.kag_router,

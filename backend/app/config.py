@@ -62,6 +62,15 @@ class Settings(BaseSettings):
     # container when running several API replicas (the bot allows only one poller).
     RUN_BACKGROUND_TASKS: bool = True
 
+    # Rate limiting (GCRA). "count/period:burst", period = second | minute | hour.
+    # REDIS_URL shares limits across replicas and workers; without it limits are per process.
+    RATE_LIMIT_ENABLED: bool = True
+    REDIS_URL: str = ""
+    RATE_LIMIT_DEFAULT: str = "180/minute:60"
+    RATE_LIMIT_AUTH: str = "20/minute:10"
+    RATE_LIMIT_AI: str = "20/minute:8"
+    RATE_LIMIT_UPLOAD: str = "10/minute:5"
+
     @model_validator(mode="after")
     def _production_safety(self) -> "Settings":
         if self.APP_ENV == "production" and self.JWT_SECRET_KEY in ("", "change-this-in-development"):
