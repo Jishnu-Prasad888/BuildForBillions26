@@ -10,6 +10,8 @@ export function speechSupported(): boolean {
   return typeof window !== "undefined" && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 }
 
+const MAX_NETWORK_RETRIES = 2;
+
 function isBrave(): boolean {
   return !!(navigator as any).brave;
 }
@@ -37,20 +39,23 @@ export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
   const [interim, setInterim] = useState("");
   const [error, setError] = useState<string | null>(null);
   const recRef = useRef<Recognition | null>(null);
+  const retriesRef = useRef(0);
   const cbRef = useRef(onFinal);
   cbRef.current = onFinal;
 
   const stop = useCallback(() => {
     recRef.current?.stop();
+    recRef.current = null;
     setListening(false);
   }, []);
 
-  const start = useCallback(() => {
+  const begin = useCallback((isRetry: boolean) => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
       setError("Voice input is not supported in this browser. Please use Chrome or Edge, or type instead.");
       return;
     }
+    if (!isRetry) retriesRef.current = 0;
     if (isBrave()) {
       setError(voiceErrorMessage("network"));
       return;
@@ -75,18 +80,39 @@ export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
         cbRef.current(fin.trim());
       }
     };
+    let retrying = false;
     rec.onerror = (e: any) => {
+      if (e.error === "network" && navigator.onLine && retriesRef.current < MAX_NETWORK_RETRIES) {
+        retriesRef.current += 1;
+        retrying = true;
+        return;
+      }
       if (e.error !== "no-speech" && e.error !== "aborted") setError(voiceErrorMessage(e.error));
       setListening(false);
     };
-    rec.onend = () => setListening(false);
+    rec.onend = () => {
+      if (retrying && recRef.current === rec) {
+        setTimeout(() => { if (recRef.current === rec) beginRef.current(true); }, 500);
+        return;
+      }
+      setListening(false);
+    };
     recRef.current = rec;
     setError(null);
     setListening(true);
-    rec.start();
+    try {
+      rec.start();
+    } catch {
+      setError("Couldn't start voice input. Please try again.");
+      setListening(false);
+    }
   }, [lang]);
 
-  useEffect(() => () => recRef.current?.abort?.(), []);
+  const beginRef = useRef(begin);
+  beginRef.current = begin;
+  const start = useCallback(() => begin(false), [begin]);
+
+  useEffect(() => () => { recRef.current?.abort?.(); recRef.current = null; }, []);
   return { listening, interim, error, start, stop, supported: speechSupported() };
 }
 
