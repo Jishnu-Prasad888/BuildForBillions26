@@ -76,7 +76,11 @@ services:
     extra_hosts: ["host.docker.internal:host-gateway"]
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_SENTRY_DSN: ${FRONTEND_SENTRY_DSN:-}
+        VITE_SENTRY_ENVIRONMENT: development
     ports: ["5173:80"]
     depends_on: [backend]
 
