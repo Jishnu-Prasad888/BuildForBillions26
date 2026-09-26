@@ -1,8 +1,10 @@
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
+import { Charkha } from "./Charkha";
 
+/* Every inline/page-level loading indicator is the charkha; sized by className, coloured by the text colour. */
 export function Spinner({ className = "h-4 w-4" }: { className?: string }) {
-  return <span className={`inline-block animate-spin rounded-full border-2 border-current border-r-transparent ${className}`} aria-hidden />;
+  return <Charkha className={className} />;
 }
 
 export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: string; title: ReactNode; subtitle?: ReactNode; actions?: ReactNode }) {

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "@/services/auth";
-import { Spinner } from "@/components/ui";
+import { CharkhaLoader } from "@/components/Charkha";
 import AuthLayout from "@/layouts/AuthLayout";
 import UserLayout from "@/layouts/UserLayout";
 import AdminLayout from "@/layouts/AdminLayout";
@@ -34,7 +34,7 @@ import AdminSchemes from "@/pages/admin/Schemes";
 import AdminIngestion from "@/pages/admin/Ingestion";
 
 function FullPageSpinner() {
-  return <div className="flex h-screen items-center justify-center"><Spinner className="h-7 w-7 text-ink-500" /></div>;
+  return <CharkhaLoader />;
 }
 
 function Protected({ children, admin = false }: { children: ReactNode; admin?: boolean }) {
@@ -48,7 +48,7 @@ function Protected({ children, admin = false }: { children: ReactNode; admin?: b
 
 function GuestOnly({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <FullPageSpinner />;
   if (user) return <Navigate to={user.role === "ADMIN" ? "/admin" : "/"} replace />;
   return <>{children}</>;
 }

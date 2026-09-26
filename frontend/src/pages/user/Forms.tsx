@@ -1,4 +1,4 @@
-import { Camera, FileImage, FileText, Loader2, ShieldCheck, Sparkles, Trash2, UploadCloud } from "lucide-react";
+import { Camera, FileImage, FileText, ShieldCheck, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
@@ -120,7 +120,7 @@ export default function Forms() {
             titleTo={ready ? `/forms/${f.id}` : undefined}
             meta={`${f.page_count} page${f.page_count === 1 ? "" : "s"} · ${(f.file_size / 1024).toFixed(0)} KB · ${formatDate(f.created_at, true)}`}
             status={f.status === "ANALYZING"
-              ? <span className="chip bg-amber-50 text-amber-700"><Loader2 size={12} className="animate-spin" /> Reading…</span>
+              ? <span className="chip bg-amber-50 text-amber-700"><Spinner className="h-3.5 w-3.5" /> Reading…</span>
               : <StatusPill status={formStatusLabel(f)} />}
             hint={f.status === "FAILED" ? <span className="text-brick">{f.error}</span> : f.output_ready ? "Your completed PDF is ready to download." : f.status === "READY" ? "Read and ready. Open it to fill with the assistant." : undefined}
             primary={ready ? { label: f.status === "COMPLETED" ? "View form" : "Continue with assistant", to: `/forms/${f.id}`, icon: f.status === "COMPLETED" ? undefined : <Sparkles size={15} /> } : undefined}
@@ -144,17 +144,10 @@ export default function Forms() {
     ["done", "Done", items.filter((i) => !i.open).length],
   ];
 
-  return (
+  // Shown inside the catalog, between the guided forms and the official-portal ones.
+  const yourForms = (
     <div>
-      <PageHeader eyebrow="AI Form Assistant" title="Fill a form with help"
-        subtitle="Pick a government form or upload your own. The assistant explains every field, takes your answers by voice or typing, and gets it ready to submit." />
-
-      {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
-
-      <h2 className="mb-3 text-lg font-bold">Start a form</h2>
-      <FormCatalog apps={apps} leading={uploadCard} />
-
-      <div className="mb-3 mt-10 flex flex-wrap items-end justify-between gap-3">
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
         <h2 className="text-lg font-bold">Your forms</h2>
         {items.length > 0 && (
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter your forms">
@@ -174,6 +167,18 @@ export default function Forms() {
       ) : (
         <div key={filter} className="stagger grid gap-4 md:grid-cols-2">{shown.map((i) => <Fragment key={i.key}>{i.node}</Fragment>)}</div>
       )}
+    </div>
+  );
+
+  return (
+    <div>
+      <PageHeader eyebrow="AI Form Assistant" title="Fill a form with help"
+        subtitle="Pick a government form or upload your own. The assistant explains every field, takes your answers by voice or typing, and gets it ready to submit." />
+
+      {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
+
+      <h2 className="mb-3 text-lg font-bold">Start a form</h2>
+      <FormCatalog apps={apps} leading={uploadCard} afterGuided={yourForms} />
 
       {camera && (
         <CameraCapture onClose={() => setCamera(false)} onUnavailable={() => { setCamera(false); captureRef.current?.click(); }}

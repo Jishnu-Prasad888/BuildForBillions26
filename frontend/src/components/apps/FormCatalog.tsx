@@ -55,8 +55,9 @@ function SchemeFormCard({ scheme, existing, size, busy, onStart }: {
 /**
  * The government forms a citizen can start, taken from the same schemes as /applications.
  * Guided forms are filled with the assistant; the rest are tracked here. `leading` (the upload card) sits first in the guided group.
+ * `afterGuided` sits between the guided and portal groups, and stays visible while the catalog loads or fails.
  */
-export default function FormCatalog({ apps, leading }: { apps: Application[] | null; leading?: ReactNode }) {
+export default function FormCatalog({ apps, leading, afterGuided }: { apps: Application[] | null; leading?: ReactNode; afterGuided?: ReactNode }) {
   const { lang } = useI18n();
   const { start, busy, error: startError } = useStartApplication();
   const [schemes, setSchemes] = useState<SchemeCard[] | null>(null);
@@ -75,8 +76,8 @@ export default function FormCatalog({ apps, leading }: { apps: Application[] | n
   }, [lang]);
   useEffect(() => { load(); }, [load]);
 
-  if (error) return <LoadError message={error} onRetry={load} />;
-  if (!schemes) return <CardGridSkeleton count={3} />;
+  if (error) return <div className="space-y-6"><LoadError message={error} onRetry={load} />{afterGuided}</div>;
+  if (!schemes) return <div className="space-y-6"><CardGridSkeleton count={3} />{afterGuided}</div>;
 
   const open = (code: string) => apps?.find((a) => a.scheme_code === code && isActive(a));
   const card = (s: SchemeCard) => (
@@ -96,6 +97,7 @@ export default function FormCatalog({ apps, leading }: { apps: Application[] | n
           {guided.map(card)}
         </div>
       </div>
+      {afterGuided}
       {portal.length > 0 && (
         <div>
           <h3 className="mb-1 text-sm font-bold uppercase tracking-wide text-ink-700">Apply on the official portal</h3>
