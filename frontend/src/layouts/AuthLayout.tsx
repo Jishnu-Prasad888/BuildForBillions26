@@ -1,13 +1,11 @@
 import { Link, Outlet } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { DemoStrip } from "./UserLayout";
 
 export default function AuthLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="tricolor-rule h-1" />
-      <DemoStrip />
       <div className="grid flex-1 lg:grid-cols-[1.1fr_1fr]">
         <section className="relative hidden flex-col justify-between overflow-hidden bg-ink-900 p-12 text-white lg:flex">
           <Link to="/" aria-label="Sahayak home"><Logo light /></Link>

@@ -9,7 +9,6 @@ import MockGovForm from "@/components/MockGovForm";
 import AssistPanel from "@/components/AssistPanel";
 import { AINotesPanel, UserNotesPanel } from "@/components/Notes";
 import Logo from "@/components/Logo";
-import { DemoStrip } from "@/layouts/UserLayout";
 import { Modal, ProgressBar, Spinner } from "@/components/ui";
 import { allFields, fieldLabel, isFilled } from "@/components/formUtils";
 
@@ -134,7 +133,6 @@ export default function FormPage() {
   return (
     <div className="flex h-screen flex-col">
       <div className="tricolor-rule h-1" />
-      <DemoStrip />
       <header className="flex items-center gap-2 border-b border-paper-300 bg-white px-3 py-2.5 sm:gap-4 sm:px-5">
         <Link to={`/applications/${id}`} className="btn-ghost btn-sm"><ArrowLeft size={16} /> Back</Link>
         <div className="hidden sm:block"><Logo sub={false} /></div>

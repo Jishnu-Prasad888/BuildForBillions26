@@ -2,7 +2,6 @@ import { BookOpen, Database, Globe, LayoutDashboard, LogOut, Network, Users, Wor
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/services/auth";
-import { DemoStrip } from "./UserLayout";
 
 export default function AdminLayout() {
   const { user, signOut } = useAuth();
@@ -55,7 +54,6 @@ export default function AdminLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="tricolor-rule h-1 lg:hidden" />
-        <DemoStrip />
         <header className="flex items-center justify-between gap-3 bg-ink-900 px-4 py-3 lg:hidden">
           <Link to="/admin"><Logo light sub={false} /></Link>
           <button className="text-sm font-semibold text-ink-200" onClick={() => { signOut(); nav("/"); }}>Sign out</button>

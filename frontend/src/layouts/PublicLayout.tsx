@@ -4,7 +4,6 @@ import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuth } from "@/services/auth";
 import { useTr } from "@/i18n";
-import { DemoStrip } from "./UserLayout";
 
 /* Shell for pages anyone can open without signing in: landing, user guide, docs. */
 export default function PublicLayout() {
@@ -19,7 +18,6 @@ export default function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="tricolor-rule h-1" />
-      <DemoStrip />
       <header className="sticky top-0 z-30 border-b border-paper-300 bg-paper/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
           <Link to="/" aria-label="Sahayak home" className="mr-auto"><Logo sub={false} /></Link>

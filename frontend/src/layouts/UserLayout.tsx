@@ -6,15 +6,6 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuth } from "@/services/auth";
 import { useI18n } from "@/i18n";
 
-export function DemoStrip() {
-  return (
-    <div className="border-b border-saffron-100 bg-saffron-50 px-4 py-1.5 text-center text-xs font-semibold text-saffron-700">
-      <span className="sm:hidden">DEMO MODE · Practice only — nothing is sent to the government.</span>
-      <span className="hidden sm:inline">DEMO MODE · Hackathon prototype. Seed documents are summaries marked “demo”; forms and submissions are mock — nothing is sent to any government portal.</span>
-    </div>
-  );
-}
-
 export default function UserLayout() {
   const { user, signOut } = useAuth();
   const { t } = useI18n();
@@ -81,7 +72,6 @@ export default function UserLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="tricolor-rule h-1 lg:hidden" />
-        <DemoStrip />
         <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/85 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
           <Link to="/" className="lg:hidden" aria-label="Sahayak home"><Logo sub={false} /></Link>
           <div className="flex items-center gap-2">

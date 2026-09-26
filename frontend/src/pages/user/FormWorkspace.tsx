@@ -12,7 +12,6 @@ import FormPreview from "@/components/formassist/FormPreview";
 import ReviewPanel from "@/components/formassist/ReviewPanel";
 import Logo from "@/components/Logo";
 import { ErrorNote, Modal, ProgressBar, Spinner, Tabs } from "@/components/ui";
-import { DemoStrip } from "@/layouts/UserLayout";
 
 type Tab = "autofill" | "review" | "notes";
 
@@ -132,7 +131,6 @@ export default function FormWorkspace() {
   return (
     <div className="flex h-screen flex-col">
       <div className="tricolor-rule h-1" />
-      <DemoStrip />
       <header className="flex flex-wrap items-center gap-3 border-b border-paper-300 bg-white px-4 py-2.5">
         <Link to="/forms" className="btn-ghost btn-sm"><ArrowLeft size={16} /> Forms</Link>
         <Logo sub={false} />
