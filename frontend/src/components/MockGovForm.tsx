@@ -26,7 +26,7 @@ const MockGovForm = forwardRef(function MockGovForm(
   const title = form.titles?.[lang] || form.title;
   return (
     <div ref={ref} className="demo-watermark overflow-hidden rounded-lg border-2 border-ink-300 bg-white shadow-card" data-screen-root>
-      <div className="flex items-center gap-4 border-b-4 border-saffron bg-ink-800 px-6 py-4 text-white">
+      <div className="flex items-center gap-4 border-b-4 border-saffron bg-forest-800 px-6 py-4 text-white">
         <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full border-2 border-white/70 text-[0.6rem] font-bold leading-tight">DEMO<br />SEAL</div>
         <div className="min-w-0">
           <div className="text-xs font-semibold uppercase tracking-wider text-ink-200">{form.authority}</div>

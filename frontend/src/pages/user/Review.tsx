@@ -1,29 +1,35 @@
-import { CheckCircle2, Eye, EyeOff, Pencil, PartyPopper } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, CheckCircle2, Eye, EyeOff, Pencil, PartyPopper, TriangleAlert } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
 import type { Application, ApplicationDetail } from "@/types";
 import { displayValue, fieldLabel, isFilled } from "@/components/formUtils";
-import { ErrorNote, PageHeader, Spinner } from "@/components/ui";
+import { LoadError, Skeleton } from "@/components/apps/Skeleton";
+import { EmptyState, ErrorNote, PageHeader, Spinner } from "@/components/ui";
 
 export default function Review() {
   const { id } = useParams();
   const nav = useNavigate();
   const { lang } = useI18n();
   const [app, setApp] = useState<ApplicationDetail | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [reveal, setReveal] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [done, setDone] = useState<Application | null>(null);
 
-  useEffect(() => {
-    api.get<ApplicationDetail>(`/api/applications/${id}`).then(setApp);
+  const load = useCallback(() => {
+    setLoadError(null);
+    api.get<ApplicationDetail>(`/api/applications/${id}`).then(setApp).catch((e) => setLoadError(e.message));
   }, [id]);
+  useEffect(load, [load]);
 
-  if (!app) return <Spinner className="h-6 w-6" />;
-  if (!app.form) return <p>This application has no form.</p>;
+  if (loadError) return <LoadError message={loadError} onRetry={load} />;
+  if (!app) return <div className="space-y-4" role="status" aria-label="Loading"><Skeleton className="h-10 w-1/2" /><Skeleton className="h-48 w-full" /><Skeleton className="h-48 w-full" /></div>;
+  if (!app.form) return <EmptyState title="This application has no online form">There is nothing to review. <Link to={`/applications/${id}`} className="font-semibold underline">Back to the application</Link></EmptyState>;
+
   const missing = app.form.sections.flatMap((s) => s.fields.filter((f) => f.required && !isFilled(f, app.form_data[f.id])));
 
   const submit = async () => {
@@ -57,14 +63,25 @@ export default function Review() {
 
   return (
     <div>
-      <Link to={`/applications/${id}/form`} className="text-sm font-semibold text-ink-600">← Back to form</Link>
+      <Link to={`/applications/${id}/form`} className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-600 hover:text-ink-900"><ArrowLeft size={15} /> Back to form</Link>
       <PageHeader eyebrow="Final review" title={app.scheme_name} subtitle="Check every answer carefully. Nothing is submitted until you confirm below."
         actions={<button className="btn-secondary btn-sm" onClick={() => setReveal((r) => !r)}>{reveal ? <EyeOff size={15} /> : <Eye size={15} />} {reveal ? "Hide" : "Show"} sensitive numbers</button>} />
+
+      {missing.length > 0 && (
+        <div className="mb-6 flex gap-3 rounded-lg border border-brick-100 bg-brick-50 p-4 text-brick" role="alert">
+          <TriangleAlert size={20} className="mt-0.5 flex-none" />
+          <div>
+            <div className="font-semibold">{missing.length} required {missing.length === 1 ? "field is" : "fields are"} still empty</div>
+            <p className="mt-0.5 text-sm">{missing.map((f) => fieldLabel(f, lang, app.form_data)).join(", ")}. <Link to={`/applications/${id}/form`} className="font-semibold underline">Go back and finish them</Link>.</p>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         {app.form.sections.map((s, i) => (
           <section key={s.id} className="card overflow-hidden">
             <div className="flex items-center justify-between border-b border-paper-300 bg-paper-100 px-5 py-3">
-              <h2 className="font-bold"><span className="mr-2 text-saffron-600">{i + 1}.</span>{s.titles?.[lang] || s.title}</h2>
+              <h2 className="font-bold"><span className="mr-2 text-forest-600">{i + 1}.</span>{s.titles?.[lang] || s.title}</h2>
               <Link to={`/applications/${id}/form`} className="inline-flex items-center gap-1 text-sm font-semibold text-ink-600 hover:text-ink-900"><Pencil size={14} /> Edit</Link>
             </div>
             <dl className="grid gap-x-6 gap-y-3 px-5 py-4 sm:grid-cols-2">
@@ -74,8 +91,8 @@ export default function Review() {
                 return (
                   <div key={f.id}>
                     <dt className="text-xs font-semibold uppercase tracking-wide text-ink-500">{fieldLabel(f, lang, app.form_data)}</dt>
-                    <dd className={`mt-0.5 flex items-center gap-1.5 text-[1.02rem] ${ok ? "text-ink-900" : "text-brick"}`}>
-                      {ok && <CheckCircle2 size={15} className="text-leaf" />}{ok ? displayValue(f, v, lang, !reveal) : "Missing"}
+                    <dd className={`mt-0.5 flex items-center gap-1.5 break-words text-[1.02rem] ${ok ? "text-ink-900" : f.required ? "text-brick" : "text-ink-400"}`}>
+                      {ok && <CheckCircle2 size={15} className="flex-none text-leaf" />}{ok ? displayValue(f, v, lang, !reveal) : f.required ? "Missing" : "Not filled (optional)"}
                     </dd>
                   </div>
                 );
@@ -84,13 +101,14 @@ export default function Review() {
           </section>
         ))}
       </div>
+
       <div className="card mt-6 p-5">
         {missing.length > 0 ? (
-          <ErrorNote>Please complete {missing.length} required field(s) before submitting: {missing.map((f) => f.label).join(", ")}.</ErrorNote>
+          <ErrorNote>Complete the required fields above before you can submit.</ErrorNote>
         ) : (
           <>
             <label className="flex items-start gap-3 text-[1.02rem]">
-              <input type="checkbox" className="mt-1 h-5 w-5 accent-ink-800" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
+              <input type="checkbox" className="mt-1 h-5 w-5 accent-forest-800" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />
               <span>I have checked the information above and confirm it is correct. I understand this is a <b>demo</b> and the application is <b>not</b> sent to any government portal.</span>
             </label>
             <div className="mt-2"><ErrorNote>{err}</ErrorNote></div>

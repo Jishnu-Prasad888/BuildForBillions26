@@ -1,5 +1,5 @@
-import { ArrowLeft, Eye, FileCheck2, MonitorUp, RefreshCw, Share2, ShieldCheck } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, Bot, Eye, FileCheck2, FileText, ListChecks, MonitorUp, RefreshCw, Share2, ShieldCheck } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
@@ -12,9 +12,13 @@ import FormNotes from "@/components/formassist/FormNotes";
 import FormPreview from "@/components/formassist/FormPreview";
 import ReviewPanel from "@/components/formassist/ReviewPanel";
 import Logo from "@/components/Logo";
+import Splitter from "@/components/Splitter";
+import { useColumns } from "@/hooks/useSplit";
 import { ErrorNote, Modal, ProgressBar, Spinner, Tabs } from "@/components/ui";
 
 type Tab = "autofill" | "review" | "notes";
+// Phones show one pane at a time; from `lg` up all three are visible and resizable.
+type Pane = "form" | "assistant" | "fields";
 
 export default function FormWorkspace() {
   const { id } = useParams();
@@ -37,6 +41,12 @@ export default function FormWorkspace() {
   const [dockOpen, setDockOpen] = useState(true);
   const screen = useScreenCapture();
   const dock = useRef<AssistantHandle>(null);
+  const [pane, setPane] = useState<Pane>("assistant");
+  const [unread, setUnread] = useState(false);
+  const paneRef = useRef(pane);
+  paneRef.current = pane;
+  // Widths of the left (fields) and right (assistant) panels; the form in the middle takes the rest. Remembered per browser.
+  const cols = useColumns({ storageKey: "sahayak.split.columns", leftDefault: 0.27, rightDefault: 0.3, leftMin: 280, rightMin: 320, centerMin: 360 });
 
   const loadSchema = useCallback(async () => {
     const s = await api.get<FormSchema>(`/api/forms/${id}/schema`);
@@ -80,6 +90,7 @@ export default function FormWorkspace() {
     const ups = Object.keys(r.field_updates);
     if (ups.length) { setFlash(ups); window.setTimeout(() => setFlash([]), 1700); }
     setPicked(null);
+    if (paneRef.current !== "assistant") setUnread(true);
     // Show the field being asked right away; waiting for the schema reload let the next message go to the old field.
     if (r.ask) setCurrent(r.ask.field_id);
     loadSchema().then((s) => {
@@ -102,6 +113,8 @@ export default function FormWorkspace() {
   const askAbout = (f: FormFieldDef | { field_id: string }) => {
     select(f.field_id, null);
     setDockOpen(true);
+    setPane("assistant");
+    setUnread(false);
     dock.current?.ask("What does this field mean?", f.field_id);
   };
 
@@ -137,7 +150,7 @@ export default function FormWorkspace() {
   const summaryLine = `${sm.detected} fields found · ${sm.completed} done · ${sm.pending} need information${sm.clarification_needed ? " · 1 question open" : ""}`;
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen h-dvh flex-col">
       <div className="tricolor-rule h-1" />
       <header className="flex flex-wrap items-center gap-3 border-b border-paper-300 bg-white px-4 py-2.5">
         <Link to="/forms" className="btn-ghost btn-sm"><ArrowLeft size={16} /> Forms</Link>
@@ -149,15 +162,48 @@ export default function FormWorkspace() {
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <span className="hidden items-center gap-1 text-xs text-ink-500 lg:flex"><ShieldCheck size={14} className="text-leaf" /> Original file is never modified</span>
-          <button className="btn-secondary btn-sm" onClick={() => setScreenModal(true)} disabled={screen.active}><MonitorUp size={15} /> Start Screen Assistance</button>
           <button className="btn-secondary btn-sm" onClick={() => setShareOpen(true)}><Share2 size={15} /> Share</button>
-          <button className="btn-accent btn-sm" onClick={() => setTab("review")}><FileCheck2 size={15} /> Generate PDF</button>
+          <button className="btn-accent btn-sm" onClick={() => { setTab("review"); setPane("fields"); }}><FileCheck2 size={15} /> Generate PDF</button>
         </div>
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-y-auto p-3 lg:grid-cols-[minmax(0,1fr)_minmax(340px,440px)] lg:overflow-hidden">
-          <div className="min-h-[60vh] lg:min-h-0">
+        {/* Phones: one pane at a time, so the assistant gets the whole screen. */}
+        <div className="grid flex-none grid-cols-3 gap-1 border-b border-paper-300 bg-white p-1.5 lg:hidden" role="tablist" aria-label="Workspace view">
+          {([["fields", "Fields", ListChecks], ["form", "Form", FileText], ["assistant", "Assistant", Bot]] as const).map(([id, label, Icon]) => (
+            <button key={id} role="tab" aria-selected={pane === id} onClick={() => { setPane(id); if (id === "assistant") setUnread(false); }}
+              className={`relative flex min-h-[40px] items-center justify-center gap-1.5 rounded-md text-sm font-semibold transition-colors ${pane === id ? "bg-forest-800 text-white" : "text-ink-600 hover:bg-ink-100"}`}>
+              <Icon size={16} /> {label}
+              {id === "assistant" && unread && pane !== "assistant" && <span className="absolute right-3 top-2 h-2 w-2 rounded-full bg-amber" role="status" aria-label="New reply" />}
+            </button>
+          ))}
+        </div>
+        <div ref={cols.containerRef} className="flex min-h-0 flex-1 flex-col p-3 lg:flex-row">
+          {/* Left: AutoFill, review and notes */}
+          <section style={{ "--w": `${cols.leftWidth}px` } as CSSProperties} aria-label="AutoFill, review and notes"
+            className={`${pane === "fields" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-paper-300 bg-paper-100 lg:flex lg:w-[var(--w)] lg:flex-none`}>
+            <Tabs<Tab> value={tab} onChange={setTab} tabs={[
+              { id: "autofill", label: "AutoFill" },
+              { id: "review", label: `Review${sm.required_missing ? ` (${sm.required_missing})` : ""}` },
+              { id: "notes", label: "Notes" },
+            ]} />
+            <div className="min-h-0 flex-1">
+              {tab === "autofill" && <AutoFillPanel schema={schema} currentFieldId={current} flashIds={flash} onSelect={(fid) => select(fid, null)} onSave={save} onAsk={askAbout} />}
+              {tab === "review" && (
+                <ReviewPanel form={meta} refreshKey={reviewKey}
+                  onEdit={(fid) => { select(fid, "autofill"); }}
+                  onAsk={(fid) => askAbout({ field_id: fid })}
+                  onGenerated={(f) => { setMeta(f); setSource("completed"); loadSchema().catch(() => undefined); }}
+                  onPreviewPdf={() => { setSource("completed"); setPane("form"); }}
+                  onEditInfo={() => { setSource("original"); setTab("autofill"); }} />
+              )}
+              {tab === "notes" && <FormNotes formId={meta.id} aiNotes={schema.ai_notes} />}
+            </div>
+          </section>
+          <Splitter split={cols.left} label="Resize the fields panel" className="hidden lg:flex" />
+
+          {/* Centre: the form */}
+          <div className={`${pane === "form" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col lg:flex`}>
             <div className="flex h-full min-h-0 flex-col gap-2">
               {meta.output_ready && (
                 <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -172,35 +218,23 @@ export default function FormWorkspace() {
               </div>
             </div>
           </div>
-          <section className="flex min-h-[70vh] flex-col overflow-hidden rounded-lg border border-paper-300 bg-paper-100 lg:min-h-0" aria-label="AutoFill, review and notes">
-            <Tabs<Tab> value={tab} onChange={setTab} tabs={[
-              { id: "autofill", label: "AutoFill" },
-              { id: "review", label: `Review${sm.required_missing ? ` (${sm.required_missing})` : ""}` },
-              { id: "notes", label: "Notes" },
-            ]} />
-            <div className="min-h-0 flex-1">
-              {tab === "autofill" && <AutoFillPanel schema={schema} currentFieldId={current} flashIds={flash} onSelect={(fid) => select(fid, null)} onSave={save} onAsk={askAbout} />}
-              {tab === "review" && (
-                <ReviewPanel form={meta} refreshKey={reviewKey}
-                  onEdit={(fid) => { select(fid, "autofill"); }}
-                  onAsk={(fid) => askAbout({ field_id: fid })}
-                  onGenerated={(f) => { setMeta(f); setSource("completed"); loadSchema().catch(() => undefined); }}
-                  onPreviewPdf={() => setSource("completed")}
-                  onEditInfo={() => { setSource("original"); setTab("autofill"); }} />
-              )}
-              {tab === "notes" && <FormNotes formId={meta.id} aiNotes={schema.ai_notes} />}
-            </div>
+
+          <Splitter split={cols.right} label="Resize the assistant panel" className="hidden lg:flex" />
+          {/* Right: the AI assistant */}
+          <section aria-label="AI assistant" style={{ "--w": `${cols.rightWidth}px` } as CSSProperties}
+            className={`${pane === "assistant" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-paper-300 bg-white lg:flex lg:w-[var(--w)] lg:flex-none`}>
+            {dockOpen ? (
+              <AssistantDock ref={dock} formId={meta.id} lang={lang} pickedFieldId={picked} screen={screen} onStartScreen={() => setScreenModal(true)}
+                onResponse={onAssistantResponse} onEnd={() => setDockOpen(false)} summaryLine={summaryLine} />
+            ) : (
+              <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+                <Bot size={28} className="text-forest-700" aria-hidden />
+                <p className="text-sm text-ink-600">Assistant ended.<br />{summaryLine}</p>
+                <button className="btn-primary btn-sm" onClick={() => setDockOpen(true)}>Talk to the assistant</button>
+              </div>
+            )}
           </section>
         </div>
-        {dockOpen ? (
-          <AssistantDock ref={dock} formId={meta.id} lang={lang} pickedFieldId={picked} screen={screen} onStartScreen={() => setScreenModal(true)}
-            onResponse={onAssistantResponse} onEnd={() => setDockOpen(false)} summaryLine={summaryLine} />
-        ) : (
-          <div className="flex items-center justify-between border-t border-paper-300 bg-white px-4 py-2 text-sm">
-            <span className="text-ink-600">Assistant ended. {summaryLine}</span>
-            <button className="btn-primary btn-sm" onClick={() => setDockOpen(true)}>Talk to the assistant</button>
-          </div>
-        )}
       </div>
 
       <ShareSheet

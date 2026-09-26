@@ -27,7 +27,7 @@ export default function DocDrawer({ docId, onClose, onChanged }: { docId: string
           <div>
             <h3 className="text-xl font-bold">{d.title}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink-600">
-              <StatusPill status={d.status} /> {d.publisher} {d.is_demo && <span className="chip bg-saffron-50 text-saffron-700">demo</span>}
+              <StatusPill status={d.status} /> {d.publisher} {d.is_demo && <span className="chip bg-amber-50 text-amber-700">demo</span>}
               {d.source?.is_official && <span className="chip bg-leaf-50 text-leaf-700">official source</span>}
             </div>
             {d.source_url && <a href={d.source_url} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-sm underline decoration-saffron">{d.source_url} <ExternalLink size={12} /></a>}

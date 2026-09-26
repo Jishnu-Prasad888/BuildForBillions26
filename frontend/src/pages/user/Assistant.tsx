@@ -10,7 +10,6 @@ import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
 import SchemeCard from "@/components/SchemeCard";
 import ChatInput, { type InputMode } from "@/components/ChatInput";
 import KagTrace from "@/components/KagTrace";
-import { Spinner } from "@/components/ui";
 import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Reference";
 
 const SUGGESTIONS: Record<Lang, string[]> = {
@@ -119,7 +118,7 @@ export default function Assistant() {
             const cards = m.meta?.scheme_cards ?? [];
             const isRef = reference?.id === m.id;
             return (
-              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-2xl" : ""}`}>
+              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-lg" : ""}`}>
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
                   <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">

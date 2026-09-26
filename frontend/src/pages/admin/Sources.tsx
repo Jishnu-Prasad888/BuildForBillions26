@@ -70,7 +70,7 @@ export default function Sources() {
                 <td className="px-4 py-3 font-semibold">{s.name}</td>
                 <td className="px-4 py-3 text-ink-600">{s.publisher}</td>
                 <td className="max-w-[240px] truncate px-4 py-3 text-xs">{s.base_url}</td>
-                <td className="px-4 py-3">{s.is_official ? <span className="chip bg-leaf-50 text-leaf-700">official</span> : <span className="chip bg-ink-100 text-ink-600">unverified</span>}{s.is_demo && <span className="chip ml-1 bg-saffron-50 text-saffron-700">demo</span>}</td>
+                <td className="px-4 py-3">{s.is_official ? <span className="chip bg-leaf-50 text-leaf-700">official</span> : <span className="chip bg-ink-100 text-ink-600">unverified</span>}{s.is_demo && <span className="chip ml-1 bg-amber-50 text-amber-700">demo</span>}</td>
                 <td className="px-4 py-3 text-right font-mono">{s.documents}</td>
                 <td className="px-4 py-3 text-ink-500">{formatDate(s.created_at)}</td>
               </tr>

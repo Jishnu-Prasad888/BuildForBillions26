@@ -23,9 +23,9 @@ export default function PipelineViz({ status, stages }: { status?: string; stage
         const detail = stages?.find((x) => x.stage === s.key)?.detail;
         return (
           <li key={s.key} className="flex items-center gap-2">
-            <div className={`w-[8.6rem] self-stretch rounded-lg border p-2.5 ${done ? "border-leaf-100 bg-leaf-50" : active ? "border-saffron bg-saffron-50" : i === failedIdx ? "border-brick-100 bg-brick-50" : "border-paper-300 bg-white"}`}>
+            <div className={`w-[8.6rem] self-stretch rounded-lg border p-2.5 ${done ? "border-leaf-100 bg-leaf-50" : active ? "border-amber bg-amber-50" : i === failedIdx ? "border-brick-100 bg-brick-50" : "border-paper-300 bg-white"}`}>
               <div className="flex items-center gap-1.5 text-sm font-bold text-ink-800">
-                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[0.65rem] text-white ${done ? "bg-leaf" : active ? "animate-pulse bg-saffron" : "bg-ink-300"}`}>{done ? <Check size={12} /> : i + 1}</span>
+                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[0.65rem] text-white ${done ? "bg-leaf" : active ? "animate-pulse bg-amber" : "bg-ink-300"}`}>{done ? <Check size={12} /> : i + 1}</span>
                 {s.label}
               </div>
               <div className="mt-1 text-xs text-ink-500">{detail || s.sub}</div>

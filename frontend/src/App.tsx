@@ -97,7 +97,7 @@ export default function App() {
         <Route path="/applications/:id/review" element={<Review />} />
         <Route path="/documents" element={<Documents />} />
         <Route path="/notes" element={<Notes />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/profile" element={<Profile />} />
       </Route>
 
       <Route path="/admin" element={<Protected admin><AdminLayout /></Protected>}>

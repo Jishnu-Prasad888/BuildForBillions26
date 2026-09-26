@@ -1,8 +1,8 @@
 import type { GraphView as G } from "@/types";
 
 const COLORS: Record<string, string> = {
-  LifeEvent: "#d9731a", Scheme: "#14213d", EligibilityRule: "#56688f", DocumentRequirement: "#1f7a4d",
-  Department: "#8f4a0e", Portal: "#34466f", State: "#8793ad", Document: "#b3372b", Source: "#b3372b",
+  LifeEvent: "#d9731a", Scheme: "#0f4a37", EligibilityRule: "#4b6157", DocumentRequirement: "#1f7a4d",
+  Department: "#6f4a0f", Portal: "#7fc4a8", State: "#93a39b", Document: "#b3372b", Source: "#b3372b",
 };
 const ORDER = ["EligibilityRule", "DocumentRequirement", "Department", "Portal", "State", "Document", "Source"];
 
@@ -40,17 +40,17 @@ export default function GraphView({ graph, height }: { graph: G; height?: number
           const y2 = r.y + 11;
           if (x2 <= x1) return null;
           const mx = (x1 + x2) / 2;
-          return <path key={i} d={`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`} fill="none" stroke="#b6bfd1" strokeWidth="1.2"><title>{e.type}</title></path>;
+          return <path key={i} d={`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`} fill="none" stroke="#c3cec8" strokeWidth="1.2"><title>{e.type}</title></path>;
         })}
         {graph.nodes.map((n) => {
           const p = pos[n.id];
-          const col = COLORS[n.label] ?? "#56688f";
+          const col = COLORS[n.label] ?? "#4b6157";
           return (
             <g key={n.id} transform={`translate(${p.x},${p.y})`}>
               <title>{`${n.label}: ${n.name}`}</title>
               <rect width={p.w} height={22} rx={6} fill="#fff" stroke={col} strokeWidth={n.label === "Scheme" ? 2 : 1} />
               <rect width={6} height={22} rx={3} fill={col} />
-              <text x={12} y={15} fontSize="11.5" fill="#14213d" fontWeight={n.label === "Scheme" || n.label === "LifeEvent" ? 700 : 500}>{trunc(n.name, p.w)}</text>
+              <text x={12} y={15} fontSize="11.5" fill="#111e18" fontWeight={n.label === "Scheme" || n.label === "LifeEvent" ? 700 : 500}>{trunc(n.name, p.w)}</text>
             </g>
           );
         })}

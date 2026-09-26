@@ -46,7 +46,7 @@ function EvidenceItem({ e, n, highlight }: { e: Evidence; n: number; highlight: 
             )}
             {e.section && <span>Section: <b className="font-semibold text-ink-700">{e.section}</b></span>}
             {e.page && <span>· Page {e.page}</span>}
-            {e.is_demo && <span className="chip bg-saffron-50 text-saffron-700">Demo seed summary</span>}
+            {e.is_demo && <span className="chip bg-amber-50 text-amber-700">Demo seed summary</span>}
           </div>
         </div>
         <ChevronDown size={18} className={`mt-1 flex-none text-ink-400 transition-transform ${open ? "rotate-180" : ""}`} />

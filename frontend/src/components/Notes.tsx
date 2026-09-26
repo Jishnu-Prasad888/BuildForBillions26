@@ -53,7 +53,7 @@ export function UserNotesPanel({ notes, applicationId, onChange, title, bare = f
       ) : (
         <span className={`flex-1 text-[0.93rem] transition-colors duration-300 ${n.done ? "text-ink-400 line-through" : "text-ink-800"}`}>
           {n.content}
-          {n.origin === "ai_suggested" && <span className="ml-1.5 align-middle text-[0.65rem] font-bold uppercase text-saffron-600">AI suggested</span>}
+          {n.origin === "ai_suggested" && <span className="ml-1.5 align-middle text-[0.65rem] font-bold uppercase text-amber-600">AI suggested</span>}
         </span>
       )}
       {editing !== n.id && (
@@ -113,7 +113,7 @@ export function AINotesPanel({ data, flash }: { data?: AINotes | null; flash?: b
         <>
           <div className="eyebrow">Pending</div>
           <ul className="mb-2 text-sm text-ink-700">
-            {data.skipped.map((c) => <li key={c}>• {c} <span className="text-xs font-semibold text-saffron-600">(later)</span></li>)}
+            {data.skipped.map((c) => <li key={c}>• {c} <span className="text-xs font-semibold text-amber-600">(later)</span></li>)}
             {data.pending.slice(0, 6).map((c) => <li key={c}>• {c}</li>)}
             {data.pending.length > 6 && <li className="text-ink-400">+{data.pending.length - 6} more</li>}
           </ul>

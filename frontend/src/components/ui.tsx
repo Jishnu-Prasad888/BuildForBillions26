@@ -20,7 +20,7 @@ export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: st
 
 const STATUS: Record<string, { label: string; cls: string }> = {
   DRAFT: { label: "Draft", cls: "bg-ink-100 text-ink-700" },
-  IN_PROGRESS: { label: "In progress", cls: "bg-saffron-50 text-saffron-700 ring-1 ring-saffron-100" },
+  IN_PROGRESS: { label: "In progress", cls: "bg-amber-50 text-amber-700 ring-1 ring-amber-100" },
   DOCUMENTS_REQUIRED: { label: "Documents required", cls: "bg-brick-50 text-brick ring-1 ring-brick-100" },
   SUBMITTED: { label: "Submitted (demo)", cls: "bg-leaf-50 text-leaf-700 ring-1 ring-leaf-100" },
   UNDER_REVIEW: { label: "Under review", cls: "bg-ink-100 text-ink-800" },
@@ -28,7 +28,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   APPROVED: { label: "Approved (demo)", cls: "bg-leaf text-white" },
   COMPLETE: { label: "Complete", cls: "bg-leaf-50 text-leaf-700 ring-1 ring-leaf-100" },
   PENDING: { label: "Pending", cls: "bg-ink-100 text-ink-600" },
-  SKIPPED: { label: "Later", cls: "bg-saffron-50 text-saffron-700" },
+  SKIPPED: { label: "Later", cls: "bg-amber-50 text-amber-700" },
   FAILED: { label: "Failed", cls: "bg-brick-50 text-brick" },
   UPLOADED: { label: "Uploaded", cls: "bg-ink-100 text-ink-700" },
   EXTRACTING: { label: "Extracting", cls: "bg-saffron-50 text-saffron-700" },
@@ -134,7 +134,7 @@ export function SkeletonList({ rows = 3, className = "h-20" }: { rows?: number; 
 }
 
 export function DemoBadge({ className = "" }: { className?: string }) {
-  return <span className={`chip bg-saffron-50 text-saffron-700 ring-1 ring-saffron-100 ${className}`}>DEMO</span>;
+  return <span className={`chip bg-amber-50 text-amber-700 ring-1 ring-amber-100 ${className}`}>DEMO</span>;
 }
 
 export function ErrorNote({ children }: { children: ReactNode }) {
