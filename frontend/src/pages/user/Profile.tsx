@@ -39,7 +39,7 @@ export default function Profile() {
           <span className="label">Preferred language</span>
           <div className="grid grid-cols-3 gap-2">
             {LANGUAGES.map((l) => (
-              <button type="button" key={l.code} onClick={() => setL(l.code)} className={`rounded-lg border px-3 py-2 font-semibold ${lang === l.code ? "border-ink-800 bg-ink-800 text-white" : "border-ink-200 bg-white"}`}>{l.native}</button>
+              <button type="button" key={l.code} onClick={() => setL(l.code)} className={`rounded-lg border px-3 py-2 font-semibold ${lang === l.code ? "border-ink-800 bg-forest-800 text-white" : "border-ink-200 bg-white"}`}>{l.native}</button>
             ))}
           </div>
         </div>

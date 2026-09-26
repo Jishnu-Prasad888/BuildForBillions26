@@ -57,7 +57,7 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
             {i.status === "filled" ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-leaf" />
               : i.status === "manual" ? <HandMetal size={17} className="mt-0.5 flex-none text-ink-400" />
               : i.status === "blank" ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-ink-300" />
-              : <AlertTriangle size={17} className={`mt-0.5 flex-none ${i.required ? "text-saffron" : "text-ink-300"}`} />}
+              : <AlertTriangle size={17} className={`mt-0.5 flex-none ${i.required ? "text-amber" : "text-ink-300"}`} />}
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold text-ink-800">{i.label}</div>
               <div className={`break-words text-sm ${i.status === "filled" ? "text-ink-900" : "text-ink-500"}`}>
@@ -76,7 +76,7 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
         {justMade && form.output_ready && (
           <div className="rounded-lg border border-leaf-100 bg-leaf-50 p-3">
             <div className="font-semibold text-leaf-700">Your form is ready.</div>
-            {warnings.length > 0 && <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-sm text-saffron-700">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
+            {warnings.length > 0 && <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-sm text-amber-700">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
             <div className="mt-2.5 flex flex-wrap gap-2">
               <button className="btn-secondary btn-sm" onClick={onPreviewPdf}><Eye size={15} /> Preview PDF</button>
               <button className="btn-accent btn-sm" onClick={() => downloadBlob(`/api/forms/${form.id}/download`, `${form.original_filename.replace(/\.[^.]+$/, "")}-completed.pdf`).catch((e) => setError(e.message))}><Download size={15} /> Download Completed PDF</button>
@@ -85,7 +85,7 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
           </div>
         )}
         {missing.length > 0 && (
-          <div className="rounded-lg border border-saffron-100 bg-saffron-50 p-3 text-sm text-saffron-700">
+          <div className="rounded-lg border border-amber-100 bg-amber-50 p-3 text-sm text-amber-700">
             <b>{missing.length} required field{missing.length === 1 ? " is" : "s are"} still empty:</b> {missing.slice(0, 5).map((m) => m.label).join(", ")}{missing.length > 5 ? ` and ${missing.length - 5} more` : ""}.
             <label className="mt-2 flex items-start gap-2 text-ink-800">
               <input type="checkbox" className="mt-1" checked={confirmBlank} onChange={(e) => setConfirmBlank(e.target.checked)} />

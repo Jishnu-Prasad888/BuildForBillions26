@@ -64,7 +64,7 @@ export default function ForgotPassword() {
         <form onSubmit={reset} className="mt-6 space-y-4">
           <p className="rounded-lg border border-forest-100 bg-forest-50 px-3 py-2 text-sm text-forest-800">{msg}</p>
           {demoToken && (
-            <p className="rounded-lg border border-saffron-100 bg-saffron-50 px-3 py-2 text-sm text-saffron-700">
+            <p className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-sm text-amber-700">
               Demo mode: there is no email service in this prototype, so the reset token has been filled in for you.
             </p>
           )}

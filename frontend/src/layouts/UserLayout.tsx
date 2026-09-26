@@ -6,15 +6,6 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuth } from "@/services/auth";
 import { useI18n } from "@/i18n";
 
-export function DemoStrip() {
-  return (
-    <div className="border-b border-saffron-100 bg-saffron-50 px-4 py-1 text-center text-[0.72rem] font-semibold leading-snug text-saffron-700">
-      <span className="sm:hidden">DEMO MODE · Practice only — nothing is sent to the government.</span>
-      <span className="hidden sm:inline">DEMO MODE · Hackathon prototype. Seed documents are summaries marked “demo”; forms and submissions are mock — nothing is sent to any government portal.</span>
-    </div>
-  );
-}
-
 export default function UserLayout() {
   const { user, signOut } = useAuth();
   const { t } = useI18n();
@@ -53,8 +44,8 @@ export default function UserLayout() {
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  `flex min-h-[44px] items-center gap-3 rounded-xl px-3 text-[0.97rem] font-semibold transition-colors ${
-                    isActive ? "bg-ink-800 text-white" : "text-ink-700 hover:bg-ink-50"
+                  `flex min-h-[44px] items-center gap-3 rounded-md px-3 text-[0.97rem] font-semibold transition-colors ${
+                    isActive ? "bg-forest-800 text-white" : "text-ink-700 hover:bg-forest-50"
                   }`
                 }
               >
@@ -68,7 +59,7 @@ export default function UserLayout() {
                 <ShieldCheck size={16} /> {t("admin_console")}
               </button>
             )}
-            <div className="rounded-xl bg-paper-100 p-3">
+            <div className="rounded-lg border border-paper-300 bg-paper-100 p-3">
               <div className="truncate text-sm font-semibold text-ink-900">{user?.full_name}</div>
               <div className="truncate text-xs text-ink-500">{user?.email}</div>
               <button className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-600 hover:text-brick" onClick={logout}>
@@ -81,11 +72,10 @@ export default function UserLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="tricolor-rule h-1 lg:hidden" />
-        <DemoStrip />
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/85 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/90 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
           <Link to="/" className="lg:hidden" aria-label="Sahayak home"><Logo sub={false} /></Link>
           <div className="flex items-center gap-2">
-            <Link to="/guide" className="btn-ghost btn-sm" title={t("how_to_use")}>
+            <Link to="/welcome#guide" className="btn-ghost btn-sm" title={t("how_to_use")}>
               <CircleHelp size={18} /> <span className="hidden sm:inline">{t("how_to_use")}</span>
             </Link>
             <LanguageSwitcher />
@@ -105,19 +95,19 @@ export default function UserLayout() {
               to={to}
               end={end}
               className={({ isActive }) =>
-                `flex min-h-[60px] flex-col items-center justify-center gap-1 px-0.5 text-center text-[0.68rem] font-semibold leading-tight ${isActive ? "text-saffron-700" : "text-ink-600"}`
+                `flex min-h-[60px] flex-col items-center justify-center gap-1 px-0.5 text-center text-[0.68rem] font-semibold leading-tight ${isActive ? "text-forest-800" : "text-ink-600"}`
               }
             >
               {({ isActive }) => (
                 <>
-                  <span className={`flex h-8 w-12 items-center justify-center rounded-full ${isActive ? "bg-saffron-50" : ""}`}><Icon size={21} /></span>
+                  <span className={`flex h-8 w-12 items-center justify-center rounded-full ${isActive ? "bg-forest-100" : ""}`}><Icon size={21} /></span>
                   <span className="max-w-full break-words">{label}</span>
                 </>
               )}
             </NavLink>
           ))}
           <button
-            className={`flex min-h-[60px] flex-col items-center justify-center gap-1 text-[0.68rem] font-semibold leading-tight ${moreOpen ? "text-saffron-700" : "text-ink-600"}`}
+            className={`flex min-h-[60px] flex-col items-center justify-center gap-1 text-[0.68rem] font-semibold leading-tight ${moreOpen ? "text-forest-800" : "text-ink-600"}`}
             onClick={() => setMoreOpen((o) => !o)}
             aria-expanded={moreOpen}
           >
@@ -136,19 +126,19 @@ export default function UserLayout() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               {extra.map(({ to, icon: Icon, label }) => (
-                <Link key={to} to={to} className="flex min-h-[56px] items-center gap-3 rounded-2xl bg-paper-100 px-4 font-semibold text-ink-800">
-                  <Icon size={20} className="text-saffron-600" /> {label}
+                <Link key={to} to={to} className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+                  <Icon size={20} className="text-forest-600" /> {label}
                 </Link>
               ))}
-              <Link to="/guide" className="flex min-h-[56px] items-center gap-3 rounded-2xl bg-paper-100 px-4 font-semibold text-ink-800">
-                <CircleHelp size={20} className="text-saffron-600" /> {t("how_to_use")}
+              <Link to="/welcome#guide" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+                <CircleHelp size={20} className="text-forest-600" /> {t("how_to_use")}
               </Link>
               {user?.role === "ADMIN" && (
-                <Link to="/admin" className="flex min-h-[56px] items-center gap-3 rounded-2xl bg-paper-100 px-4 font-semibold text-ink-800">
-                  <ShieldCheck size={20} className="text-saffron-600" /> {t("admin_console")}
+                <Link to="/admin" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+                  <ShieldCheck size={20} className="text-forest-600" /> {t("admin_console")}
                 </Link>
               )}
-              <button onClick={logout} className="flex min-h-[56px] items-center gap-3 rounded-2xl bg-brick-50 px-4 font-semibold text-brick">
+              <button onClick={logout} className="flex min-h-[56px] items-center gap-3 rounded-lg bg-brick-50 px-4 font-semibold text-brick">
                 <LogOut size={20} /> {t("sign_out")}
               </button>
             </div>

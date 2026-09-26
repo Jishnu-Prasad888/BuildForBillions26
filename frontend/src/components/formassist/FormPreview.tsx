@@ -22,7 +22,7 @@ function overlayClass(status: FieldStatus | undefined, current: boolean, showFil
   if (flash) return "animate-flash border-2 border-leaf";
   if (status === "filled" && showFilled) return "border border-leaf bg-leaf/15";
   if (status === "manual") return "border border-dashed border-ink-300";
-  if (status === "missing" || status === "skipped") return "border border-dashed border-saffron/70 hover:bg-saffron/10";
+  if (status === "missing" || status === "skipped") return "border border-dashed border-amber/70 hover:bg-amber/10";
   return "border border-transparent hover:border-ink-300";
 }
 
@@ -34,7 +34,7 @@ export default function FormPreview({ formId, schema, page, onPage, source, vers
   const total = schema.pages.length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-xl border border-paper-300 bg-ink-50">
+    <div className="flex h-full min-h-0 flex-col rounded-lg border border-paper-300 bg-ink-50">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-300 bg-white px-3 py-2 text-sm">
         <div className="flex items-center gap-1">
           <button className="btn-ghost btn-sm" disabled={page <= 1} onClick={() => onPage(page - 1)} aria-label="Previous page"><ChevronLeft size={16} /></button>
@@ -78,7 +78,7 @@ export default function FormPreview({ formId, schema, page, onPage, source, vers
       </div>
       <div className="flex flex-wrap items-center gap-3 border-t border-paper-300 bg-white px-3 py-1.5 text-xs text-ink-500">
         <span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-sm border-2 border-saffron bg-saffron/15" />selected</span>
-        <span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-sm border border-dashed border-saffron/70" />needs information</span>
+        <span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-sm border border-dashed border-amber/70" />needs information</span>
         <span><i className="mr-1 inline-block h-2.5 w-2.5 rounded-sm border border-leaf bg-leaf/15" />filled</span>
         {schema.pages.find((p) => p.page === page)?.warnings.includes("ocr_unclear") && <span className="text-brick">I couldn't read this page clearly.</span>}
       </div>

@@ -41,7 +41,7 @@ export default function UploadModal({ open, onClose, onStarted }: { open: boolea
   return (
     <Modal open={open} onClose={onClose} title="Upload document" wide>
       <form onSubmit={submit} className="space-y-4">
-        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-ink-200 bg-paper-100 px-4 py-8 text-center hover:border-saffron">
+        <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-ink-200 bg-paper-100 px-4 py-8 text-center hover:border-saffron">
           <input type="file" className="sr-only" accept=".pdf,.txt,.md,.markdown,.html,.htm,.docx" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
           <span className="font-semibold text-ink-800">{file ? file.name : "Choose a file"}</span>
           <span className="mt-1 text-sm text-ink-500">Accepted: PDF / TXT / Markdown / HTML / DOCX · max 50 MB</span>
@@ -61,7 +61,7 @@ export default function UploadModal({ open, onClose, onStarted }: { open: boolea
           <div className="flex flex-wrap gap-2">
             {schemes.map((s) => (
               <button type="button" key={s.code} onClick={() => setCodes((c) => (c.includes(s.code) ? c.filter((x) => x !== s.code) : [...c, s.code]))}
-                className={`rounded-full border px-3 py-1 text-sm font-semibold ${codes.includes(s.code) ? "border-ink-800 bg-ink-800 text-white" : "border-ink-200 bg-white text-ink-700"}`}>
+                className={`rounded-full border px-3 py-1 text-sm font-semibold ${codes.includes(s.code) ? "border-ink-800 bg-forest-800 text-white" : "border-ink-200 bg-white text-ink-700"}`}>
                 {s.short_name || s.name}
               </button>
             ))}

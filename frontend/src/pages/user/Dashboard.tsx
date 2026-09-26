@@ -48,8 +48,8 @@ export default function Dashboard() {
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         {actions.map(({ icon: Icon, title, sub, onClick, primary }) => (
           <button key={title} onClick={onClick}
-            className={`group flex items-center gap-4 rounded-2xl border p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-lift sm:flex-col sm:items-start sm:p-5 ${primary ? "border-ink-800 bg-ink-800 text-white" : "border-paper-300 bg-white"}`}>
-            <span className={`flex h-12 w-12 flex-none items-center justify-center rounded-xl sm:mb-1 ${primary ? "bg-saffron text-white" : "bg-saffron-50 text-saffron-700"}`}>
+            className={`group flex items-center gap-4 rounded-lg border p-4 text-left transition-all hover:-translate-y-0.5 hover:shadow-lift sm:flex-col sm:items-start sm:p-5 ${primary ? "border-ink-800 bg-forest-800 text-white" : "border-paper-300 bg-white"}`}>
+            <span className={`flex h-12 w-12 flex-none items-center justify-center rounded-lg sm:mb-1 ${primary ? "bg-saffron text-white" : "bg-saffron-50 text-saffron-700"}`}>
               <Icon size={24} />
             </span>
             <span className="min-w-0 flex-1">

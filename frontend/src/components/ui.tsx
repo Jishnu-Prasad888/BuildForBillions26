@@ -52,7 +52,7 @@ export function ProgressBar({ value, className = "" }: { value: number; classNam
 
 export function EmptyState({ icon, title, children }: { icon?: ReactNode; title: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
       {icon && <div className="mb-3 text-ink-400">{icon}</div>}
       <div className="font-semibold text-ink-800">{title}</div>
       {children && <div className="mt-1 text-sm text-ink-600">{children}</div>}

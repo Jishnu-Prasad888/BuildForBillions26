@@ -71,7 +71,7 @@ export default function Forms() {
         onDrop={(e) => { e.preventDefault(); setDrag(false); upload(e.dataTransfer.files?.[0]); }}
         className={`card flex flex-col items-center gap-4 border-2 border-dashed p-8 text-center transition-colors ${drag ? "border-saffron bg-saffron-50" : "border-paper-300"}`}
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-saffron-50 text-saffron-700"><UploadCloud size={28} /></div>
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><UploadCloud size={28} /></div>
         {busy ? (
           <div className="flex items-center gap-2 font-semibold text-ink-800"><Spinner /> {busy}</div>
         ) : (

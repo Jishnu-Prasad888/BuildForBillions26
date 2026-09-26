@@ -70,14 +70,14 @@ export default function SignIn() {
       </div>
       <Link to="/signup" className="btn-secondary w-full">Create an account</Link>
 
-      <div className="mt-7 rounded-lg border border-dashed border-saffron/50 bg-saffron-50/60 p-3.5">
-        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.08em] text-saffron-700">Demo accounts</div>
+      <div className="mt-7 rounded-md border border-forest-100 bg-forest-50/60 p-3.5">
+        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.08em] text-forest-700">Quick sign-in</div>
         <div className="grid grid-cols-2 gap-2">
-          <button type="button" onClick={() => fill("ramesh@demo.in", "Demo@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-saffron-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-saffron hover:bg-saffron-50">
-            <UserRound size={15} className="text-saffron-600" /> Citizen
+          <button type="button" onClick={() => fill("ramesh@demo.in", "Demo@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-forest-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-forest-300 hover:bg-forest-50">
+            <UserRound size={15} className="text-forest-600" /> Citizen
           </button>
-          <button type="button" onClick={() => fill("admin@demo.gov.in", "Admin@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-saffron-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-saffron hover:bg-saffron-50">
-            <ShieldCheck size={15} className="text-saffron-600" /> Admin
+          <button type="button" onClick={() => fill("admin@demo.gov.in", "Admin@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-forest-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-forest-300 hover:bg-forest-50">
+            <ShieldCheck size={15} className="text-forest-600" /> Admin
           </button>
         </div>
       </div>

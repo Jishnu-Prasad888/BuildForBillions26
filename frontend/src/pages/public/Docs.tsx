@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BadgeCheck, BookOpen, Languages, ListChecks, MonitorSmartphone, Search } from "lucide-react";
 
 const SECTIONS = [
   { id: "overview", title: "Overview" },
@@ -9,11 +8,11 @@ const SECTIONS = [
 ];
 
 const FEATURES = [
-  { icon: Languages, title: "Three languages", text: "English, Hindi, Kannada with voice input" },
-  { icon: Search, title: "Scheme discovery", text: "Describe your problem, find applicable schemes" },
-  { icon: BadgeCheck, title: "Sourced answers", text: "Every answer links to its source document" },
-  { icon: MonitorSmartphone, title: "Form assistance", text: "Guided field-by-field help with voice support" },
-  { icon: ListChecks, title: "Application tracker", text: "Monitor progress for each application" },
+  { title: "Three languages", text: "English, Hindi, Kannada with voice input" },
+  { title: "Scheme discovery", text: "Describe your problem, find applicable schemes" },
+  { title: "Sourced answers", text: "Every answer links to its source document" },
+  { title: "Form assistance", text: "Guided field-by-field help with voice support" },
+  { title: "Application tracker", text: "Monitor progress for each application" },
 ];
 
 const AREAS = ["Home", "Assistant", "Schemes", "Applications", "More"];
@@ -43,10 +42,10 @@ export default function Docs() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
       <header className="mb-8 border-b border-paper-300 pb-6">
-        <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.08em] text-forest-700"><BookOpen size={14} /> Documentation</div>
+        <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">Documentation</div>
         <h1 className="mt-2 font-display text-3xl font-bold sm:text-4xl">Sahayak</h1>
         <p className="mt-2 max-w-xl text-lg text-ink-600">
-          An AI assistant for government schemes. <Link to="/guide" className="link">See the guide</Link> for step-by-step help.
+          An AI assistant for government schemes. <Link to="/welcome#guide" className="link">See the guide</Link> for step-by-step help.
         </p>
       </header>
 
@@ -61,7 +60,7 @@ export default function Docs() {
                   aria-current={active === s.id ? "true" : undefined}
                   className={`block whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-semibold transition-colors lg:-ml-px lg:rounded-none lg:rounded-r-md lg:border-l-2 ${
                     active === s.id
-                      ? "bg-forest-50 text-forest-800 lg:border-saffron"
+                      ? "bg-forest-50 text-forest-800 lg:border-forest-600"
                       : "text-ink-600 hover:bg-ink-100 hover:text-ink-900 lg:border-transparent"
                   }`}
                 >
@@ -78,17 +77,17 @@ export default function Docs() {
             <p className="mt-3 leading-relaxed text-ink-700">
               Sahayak is an AI assistant that helps citizens find government schemes and fill application forms by speaking their own language.
             </p>
-            <div className="mt-4 rounded-lg border border-saffron-100 border-l-4 border-l-saffron bg-saffron-50 px-4 py-3 text-sm text-ink-800">
-              <strong>This is a prototype.</strong> Documents and forms are demo versions. Nothing is sent to government portals.
+            <div className="mt-4 rounded-lg border border-amber-100 border-l-4 border-l-amber bg-amber-50 px-4 py-3 text-sm text-ink-800">
+              <strong>This is a prototype.</strong> Documents and forms are practice versions. Nothing is sent to government portals.
             </div>
           </section>
 
           <section aria-labelledby="features" className="scroll-mt-24">
             <h2 id="features" className="font-display text-2xl font-bold">Features</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {FEATURES.map(({ icon: Icon, title, text }) => (
+              {FEATURES.map(({ title, text }) => (
                 <li key={title} className="card flex gap-3 p-4 transition-colors hover:border-forest-200">
-                  <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-forest-50 text-forest-700 ring-1 ring-forest-100"><Icon size={18} /></span>
+                  <span className="mt-1 h-8 w-1 flex-none rounded-full bg-forest-600" aria-hidden />
                   <div>
                     <div className="font-bold text-ink-900">{title}</div>
                     <div className="text-sm leading-snug text-ink-600">{text}</div>
