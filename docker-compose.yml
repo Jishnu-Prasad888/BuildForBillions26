@@ -1,0 +1,82 @@
+# Sahayak – AI Public Service Assistant (Build for Billions prototype)
+#   cp backend/.env.example backend/.env
+#   docker compose up --build
+# App: http://localhost:5173   API docs: http://localhost:8000/docs   Neo4j: http://localhost:7474
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: public_service_ai
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d public_service_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_server_memory_heap_max__size: 512m
+    ports: ["7474:7474", "7687:7687"]
+    volumes: [neo4jdata:/data]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    volumes: [ollama:/root/.ollama]
+    # Uncomment for NVIDIA GPUs:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+
+  # One-shot: pulls the embedding + LLM models configured in backend/.env.
+  # The app works immediately (clearly-labelled fallback) and upgrades itself once models are ready.
+  ollama-pull:
+    image: curlimages/curl:8.10.1
+    depends_on: [ollama]
+    env_file: [backend/.env]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until curl -sf http://ollama:11434/api/tags >/dev/null; do sleep 2; done
+        for m in "$${EMBEDDING_MODEL:-$${OLLAMA_EMBED_MODEL:-nomic-embed-text}}" "$${LLM_MODEL:-qwen3:8b}" $${VISION_MODEL}; do
+          echo "Pulling $$m ..."; curl -s http://ollama:11434/api/pull -d "{\"model\":\"$$m\",\"stream\":false}"; echo
+        done
+    restart: "no"
+
+  backend:
+    build: ./backend
+    env_file: [backend/.env]
+    environment:
+      SEED_DIR: /data/seed
+      UPLOAD_DIR: /data/uploads
+      CORS_ORIGINS: http://localhost:5173
+    volumes:
+      - ./data:/data
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      neo4j: { condition: service_healthy }
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
+  frontend:
+    build: ./frontend
+    ports: ["5173:80"]
+    depends_on: [backend]
+
+volumes:
+  pgdata:
+  neo4jdata:
+  ollama:
