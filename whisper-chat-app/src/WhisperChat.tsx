@@ -34,12 +34,21 @@ export default function WhisperChat() {
     requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
   };
 
+  // Taps that land while a start/stop is still in flight are ignored: state
+  // only updates once it finishes, so they'd otherwise start or stop twice.
+  const busyRef = useRef(false);
+
   const handlePress = useCallback(async () => {
+    if (busyRef.current) return;
+    busyRef.current = true;
+
     if (!isRecording) {
       try {
         await startRecording();
       } catch (err: any) {
         addMessage(`⚠️ Could not start recording: ${err?.message ?? err}`);
+      } finally {
+        busyRef.current = false;
       }
       return;
     }
@@ -52,6 +61,7 @@ export default function WhisperChat() {
       addMessage(`⚠️ Transcription failed: ${err?.message ?? err}`);
     } finally {
       setIsTranscribing(false);
+      busyRef.current = false;
     }
   }, [isRecording, startRecording, stopRecordingAndTranscribe]);
 
