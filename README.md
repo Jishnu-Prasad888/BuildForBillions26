@@ -207,10 +207,15 @@ uvicorn app.main:app --reload
 cd ../frontend && npm install && npm run dev     # http://localhost:5173 (proxies /api to :8000)
 ```
 
+## Production deployment
+
+`docker-compose.prod.yml` runs a multi-container deployment: an nginx edge proxy, several API replicas, a single background worker, Redis for shared rate limits, and databases on a private network. See [DEPLOYMENT.md](DEPLOYMENT.md) for setup, scaling, rate limits, TLS and backups.
+
 ## Security and privacy (prototype level)
 
 - Passwords are hashed with bcrypt. Authentication uses JWTs, with USER / ADMIN roles checked on every admin route.
 - Inputs are validated with Pydantic. Uploads are checked by type and size. Disabled accounts cannot sign in.
+- Requests are rate-limited per user (GCRA, shared through Redis in production), with stricter limits on sign-in and AI endpoints. See [DEPLOYMENT.md](DEPLOYMENT.md#rate-limiting).
 - Screen frames are not stored. Aadhaar and account numbers are masked in chat and review.
 - The forgot-password flow shows the reset token on screen, because the prototype has no email service. This happens in demo mode only.
 - Out of scope, on purpose: SSO, complex RBAC, distributed queues and production observability.
