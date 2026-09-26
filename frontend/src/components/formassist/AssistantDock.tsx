@@ -5,7 +5,6 @@ import type { Evidence, FormAssistResponse, FormAssistSection, Lang } from "@/ty
 import Markdown, { citationOrderFrom } from "@/components/Markdown";
 import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
 import ChatInput, { type InputMode } from "@/components/ChatInput";
-import { Spinner } from "@/components/ui";
 import { QuoteButton, ReferenceChip, type ReferenceState } from "@/components/Reference";
 
 interface Msg { id: string; role: "user" | "assistant" | "system"; sections: FormAssistSection[]; choices?: string[] | null }
@@ -37,7 +36,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
   const [reference, setReference] = useState<ReferenceState | null>(null);
   const referenceRef = useRef<ReferenceState | null>(null);
   referenceRef.current = reference;
-  const bottom = useRef<HTMLDivElement>(null);
+  const list = useRef<HTMLDivElement>(null);
   const started = useRef(false);
   const fieldRef = useRef(pickedFieldId);
   fieldRef.current = pickedFieldId;
@@ -93,7 +92,26 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages, busy]);
+  // Follow the conversation inside the list only (never the page). A long reply opens at its first line, not its end.
+  useEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    const last = el.querySelector<HTMLElement>("[data-last='true']");
+    const fits = !last || last.offsetHeight <= el.clientHeight - 16;
+    el.scrollTo({ top: busy || fits ? el.scrollHeight : Math.max(0, last.offsetTop - 8), behavior: "smooth" });
+  }, [messages, busy]);
+
+  useEffect(() => { // the pane can be hidden (phone view) or resized; jump to the latest message when it shows again
+    const el = list.current;
+    if (!el) return;
+    let prev = el.clientHeight;
+    const ro = new ResizeObserver(() => {
+      if (prev === 0 && el.clientHeight > 0) el.scrollTop = el.scrollHeight;
+      prev = el.clientHeight;
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const end = async () => {
     screen.stop();
@@ -102,65 +120,89 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
   };
 
   const lastId = messages[messages.length - 1]?.id;
+  const avatar = <span className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={14} aria-hidden /></span>;
   return (
-    <div className="flex max-h-[36vh] min-h-[200px] flex-col border-t border-paper-300 bg-white lg:max-h-[30vh]">
-      <div className="flex flex-wrap items-center gap-2 border-b border-paper-300 px-3 py-2">
-        <div className="flex items-center gap-2 text-sm font-semibold text-ink-800"><Bot size={17} /> AI Assistant</div>
-        <span className="hidden truncate text-xs text-ink-500 md:inline">{summaryLine}</span>
-        <div className="ml-auto flex flex-wrap items-center gap-2">
-          {screen.active ? (
-            <>
-              <span role="status" className="flex items-center gap-1.5 rounded-md bg-leaf px-2.5 py-1 text-xs font-semibold text-white"><span className="h-2 w-2 animate-pulse rounded-full bg-white" /> 🟢 Screen assistance active</span>
-              <button className="flex items-center gap-1.5 rounded-md bg-brick px-2.5 py-1 text-xs font-semibold text-white" onClick={screen.stop}><MonitorOff size={14} /> Stop Assistance</button>
-            </>
-          ) : (
-            <button className="btn-secondary btn-sm" onClick={onStartScreen}><MonitorUp size={15} /> Start AI Screen Assistance</button>
-          )}
-          <button className="btn-danger btn-sm" onClick={end}><PhoneOff size={14} /> End</button>
+    <div className="flex h-full min-h-0 flex-1 flex-col bg-white">
+      <div className="flex flex-none items-center gap-3 border-b border-paper-300 px-4 py-3">
+        <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-forest-800 text-white"><Bot size={19} aria-hidden /></span>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-[0.97rem] font-bold leading-tight text-ink-900">AI Assistant</h2>
+          <p className="mt-0.5 text-xs leading-snug text-ink-500">{summaryLine}</p>
         </div>
+        {!screen.active && (
+          <button className="btn-ghost btn-sm w-9 flex-none !px-0" title="Start AI Screen Assistance" aria-label="Start AI Screen Assistance" onClick={onStartScreen}><MonitorUp size={18} /></button>
+        )}
+        <button className="btn-ghost btn-sm w-9 flex-none !px-0 text-ink-500 hover:text-brick" title="End the assistant session" aria-label="End the assistant session" onClick={end}><PhoneOff size={17} /></button>
       </div>
-      <div className="flex min-h-0 flex-1">
-        <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-3 py-3" aria-live="polite">
+      {screen.active && (
+        <div className="flex flex-none items-center gap-3 border-b border-forest-100 bg-forest-50 px-4 py-2.5">
+          <video ref={screen.videoRef} muted playsInline aria-label="Preview of the screen you are sharing" className="aspect-video w-24 flex-none rounded-md border border-forest-200 bg-black object-contain" />
+          <div className="min-w-0 flex-1">
+            <div role="status" className="flex items-center gap-1.5 text-xs font-bold text-forest-800"><span className="h-2 w-2 animate-pulse rounded-full bg-forest-500" /> Screen assistance is on</div>
+            <p className="mt-0.5 text-[0.68rem] leading-snug text-ink-500">A frame is used only when you ask a question. Nothing is recorded or stored.</p>
+          </div>
+          <button className="btn-danger btn-sm flex-none" title="Stop screen assistance" onClick={screen.stop}><MonitorOff size={14} /> Stop</button>
+        </div>
+      )}
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div ref={list} className="relative min-h-0 flex-1 space-y-4 overflow-y-auto bg-ink-50 px-4 py-4" aria-live="polite">
           {messages.map((m) => {
-            if (m.role === "user") return <div key={m.id} className="ml-10 rounded-lg rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.95rem]">{m.sections[0].text}</div>;
-            if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-3 py-2 text-sm text-brick">{m.sections[0].text}</div>;
+            if (m.role === "user") return (
+              <div key={m.id} data-last={m.id === lastId} className="flex justify-end">
+                <div className="max-w-[88%] whitespace-pre-wrap break-words rounded-lg rounded-br-sm bg-forest-700 px-3.5 py-2.5 text-[0.97rem] leading-relaxed text-white shadow-card">{m.sections[0].text}</div>
+              </div>
+            );
+            if (m.role === "system") return (
+              <div key={m.id} data-last={m.id === lastId} role="alert" className="break-words rounded-lg border border-brick-100 bg-brick-50 px-3 py-2 text-sm text-brick">{m.sections[0].text}</div>
+            );
             return (
-              <div key={m.id} className="mr-6 space-y-1.5">
-                {m.sections.map((s, i) => {
-                  const tag = TAG[s.kind];
-                  const ev = s.evidence ?? [];
-                  const order = citationOrderFrom(s.text, ev.map((e) => e.id));
-                  const ordered = order.map((id) => ev.find((e) => e.id === id)!).filter(Boolean);
-                  return (
-                    <div key={i} className={`rounded-lg rounded-tl-sm border px-3.5 py-2.5 text-[0.95rem] ${tag ? "border-paper-300 bg-paper-100" : "border-paper-300 bg-white"}`}>
-                      {tag && <span className={`chip mb-1.5 ${tag.cls}`}>{tag.label}</span>}
-                      <Markdown text={s.text} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
-                      {ordered.length > 0 && <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />}
+              <div key={m.id} data-last={m.id === lastId} className="flex items-start gap-2.5">
+                {avatar}
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  {m.sections.map((s, i) => {
+                    const tag = TAG[s.kind];
+                    const ev = s.evidence ?? [];
+                    const order = citationOrderFrom(s.text, ev.map((e) => e.id));
+                    const ordered = order.map((id) => ev.find((e) => e.id === id)!).filter(Boolean);
+                    return (
+                      <div key={i} className={`w-fit max-w-full break-words rounded-lg rounded-tl-sm border bg-white px-3.5 py-2.5 text-[0.97rem] shadow-card ${tag ? "border-forest-200" : "border-paper-300"}`}>
+                        {tag && <span className={`chip mb-1.5 ${tag.cls}`}>{tag.label}</span>}
+                        <Markdown text={s.text} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
+                        {ordered.length > 0 && <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />}
+                      </div>
+                    );
+                  })}
+                  <QuoteButton messageId={m.id} text={m.sections.map((s) => s.text).join(" ")} onSet={setReference} />
+                  {m.id === lastId && m.choices && m.choices.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {m.choices.map((c) => (
+                        <button key={c} disabled={busy} onClick={() => send(c)}
+                          className="rounded-full border border-forest-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-forest-800 transition-colors hover:bg-forest-50 disabled:opacity-50">{c}</button>
+                      ))}
                     </div>
-                  );
-                })}
-                <QuoteButton messageId={m.id} text={m.sections.map((s) => s.text).join(" ")} onSet={setReference} />
-                {m.id === lastId && m.choices && m.choices.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-0.5">{m.choices.map((c) => <button key={c} disabled={busy} className="btn-secondary btn-sm" onClick={() => send(c)}>{c}</button>)}</div>
-                )}
+                  )}
+                </div>
               </div>
             );
           })}
-          {busy && <div className="flex items-center gap-2 text-sm text-ink-500"><Spinner /> {screen.active ? "Looking at your screen and the form…" : "Thinking…"}</div>}
-          <div ref={bottom} />
+          {busy && (
+            <div className="flex items-start gap-2.5" role="status">
+              {avatar}
+              <div className="flex items-center gap-2.5 rounded-lg rounded-tl-sm border border-paper-300 bg-white px-3.5 py-3 shadow-card">
+                <span className="flex items-center gap-1" aria-hidden>
+                  {[0, 150, 300].map((d) => <span key={d} className="h-1.5 w-1.5 animate-bounce rounded-full bg-forest-500" style={{ animationDelay: `${d}ms` }} />)}
+                </span>
+                <span className="text-xs text-ink-500">{screen.active ? "Looking at your screen and the form…" : "Thinking…"}</span>
+              </div>
+            </div>
+          )}
         </div>
-        {screen.active && (
-          <div className="hidden w-44 flex-none border-l border-paper-300 p-2 md:block">
-            <video ref={screen.videoRef} muted playsInline aria-label="Preview of the screen you are sharing" className="aspect-video w-full rounded border border-ink-200 bg-black object-contain" />
-            <p className="mt-1 text-[0.68rem] leading-snug text-ink-500">What I can see. A frame is used only when you ask a question — nothing is recorded or stored.</p>
-          </div>
-        )}
       </div>
-      <div className="border-t border-paper-300 p-2.5">
+      <div className="flex-none border-t border-paper-300 bg-white p-3">
         {screen.error && <div className="mb-1.5 text-xs text-brick">{screen.error}</div>}
         {reference && <ReferenceChip reference={reference} onClear={() => setReference(null)} />}
-        <ChatInput onSend={(t, mode) => send(t, undefined, false, mode)} busy={busy} lang={lang}
-          placeholder="Type or speak a question or your answer — e.g. “What does this field mean?”"
+        <ChatInput onSend={(t, mode) => send(t, undefined, false, mode)} busy={busy} lang={lang} compact
+          placeholder="Type your answer or ask a question…"
           hint="I never ask for OTPs, passwords or PINs. Please don't share them." />
       </div>
       <EvidenceDrawer open={!!drawer} onClose={() => setDrawer(null)} evidence={drawer?.evidence ?? []} focusId={drawer?.focus} />
