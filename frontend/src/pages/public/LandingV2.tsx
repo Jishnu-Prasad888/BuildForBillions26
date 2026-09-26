@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Accessibility,
   BadgeCheck,
@@ -596,7 +596,7 @@ function Navbar() {
 
   const links: { href: string; label: Tri }[] = [
     {
-      href: "#how",
+      href: "#guide",
       label: {
         en: "How it works",
         hi: "कैसे काम करता है",
@@ -856,7 +856,7 @@ function Footer() {
               </Link>
             </li>
             <li>
-              <a href="#how" className="hover:text-ink-900">
+              <a href="#guide" className="hover:text-ink-900">
                 {tr({
                   en: "How it works",
                   hi: "कैसे काम करता है",
@@ -919,7 +919,15 @@ function Footer() {
 export default function Landing() {
   const tr = useTr();
   const [playing, setPlaying] = useState<string | null>(null);
+  const { hash } = useLocation();
   useEffect(() => () => stopSpeaking(), []);
+
+  // Deep links like /welcome#guide should land on the section, also when arriving from another page.
+  useEffect(() => {
+    if (!hash) return;
+    const el = document.getElementById(hash.slice(1));
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }, [hash]);
 
   let n = 0; // running step number across phases
 
@@ -1089,7 +1097,7 @@ export default function Landing() {
         </section>
 
         {/* How to use: the steps, with what to keep ready and safety alongside. */}
-        <section id="how" className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <section id="guide" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <div className="max-w-2xl">
             <h2 className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">
               {tr({
