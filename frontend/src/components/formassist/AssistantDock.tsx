@@ -1,11 +1,10 @@
-import { Bot, MonitorOff, MonitorUp, PhoneOff, Send } from "lucide-react";
+import { Bot, MonitorOff, MonitorUp, PhoneOff } from "lucide-react";
 import { useCallback, useEffect, useImperativeHandle, useRef, useState, forwardRef } from "react";
 import { api } from "@/services/api";
-import { useSpeechInput } from "@/hooks/useSpeech";
 import type { Evidence, FormAssistResponse, FormAssistSection, Lang } from "@/types";
 import Markdown, { citationOrderFrom } from "@/components/Markdown";
 import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
-import VoiceButton from "@/components/VoiceButton";
+import ChatInput, { type InputMode } from "@/components/ChatInput";
 import { Spinner } from "@/components/ui";
 
 interface Msg { id: string; role: "user" | "assistant" | "system"; sections: FormAssistSection[]; choices?: string[] | null }
@@ -33,7 +32,6 @@ const TAG: Record<FormAssistSection["kind"], { label: string; cls: string } | nu
 
 const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock({ formId, lang, pickedFieldId, screen, onStartScreen, onResponse, onEnd, summaryLine }, ref) {
   const [messages, setMessages] = useState<Msg[]>([]);
-  const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [drawer, setDrawer] = useState<{ evidence: Evidence[]; focus?: string | null } | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
@@ -44,16 +42,16 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
   // an answer meant for a question it has already moved past.
   const pendingRef = useRef<string | null>(null);
 
-  const send = useCallback(async (text: string, fieldId?: string, silent = false) => {
+  const send = useCallback(async (text: string, fieldId?: string, silent = false, mode: InputMode = "text") => {
     const msg = text.trim();
     if (busy || (!msg && !silent)) return;
     if (msg) setMessages((m) => [...m, { id: `u-${Date.now()}`, role: "user", sections: [{ kind: "assistant", text: msg }] }]);
-    setInput("");
     setBusy(true);
     try {
       const frame = screen.active && msg && QUESTION_RE.test(msg) ? screen.grabFrame() : null;
       const r = await api.post<FormAssistResponse>(`/api/forms/${formId}/assistant`, {
-        message: msg, current_field_id: fieldId ?? fieldRef.current, pending_field_id: pendingRef.current, language: lang, frame, screen_shared: screen.active,
+        message: msg, current_field_id: fieldId ?? fieldRef.current, pending_field_id: pendingRef.current, language: lang, frame,
+        screen_shared: screen.active, input_mode: mode,
       });
       pendingRef.current = r.pending_field_id ?? null;
       setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", sections: r.sections, choices: r.choices }]);
@@ -83,11 +81,9 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const voice = useSpeechInput(lang, (t) => send(t));
   useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages, busy]);
 
   const end = async () => {
-    voice.stop();
     screen.stop();
     await api.post(`/api/forms/${formId}/assistant/end`).catch(() => undefined);
     onEnd();
@@ -148,14 +144,10 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
         )}
       </div>
       <div className="border-t border-paper-300 p-2.5">
-        {(voice.listening || voice.interim) && <div className="mb-1.5 text-sm font-semibold text-saffron-700">Listening… {voice.interim}</div>}
-        {(voice.error || screen.error) && <div className="mb-1.5 text-xs text-brick">{voice.error || screen.error}</div>}
-        <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex items-center gap-2">
-          {voice.supported && <VoiceButton listening={voice.listening} onStart={voice.start} onStop={voice.stop} disabled={busy} />}
-          <input className="input py-2.5" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a question or your answer — e.g. “What does this field mean?”" aria-label="Message to the assistant" maxLength={1000} />
-          <button className="btn-primary h-11 px-3" disabled={busy || !input.trim()} aria-label="Send"><Send size={17} /></button>
-        </form>
-        <p className="mt-1.5 text-[0.7rem] text-ink-400">I never ask for OTPs, passwords or PINs. Please don't share them.</p>
+        {screen.error && <div className="mb-1.5 text-xs text-brick">{screen.error}</div>}
+        <ChatInput onSend={(t, mode) => send(t, undefined, false, mode)} busy={busy} lang={lang}
+          placeholder="Type or speak a question or your answer — e.g. “What does this field mean?”"
+          hint="I never ask for OTPs, passwords or PINs. Please don't share them." />
       </div>
       <EvidenceDrawer open={!!drawer} onClose={() => setDrawer(null)} evidence={drawer?.evidence ?? []} focusId={drawer?.focus} />
     </div>

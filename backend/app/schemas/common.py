@@ -54,6 +54,7 @@ class ChatIn(BaseModel):
     conversation_id: str | None = None
     language: str | None = Field(default=None, pattern="^(en|hi|kn)$")
     application_id: str | None = None
+    input_mode: str = Field(default="text", pattern="^(text|voice)$")  # logging only; never changes routing
 
 
 class NoteIn(BaseModel):
@@ -102,6 +103,7 @@ class SessionMessage(BaseModel):
     text: str = Field(min_length=1, max_length=2000)
     screen: ScreenIn | None = None
     language: str | None = Field(default=None, pattern="^(en|hi|kn)$")
+    input_mode: str = Field(default="text", pattern="^(text|voice)$")  # logging only; never changes routing
 
 
 class AdminUserPatch(BaseModel):

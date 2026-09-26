@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -9,6 +11,8 @@ from app.models.common import utcnow
 from app.schemas.common import SessionMessage, SessionStart
 from app.services.form_assistant import FormAssistant
 from app.services.form_templates import f
+
+log = logging.getLogger("screen.api")
 
 router = APIRouter(prefix="/api/screen-assistance", tags=["screen-assistance"])
 
@@ -49,6 +53,7 @@ def start(body: SessionStart, user: User = Depends(get_current_user), db: Sessio
 @router.post("/sessions/{sid}/messages")
 def message(sid: str, body: SessionMessage, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     conv, app = _load(db, sid, user)
+    log.info("Screen assistance turn (input_mode=%s)", body.input_mode)
     if conv.ended_at:
         raise HTTPException(400, "This assistance session has ended")
     if body.language and body.language != conv.language:
