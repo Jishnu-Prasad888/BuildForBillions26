@@ -82,3 +82,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
 export const useI18n = () => useContext(Ctx);
 export const speechLang = (l: Lang) => LANGUAGES.find((x) => x.code === l)?.speech ?? "en-IN";
+
+/** Inline trilingual text for long-form pages (landing, guide) that would bloat the shared dictionary. */
+export type Tri = Record<Lang, string>;
+export const useTr = () => {
+  const { lang } = useI18n();
+  return (v: Tri) => v[lang] ?? v.en;
+};
