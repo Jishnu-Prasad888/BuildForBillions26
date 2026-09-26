@@ -10,6 +10,28 @@ export function speechSupported(): boolean {
   return typeof window !== "undefined" && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 }
 
+function isBrave(): boolean {
+  return !!(navigator as any).brave;
+}
+
+function voiceErrorMessage(code: string): string {
+  switch (code) {
+    case "not-allowed":
+    case "service-not-allowed":
+      return "Microphone permission was denied. Allow microphone access in your browser's site settings.";
+    case "audio-capture":
+      return "No microphone was found. Check that a microphone is connected.";
+    case "language-not-supported":
+      return "Voice input isn't available for this language in your browser. Please type instead.";
+    case "network":
+      if (!navigator.onLine) return "You appear to be offline. Voice input needs an internet connection.";
+      if (isBrave()) return "Brave blocks the speech service voice input depends on. Please use Chrome or Edge, or type instead.";
+      return "Couldn't reach the browser's speech service. Check your connection (VPNs and firewalls can block it) and try again, or type instead.";
+    default:
+      return `Voice error: ${code}`;
+  }
+}
+
 export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
@@ -27,6 +49,10 @@ export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
       setError("Voice input is not supported in this browser. Please use Chrome or Edge, or type instead.");
+      return;
+    }
+    if (isBrave()) {
+      setError(voiceErrorMessage("network"));
       return;
     }
     window.speechSynthesis?.cancel();
@@ -50,7 +76,7 @@ export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
       }
     };
     rec.onerror = (e: any) => {
-      if (e.error !== "no-speech" && e.error !== "aborted") setError(e.error === "not-allowed" ? "Microphone permission was denied." : `Voice error: ${e.error}`);
+      if (e.error !== "no-speech" && e.error !== "aborted") setError(voiceErrorMessage(e.error));
       setListening(false);
     };
     rec.onend = () => setListening(false);
