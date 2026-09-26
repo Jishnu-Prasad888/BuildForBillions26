@@ -26,7 +26,7 @@ mic ──► AudioRecorder ──► 0.5s PCM chunks ──► stitch ──►
 
 - A **physical iPhone or Android phone** (simulators are slow for on-device ML,
   and the iOS simulator has no real microphone).
-- iOS 17+ / Android 13+ (`minSdkVersion` 26 — already set in `app.json`).
+- iOS 17+ / Android 8.0+ (`minSdkVersion` 26 — already set in `app.json`).
 - A **development build** is required; this will **not** run in Expo Go, because
   both libraries ship native code.
 - ~500 MB free space for the one-time model download (cached afterwards).

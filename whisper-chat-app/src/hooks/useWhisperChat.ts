@@ -21,6 +21,11 @@ const LANGUAGE = 'en';
 // instead of holding hundreds of MB of PCM in JS memory.
 const MAX_RECORDING_SECONDS = 60;
 
+// Lets events already queued for the JS thread (like the final audio chunk
+// flushed by recorder.stop()) run before we read what was captured.
+const flushPendingEvents = () =>
+  new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 // The recorder asks for 16 kHz mono, but the OS may hand back a different rate.
 // Whisper needs exactly 16 kHz, so anything else has to be resampled first —
 // otherwise it just returns garbage.
@@ -55,14 +60,18 @@ export function useWhisperChat() {
   // instances costs memory and battery.
   const recorderRef = useRef<AudioRecorder | null>(null);
   const chunksRef = useRef<Float32Array[]>([]);
+  const capturedSecondsRef = useRef(0);
   const sampleRateRef = useRef(WHISPER_SAMPLE_RATE_HZ);
 
   // Stop the microphone if the screen goes away mid-recording.
   useEffect(() => {
     return () => {
-      recorderRef.current?.clearOnAudioReady();
-      void recorderRef.current?.stop();
+      const recorder = recorderRef.current;
       recorderRef.current = null;
+      if (!recorder) return;
+      recorder.clearOnAudioReady();
+      if (recorder.isRecording()) void recorder.stop();
+      void AudioManager.setAudioSessionActivity(false).catch(() => {});
     };
   }, []);
 
@@ -84,6 +93,7 @@ export function useWhisperChat() {
     await AudioManager.setAudioSessionActivity(true);
 
     chunksRef.current = [];
+    capturedSecondsRef.current = 0;
     sampleRateRef.current = WHISPER_SAMPLE_RATE_HZ;
 
     const recorder = recorderRef.current ?? new AudioRecorder();
@@ -91,22 +101,27 @@ export function useWhisperChat() {
 
     // react-native-audio-api hands us raw float32 PCM, which is exactly the
     // format Whisper wants — no audio file, no decoding, no resaving.
-    recorder.onAudioReady(
+    const callbackResult = recorder.onAudioReady(
       {
         sampleRate: WHISPER_SAMPLE_RATE_HZ,
         bufferLength: WHISPER_SAMPLE_RATE_HZ * 0.5, // ~0.5s chunks
         channelCount: 1,
       },
       ({ buffer }) => {
-        if (chunksRef.current.length >= MAX_RECORDING_SECONDS * 2) return;
+        // Capped by duration, not chunk count: the device may not honour the
+        // requested buffer length.
+        if (capturedSecondsRef.current >= MAX_RECORDING_SECONDS) return;
         chunksRef.current.push(buffer.getChannelData(0).slice());
+        capturedSecondsRef.current += buffer.duration;
         sampleRateRef.current = buffer.sampleRate;
       }
     );
 
-    const result = await recorder.start();
+    const result =
+      callbackResult.status === 'error' ? callbackResult : await recorder.start();
     if (result.status === 'error') {
       recorder.clearOnAudioReady();
+      await AudioManager.setAudioSessionActivity(false).catch(() => {});
       throw new Error(result.message);
     }
 
@@ -117,14 +132,19 @@ export function useWhisperChat() {
     const recorder = recorderRef.current;
     if (!recorder) return '';
 
-    // Clear the callback first: that flushes the final partial chunk through it
-    // before we take the audio down.
-    recorder.clearOnAudioReady();
-    const result = await recorder.stop();
-    await AudioManager.setAudioSessionActivity(false).catch(() => {
-      // Session teardown is best-effort — the recording is already captured.
-    });
-    setIsRecording(false);
+    // Stop before clearing the callback: stop() is what flushes the final
+    // partial chunk through it, so clearing first drops the tail of the speech.
+    let result: Awaited<ReturnType<AudioRecorder['stop']>>;
+    try {
+      result = await recorder.stop();
+      await flushPendingEvents();
+    } finally {
+      recorder.clearOnAudioReady();
+      setIsRecording(false);
+      await AudioManager.setAudioSessionActivity(false).catch(() => {
+        // Session teardown is best-effort — the recording is already captured.
+      });
+    }
 
     if (result.status === 'error') {
       throw new Error(result.message);
@@ -134,7 +154,8 @@ export function useWhisperChat() {
     const sampleRate = sampleRateRef.current;
     chunksRef.current = [];
 
-    if (chunks.length === 0 || !transcribe) return '';
+    if (chunks.length === 0) return '';
+    if (!transcribe) throw new Error('Whisper is not loaded yet.');
 
     // Stitch the chunks into one waveform for a single transcription pass.
     const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
