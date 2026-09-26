@@ -55,6 +55,7 @@ class FormAssistant:
         self.updates: dict = {}
         self.questions: list[str] = []
         self.action: str | None = None
+        self.pending: dict | None = None
         self.mode = "rule"
 
     # ------------------------------------------------------------------ helpers
@@ -162,6 +163,14 @@ class FormAssistant:
         return f("pending_left", self.lang, fields=", ".join(self._label(x) for x in pending_req), label=self._label(first))
 
     # ---------------------------------------------------------------- filling
+    def propose(self, fid: str, value) -> str:
+        """Never write a value the user hasn't approved: ask first, fill on 'yes'."""
+        fld = self._field(fid)
+        self.state["current_field"] = fid
+        self.state["pending_fill"] = {"field": fid, "value": value}
+        self.pending = {"field_id": fid, "label": field_label(fld, self.lang), "display": mask(fld, value)}
+        return f("confirm_fill", self.lang, label=field_label(fld, self.lang), value=mask(fld, value))
+
     def fill(self, fid: str, value) -> str:
         prev_section = self.by_id[fid]["section_id"]
         self.values[fid] = value
@@ -169,6 +178,7 @@ class FormAssistant:
         sk = self.skipped - {fid}
         self.state["skipped"] = sorted(sk)
         self.state.pop("suggestion", None)
+        self.state.pop("pending_fill", None)
         self.state.pop("editing", None)
         fld = self._field(fid)
         msg = f("filled", self.lang, value=mask(fld, value), label=field_label(fld, self.lang))
@@ -281,6 +291,17 @@ class FormAssistant:
         if contains_secret(text) and not is_question:
             return self._finish(f("no_secrets", self.lang), text, scr)
 
+        # 0) approve / decline a value the assistant proposed to fill
+        pend = self.state.get("pending_fill")
+        if pend and not is_question:
+            self.state.pop("pending_fill")
+            if pend["field"] in self.by_id:
+                if re.search(YES, low):
+                    return self._finish(self.fill(pend["field"], pend["value"]), text, scr)
+                if re.fullmatch(NO + r"[\s.!]*", low):
+                    self.state["current_field"] = pend["field"]
+                    return self._finish(f("fill_declined", self.lang, label=self._label(pend["field"])), text, scr)
+
         sugg = self.state.get("suggestion")
         # 1) accept / reject a profile suggestion
         if sugg and sugg.get("field") == cur_id and not is_question:
@@ -334,7 +355,7 @@ class FormAssistant:
                 return self._finish(f("declaration_self", self.lang), text, scr)
             opts = " / ".join(option_display(fld, self.lang)) if fld.get("options") else ""
             return self._finish(f("invalid", self.lang, label=field_label(fld, self.lang), format=fmt(err, self.lang, options=opts)), text, scr)
-        return self._finish(self.fill(cur_id, value), text, scr)
+        return self._finish(self.propose(cur_id, value), text, scr)
 
     GENERIC = {"name", "number", "date", "details", "code", "type", "information", "given", "true", "declare", "applicant",
                "affected", "land", "crop", "damage", "acres"}
@@ -410,5 +431,5 @@ class FormAssistant:
             "current_field": {"id": cur, "label": field_label(cur_f, self.lang), "section": cur_f["section_title"]} if cur_f else None,
             "field_updates": self.updates, "form_data": self.values, "field_status": status, "progress": progress,
             "ai_notes": ai_notes, "suggested_notes": self.suggestions, "evidence": self.evidence,
-            "screen_understanding": scr, "action": self.action, "mode": self.mode,
+            "screen_understanding": scr, "action": self.action, "mode": self.mode, "pending_fill": self.pending,
         }

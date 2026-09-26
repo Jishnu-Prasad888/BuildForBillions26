@@ -65,6 +65,16 @@ F = {
     },
     "reask": {"en": "When you're ready, tell me your **{label}**.", "hi": "जब आप तैयार हों, अपनी **{label}** बताइए।", "kn": "ನೀವು ಸಿದ್ಧರಾದಾಗ, ನಿಮ್ಮ **{label}** ತಿಳಿಸಿ."},
     "switched": {"en": "Sure, let's change **{label}**.", "hi": "ठीक है, **{label}** बदलते हैं।", "kn": "ಸರಿ, **{label}** ಬದಲಾಯಿಸೋಣ."},
+    "confirm_fill": {
+        "en": "I can fill **{label}** with **{value}**. Shall I fill it in? Say **yes** to fill it, or tell me the correct value.",
+        "hi": "मैं **{label}** में **{value}** भर सकता हूँ। क्या भर दूँ? भरने के लिए **हाँ** कहें, या सही जानकारी बताएँ।",
+        "kn": "**{label}** ನಲ್ಲಿ **{value}** ತುಂಬಬಹುದು. ತುಂಬಲೇ? ತುಂಬಲು **ಹೌದು** ಎನ್ನಿ, ಅಥವಾ ಸರಿಯಾದ ಮಾಹಿತಿ ತಿಳಿಸಿ.",
+    },
+    "fill_declined": {
+        "en": "Okay, I haven't filled it. Please tell me the correct **{label}**.",
+        "hi": "ठीक है, मैंने नहीं भरा। कृपया सही **{label}** बताइए।",
+        "kn": "ಸರಿ, ನಾನು ತುಂಬಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರಿಯಾದ **{label}** ತಿಳಿಸಿ.",
+    },
     "no_secrets": {
         "en": "Please don't share OTPs, PINs or passwords with me — I never need them, and this form doesn't ask for them. Enter an OTP only on the official portal when it asks.",
         "hi": "कृपया OTP, PIN या पासवर्ड मुझे न बताएँ — मुझे इनकी कभी ज़रूरत नहीं होती, और यह फ़ॉर्म इन्हें नहीं माँगता। OTP केवल आधिकारिक पोर्टल पर माँगे जाने पर ही डालें।",

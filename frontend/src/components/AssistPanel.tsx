@@ -1,4 +1,4 @@
-import { Bot, Keyboard, Mic, MicOff, MonitorOff, MonitorUp, PhoneOff, Plus, Send, Volume2, VolumeX } from "lucide-react";
+import { Bot, Check, Keyboard, X, Mic, MicOff, MonitorOff, MonitorUp, PhoneOff, Plus, Send, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
@@ -32,7 +32,10 @@ interface Props {
   onEnd: () => void;
 }
 
-type Msg = ChatMessage & { suggestions?: AssistResponse["suggested_notes"] };
+type Msg = ChatMessage & { suggestions?: AssistResponse["suggested_notes"]; pendingFill?: AssistResponse["pending_fill"] };
+
+const YES_WORD: Record<Lang, string> = { en: "Yes", hi: "हाँ", kn: "ಹೌದು" };
+const NO_WORD: Record<Lang, string> = { en: "No", hi: "नहीं", kn: "ಇಲ್ಲ" };
 
 export default function AssistPanel({ sessionId, initial, lang, setLang, screen, collectScreen, onResponse, onAddNote, onEnd }: Props) {
   const { t } = useI18n();
@@ -88,7 +91,7 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
       const ctx = collectScreen();
       const frame = screen.active ? screen.grabFrame() : null;
       const r = await api.post<AssistResponse>(`/api/screen-assistance/sessions/${sessionId}/messages`, { text: msg, language: lang, screen: { ...ctx, frame } });
-      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: r.reply, evidence: r.evidence, suggestions: r.suggested_notes }]);
+      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: "assistant", content: r.reply, evidence: r.evidence, suggestions: r.suggested_notes, pendingFill: r.pending_fill }]);
       onResponse(r);
       afterReply(r.reply);
     } catch (e: any) {
@@ -144,6 +147,16 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
                 <Markdown text={m.content} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
               </div>
               <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
+              {m.pendingFill && m.id === messages[messages.length - 1]?.id && (
+                <div className="mt-2 rounded-lg border border-ink-200 bg-white px-3 py-2.5 text-sm">
+                  <div className="text-ink-600">Fill <b>{m.pendingFill.label}</b> with:</div>
+                  <div className="my-1 font-semibold text-ink-900">“{m.pendingFill.display}”</div>
+                  <div className="mt-2 flex gap-2">
+                    <button className="btn-primary btn-sm" disabled={busy} onClick={() => send(YES_WORD[lang])}><Check size={15} /> Fill field</button>
+                    <button className="btn-secondary btn-sm" disabled={busy} onClick={() => send(NO_WORD[lang])}><X size={15} /> Don't fill</button>
+                  </div>
+                </div>
+              )}
               {m.suggestions?.map((s) => (
                 <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-dashed border-saffron-100 bg-saffron-50 px-3 py-2 text-sm">
                   <span className="text-saffron-700">Suggested note: <b>{s.content}</b></span>
