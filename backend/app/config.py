@@ -2,6 +2,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +57,16 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
 
     TELEGRAM_BOT_TOKEN: str = ""
+
+    # Run the re-embed loop and Telegram bot in this process. Enable in exactly one
+    # container when running several API replicas (the bot allows only one poller).
+    RUN_BACKGROUND_TASKS: bool = True
+
+    @model_validator(mode="after")
+    def _production_safety(self) -> "Settings":
+        if self.APP_ENV == "production" and self.JWT_SECRET_KEY in ("", "change-this-in-development"):
+            raise ValueError("JWT_SECRET_KEY must be set to a strong random value when APP_ENV=production")
+        return self
 
     @property
     def embedding_model(self) -> str:
