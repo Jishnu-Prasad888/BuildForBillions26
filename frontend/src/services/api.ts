@@ -1,3 +1,5 @@
+import { reportApiFailure } from "@/monitoring";
+
 const TOKEN_KEY = "sahayak.token";
 
 export const tokenStore = {
@@ -30,6 +32,7 @@ async function request<T>(method: string, path: string, body?: unknown, isForm =
   }
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
+  if (res.status >= 500) reportApiFailure(method, path, res.status);
   if (!res.ok) {
     let msg = data?.detail ?? res.statusText;
     if (Array.isArray(msg)) msg = msg.map((d: any) => `${(d.loc || []).slice(-1)[0]}: ${d.msg}`).join("; ");

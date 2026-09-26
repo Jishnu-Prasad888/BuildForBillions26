@@ -1,3 +1,4 @@
+import { identifyUser } from "@/monitoring";
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { api, tokenStore } from "./api";
 import type { User } from "@/types";
@@ -37,6 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  useEffect(() => identifyUser(user?.id ?? null, user?.role), [user?.id, user?.role]);
 
   const signIn = async (email: string, password: string) => {
     const r = await api.post<{ access_token: string; user: User }>("/api/auth/signin", { email, password });
