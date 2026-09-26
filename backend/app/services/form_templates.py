@@ -80,6 +80,11 @@ F = {
         "hi": "कृपया OTP, PIN या पासवर्ड मुझे न बताएँ — मुझे इनकी कभी ज़रूरत नहीं होती, और यह फ़ॉर्म इन्हें नहीं माँगता। OTP केवल आधिकारिक पोर्टल पर माँगे जाने पर ही डालें।",
         "kn": "ದಯವಿಟ್ಟು OTP, PIN ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ನನಗೆ ಹೇಳಬೇಡಿ — ನನಗೆ ಅವು ಎಂದಿಗೂ ಬೇಕಿಲ್ಲ, ಈ ಫಾರ್ಮ್ ಅವನ್ನು ಕೇಳುವುದಿಲ್ಲ. ಅಧಿಕೃತ ಪೋರ್ಟಲ್ ಕೇಳಿದಾಗ ಮಾತ್ರ OTP ನಮೂದಿಸಿ.",
     },
+    "ocr_seen": {
+        "en": "I can read these fields on your screen: {labels}.",
+        "hi": "मैं आपकी स्क्रीन पर ये फ़ील्ड पढ़ पा रहा हूँ: {labels}।",
+        "kn": "ನಿಮ್ಮ ಪರದೆಯಲ್ಲಿ ಈ ಕ್ಷೇತ್ರಗಳನ್ನು ಓದಬಲ್ಲೆ: {labels}.",
+    },
     "ask_again": {"en": "Please tell me the **{label}**.", "hi": "कृपया **{label}** बताइए।", "kn": "ದಯವಿಟ್ಟು **{label}** ತಿಳಿಸಿ."},
     "declaration_self": {
         "en": "For your protection, please tick the declaration box yourself after reading it.",

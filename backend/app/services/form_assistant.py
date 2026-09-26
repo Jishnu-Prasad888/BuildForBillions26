@@ -20,6 +20,7 @@ from app.kag.query_understanding import QueryContext, understand
 from app.kag.retriever import retrieve
 from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
+from app.services import ocr
 from app.services.ai import get_ai
 from app.services.form_templates import f, fmt
 from app.services.forms import (
@@ -56,6 +57,7 @@ class FormAssistant:
         self.questions: list[str] = []
         self.action: str | None = None
         self.pending: dict | None = None
+        self.ocr_text = ""
         self.mode = "rule"
 
     # ------------------------------------------------------------------ helpers
@@ -217,19 +219,36 @@ class FormAssistant:
             "focused_field": screen.get("focused_field_id"),
             "frame_received": bool(screen.get("frame")),
             "vision": None,
+            "ocr": None,
         }
-        if analyse_frame and screen.get("frame") and get_ai().vision_available():
-            out = get_ai().generate_json([
-                {"role": "system", "content": "You read screenshots of government forms. Return JSON with keys: "
-                 "fields (list of {label, required, has_value}), options (list), instructions (list), buttons (list), warnings (list)."},
-                {"role": "user", "content": "Describe the visible form on this screen."},
-            ], images=[screen["frame"]])
+        frame = screen.get("frame") if analyse_frame else None
+        if frame:
+            out = None
+            if get_ai().vision_available():
+                out = get_ai().generate_json([
+                    {"role": "system", "content": "You read screenshots of government forms. Return JSON with keys: "
+                     "fields (list of {label, required, has_value}), options (list), instructions (list), buttons (list), warnings (list). "
+                     "Never copy the values typed into fields."},
+                    {"role": "user", "content": "Describe the visible form on this screen."},
+                ], images=[frame])
             if out:
                 summary["vision"] = out
                 summary["source"] = "vision+form-structure"
                 self.state["vision"] = out
-        elif self.state.get("vision"):
-            summary["vision"] = self.state["vision"]
+                self.state.pop("ocr", None)
+            elif (read := ocr.read_screen(frame, self.lang)):
+                self.ocr_text = read["visible_text"]
+                labels = {"fields": read["fields"], "options": read["options"]}
+                summary["ocr"] = labels
+                summary["source"] = "ocr+form-structure"
+                self.state["ocr"] = labels
+                self.state.pop("vision", None)
+        if not summary["vision"] and not summary["ocr"]:
+            summary["vision"] = self.state.get("vision")
+            summary["ocr"] = self.state.get("ocr")
+        if not visible and summary["ocr"]:
+            summary["fields_detected"] = len(summary["ocr"]["fields"])
+            summary["required_detected"] = sum(1 for x in summary["ocr"]["fields"] if x["required"])
         return summary
 
     def screen_context_text(self, fid: str, screen: dict | None) -> str:
@@ -242,6 +261,14 @@ class FormAssistant:
             lines.append(f"- visible field: {v.get('label')}{' *required' if v.get('required') else ''}{' [filled]' if v.get('filled') else ''}")
         if self.state.get("vision"):
             lines.append(f"Vision model reading of the screenshot: {str(self.state['vision'])[:1200]}")
+        elif self.state.get("ocr"):
+            o = self.state["ocr"]
+            lines.append("OCR reading of the screenshot (may contain recognition errors):")
+            lines += [f"- field on screen: {x['label']}{' *required' if x['required'] else ''}" for x in o["fields"][:25]]
+            if o["options"]:
+                lines.append(f"- options on screen: {', '.join(o['options'][:20])}")
+            if self.ocr_text:
+                lines.append(f"Visible text:\n{self.ocr_text[:1500]}")
         return "\n".join(lines)
 
     # ---------------------------------------------------------------- main turn
@@ -258,7 +285,10 @@ class FormAssistant:
                     last=self._section_title_by_name(self.app.last_completed_section), next=section_title(nsec, self.lang))
         else:
             msg = f("greet_new", self.lang, form=title, sections=len(self.form["sections"]), fields=n_fields, required=n_req)
-        if scr["fields_detected"]:
+        dom_fields = len((screen or {}).get("visible_fields") or [])
+        if not dom_fields and scr["ocr"] and scr["ocr"]["fields"]:
+            msg += " " + f("ocr_seen", self.lang, labels=", ".join(x["label"] for x in scr["ocr"]["fields"][:8]))
+        elif scr["fields_detected"]:
             msg += " " + f("screen_seen", self.lang, n=scr["fields_detected"])
         msg += "\n\n" + self.ask(nxt)
         return self._finish(msg, None, scr)

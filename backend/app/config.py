@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "ollama"
     LLM_MODEL: str = "qwen3:8b"
     VISION_MODEL: str = ""
+    OCR_ENABLED: bool = True
+    TESSERACT_CMD: str = ""
     LLM_TIMEOUT_SECONDS: float = 120.0
     LLM_TEMPERATURE: float = 0.2
 
