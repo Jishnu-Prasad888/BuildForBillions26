@@ -12,6 +12,7 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 |---|---|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design, data stores, KAG pipeline, ingestion, form assistance, bots |
 | [docs/API.md](docs/API.md) | REST API: auth, schemes, assistant, applications, admin, health |
+| [docs/FORM_ASSISTANT.md](docs/FORM_ASSISTANT.md) | AI Form Assistant: upload any form, detect fields, AutoFill, completed PDF |
 | [TELEGRAM_SETUP.md](TELEGRAM_SETUP.md) | End-to-end Telegram bot setup |
 | [whisper-chat-app/README.md](whisper-chat-app/README.md) | Optional on-device Whisper STT companion app |
 
@@ -22,6 +23,7 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 - **Life-event discovery** — English, Hindi, and Kannada (script detection + translation for retrieval).
 - **Knowledge-augmented generation (KAG)** — Neo4j scheme graph + pgvector document chunks; citations are validated in the backend, not trusted from the LLM.
 - **Screen-aware form help** — structured screen context, plus a vision model or Tesseract OCR fallback to read shared tabs (frames are never stored). Values are filled only after the citizen approves them.
+- **AI Form Assistant** — upload any PDF or photo of a form (no prebuilt forms). It reads the page (PyMuPDF, OpenCV, Tesseract), detects fields, asks for what is missing, clarifies ambiguity, and writes a completed PDF onto a copy. The original is never modified; every file and row is private to its owner.
 - **Citizen wallet** — documents, notes, application tracker with a mock status timeline.
 - **Admin knowledge ops** — upload PDFs/HTML/MD/DOCX, fetch URLs, watch ingestion stages, inspect chunks, add schemes.
 - **Telegram bot** — same KAG pipeline, long-polling in the FastAPI process (optional token).
@@ -101,6 +103,8 @@ backend/app/
   ingestion/             extract, chunk, embed, index, web fetch
   kag/                   understand → retrieve → generate → validate citations
   services/              AI providers, form assistant, seed, notes
+  services/formdoc/      AI Form Assistant: storage, validation, analysis, detection, fill, assistant
+backend/tests/           pytest suite for the form assistant (SQLite, no containers)
   bot/                   Telegram handlers, keyboards, formatter
 data/seed/               graph.json, DEMO documents, form JSON
 data/documents/          extra files for the admin upload demo
@@ -140,6 +144,7 @@ Copy `backend/.env.example`. Important variables:
 | `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; `pgvector` or `json` cosine fallback |
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
 | `JWT_SECRET_KEY` | Change outside local demo (the backend refuses the default when `APP_ENV=production`) |
+| `FORMS_DIR`, `MAX_FORM_SIZE_MB`, `MAX_FORM_PAGES` | Private storage and limits for the AI Form Assistant |
 | `TELEGRAM_BOT_TOKEN` | Empty disables the bot |
 | `DEMO_MODE` | Mock submit / status; forgot-password returns the reset token |
 | `REDIS_URL`, `RATE_LIMIT_*` | Rate limits (`count/period:burst`); Redis shares them across replicas |

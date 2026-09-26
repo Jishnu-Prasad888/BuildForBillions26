@@ -62,6 +62,7 @@ services:
     environment:
       SEED_DIR: /data/seed
       UPLOAD_DIR: /data/uploads
+      FORMS_DIR: /data/users
       CORS_ORIGINS: http://localhost:5173
     volumes:
       - ./data:/data

@@ -19,6 +19,8 @@ import SchemeDetail from "@/pages/user/SchemeDetail";
 import Applications from "@/pages/user/Applications";
 import ApplicationDetail from "@/pages/user/ApplicationDetail";
 import FormPage from "@/pages/user/FormPage";
+import Forms from "@/pages/user/Forms";
+import FormWorkspace from "@/pages/user/FormWorkspace";
 import Review from "@/pages/user/Review";
 import Documents from "@/pages/user/Documents";
 import Notes from "@/pages/user/Notes";
@@ -81,12 +83,14 @@ export default function App() {
       </Route>
 
       <Route path="/applications/:id/form" element={<Protected><FormPage /></Protected>} />
+      <Route path="/forms/:id" element={<Protected><FormWorkspace /></Protected>} />
 
       <Route element={<CitizenShell />}>
         <Route path="/" element={<Home />} />
         <Route path="/assistant" element={<Assistant />} />
         <Route path="/schemes" element={<Schemes />} />
         <Route path="/schemes/:code" element={<SchemeDetail />} />
+        <Route path="/forms" element={<Forms />} />
         <Route path="/applications" element={<Applications />} />
         <Route path="/applications/:id" element={<ApplicationDetail />} />
         <Route path="/applications/:id/review" element={<Review />} />
