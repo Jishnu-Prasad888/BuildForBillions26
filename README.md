@@ -164,6 +164,8 @@ API keys are never returned by the API. Interactive OpenAPI: `/docs` (disabled w
 
 Crash and error reporting for both the API and the browser. It is **off unless you set a DSN**: with the DSN empty the backend never imports the SDK, and the frontend does not even download it.
 
+For a step-by-step walkthrough of getting the dashboard (accounts, projects, DSNs, verifying, reading it, alerts, troubleshooting), see **[sentry.md](sentry.md)**.
+
 **Turn it on**
 
 1. In Sentry, create two projects: a **Python** one (backend) and a **Browser** one (frontend). Each has its own DSN.
