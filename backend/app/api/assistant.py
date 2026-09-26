@@ -9,6 +9,7 @@ from app.kag.query_understanding import understand
 from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
 from app.schemas.common import ChatIn, KagQueryIn
+from app.services.query_normalizer import answer_normalized
 from app.services.redact import redact
 
 router = APIRouter(prefix="/api/assistant", tags=["assistant"])
@@ -47,11 +48,12 @@ def chat(body: ChatIn, user: User = Depends(get_current_user), db: Session = Dep
 
     q = understand(body.message, lang, context_schemes or last_scheme_ctx or None, _state_code(user))
     q.language = lang
-    db.add(Message(conversation_id=conv.id, role="user", content=redact(body.message), meta={"language": lang}))
+    db.add(Message(conversation_id=conv.id, role="user", content=redact(body.message), meta={"language": lang, "input_mode": body.input_mode}))
 
     prev = next((m for m in reversed(history_msgs) if m.role == "assistant"), None)
-    result = agent.answer(db, body.message, lang, query=q, history=history,
-                          previous_evidence=(prev.evidence or []) if prev else [])
+    result = answer_normalized(db, body.message, lang, query=q, history=history,
+                               input_mode=body.input_mode,
+                               previous_evidence=(prev.evidence or []) if prev else [])
 
     reply = Message(conversation_id=conv.id, role="assistant", content=result["answer"], evidence=result["evidence"],
                     meta={"grounded": result["grounded"], "insufficient_evidence": result["insufficient_evidence"], "mode": result["mode"],
@@ -61,7 +63,10 @@ def chat(body: ChatIn, user: User = Depends(get_current_user), db: Session = Dep
     db.add(reply)
     conv.updated_at = utcnow()
     db.commit()
-    return {"conversation_id": conv.id, "message": _msg_out(reply), "retrieved": result.get("retrieved", [])}
+    out = {"conversation_id": conv.id, "message": _msg_out(reply), "retrieved": result.get("retrieved", [])}
+    if result.get("form_offer"):
+        out["form_offer"] = True
+    return out
 
 
 @router.get("/conversations")

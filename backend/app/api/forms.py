@@ -251,7 +251,7 @@ def assistant(form_id: str, body: AssistantIn, user: User = Depends(get_current_
     session.language = body.language
     log.info("Form assistant turn (input_mode=%s)", body.input_mode)
     return FormAssistant(db, user, form, session).handle(body.message, body.current_field_id, body.frame if body.screen_shared else None, body.language,
-                                                         pending_field_id=body.pending_field_id)
+                                                         pending_field_id=body.pending_field_id, input_mode=body.input_mode)
 
 
 @router.get("/{form_id}/assistant")
