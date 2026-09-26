@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { DemoStrip } from "./UserLayout";
@@ -10,7 +10,7 @@ export default function AuthLayout() {
       <DemoStrip />
       <div className="grid flex-1 lg:grid-cols-[1.1fr_1fr]">
         <section className="relative hidden flex-col justify-between overflow-hidden bg-ink-900 p-12 text-white lg:flex">
-          <Logo light />
+          <Link to="/" aria-label="Sahayak home"><Logo light /></Link>
           <div className="max-w-lg">
             <h1 className="font-display text-4xl font-bold leading-tight text-white">Government help, explained in your language — and filled in with you.</h1>
             <p className="mt-4 text-lg text-ink-200">
@@ -32,7 +32,7 @@ export default function AuthLayout() {
         </section>
         <section className="flex flex-col px-6 py-8 sm:px-12">
           <div className="flex justify-between">
-            <div className="lg:hidden"><Logo /></div>
+            <Link to="/" className="lg:hidden" aria-label="Sahayak home"><Logo /></Link>
             <div className="ml-auto"><LanguageSwitcher /></div>
           </div>
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">

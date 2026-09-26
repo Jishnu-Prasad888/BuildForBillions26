@@ -7,8 +7,10 @@ export default function SignIn() {
   const { signIn } = useAuth();
   const nav = useNavigate();
   const [params] = useSearchParams();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // "Try the demo" on the landing page arrives with ?demo=citizen and finds the form pre-filled.
+  const demo = params.get("demo") === "citizen";
+  const [email, setEmail] = useState(demo ? "ramesh@demo.in" : "");
+  const [password, setPassword] = useState(demo ? "Demo@123" : "");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
 

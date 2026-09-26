@@ -5,6 +5,10 @@ import { Spinner } from "@/components/ui";
 import AuthLayout from "@/layouts/AuthLayout";
 import UserLayout from "@/layouts/UserLayout";
 import AdminLayout from "@/layouts/AdminLayout";
+import PublicLayout from "@/layouts/PublicLayout";
+import Landing from "@/pages/public/Landing";
+import Guide from "@/pages/public/Guide";
+import Docs from "@/pages/public/Docs";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
@@ -27,10 +31,14 @@ import AdminUsers from "@/pages/admin/Users";
 import AdminSchemes from "@/pages/admin/Schemes";
 import AdminIngestion from "@/pages/admin/Ingestion";
 
+function FullPageSpinner() {
+  return <div className="flex h-screen items-center justify-center"><Spinner className="h-7 w-7 text-ink-500" /></div>;
+}
+
 function Protected({ children, admin = false }: { children: ReactNode; admin?: boolean }) {
   const { user, loading } = useAuth();
   const loc = useLocation();
-  if (loading) return <div className="flex h-screen items-center justify-center"><Spinner className="h-7 w-7 text-ink-500" /></div>;
+  if (loading) return <FullPageSpinner />;
   if (!user) return <Navigate to={`/signin?next=${encodeURIComponent(loc.pathname)}`} replace />;
   if (admin && user.role !== "ADMIN") return <Navigate to="/" replace />;
   return <>{children}</>;
@@ -43,6 +51,20 @@ function GuestOnly({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+/* "/" is the public landing page for visitors and the citizen app for signed-in users. */
+function CitizenShell() {
+  const { user, loading } = useAuth();
+  const loc = useLocation();
+  if (loading) return <FullPageSpinner />;
+  if (!user && loc.pathname === "/") return <PublicLayout />;
+  return <Protected><UserLayout /></Protected>;
+}
+
+function Home() {
+  const { user } = useAuth();
+  return user ? <Dashboard /> : <Landing />;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -52,10 +74,16 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
 
+      <Route element={<PublicLayout />}>
+        <Route path="/welcome" element={<Landing />} />
+        <Route path="/guide" element={<Guide />} />
+        <Route path="/docs" element={<Docs />} />
+      </Route>
+
       <Route path="/applications/:id/form" element={<Protected><FormPage /></Protected>} />
 
-      <Route element={<Protected><UserLayout /></Protected>}>
-        <Route path="/" element={<Dashboard />} />
+      <Route element={<CitizenShell />}>
+        <Route path="/" element={<Home />} />
         <Route path="/assistant" element={<Assistant />} />
         <Route path="/schemes" element={<Schemes />} />
         <Route path="/schemes/:code" element={<SchemeDetail />} />
