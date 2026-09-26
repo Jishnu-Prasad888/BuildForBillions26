@@ -6,7 +6,6 @@ from app.auth.deps import get_current_user
 from app.database import get_db
 from app.kag import agent
 from app.kag.query_understanding import understand
-from app.kag.templates import t
 from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
 from app.schemas.common import ChatIn, KagQueryIn
@@ -50,17 +49,9 @@ def chat(body: ChatIn, user: User = Depends(get_current_user), db: Session = Dep
     q.language = lang
     db.add(Message(conversation_id=conv.id, role="user", content=redact(body.message), meta={"language": lang}))
 
-    if q.intent == "why":
-        prev = next((m for m in reversed(history_msgs) if m.role == "assistant"), None)
-        ev = prev.evidence if prev else []
-        lines = [t("why_answer", lang) if ev else t("why_none", lang)]
-        for i, e in enumerate(ev, 1):
-            lines.append(f"{i}. **{e.get('publisher') or e.get('source_title')}** — {e.get('source_title')}"
-                         + (f" · {e.get('section')}" if e.get("section") else "") + f" [{e['id']}]")
-        result = {"answer": "\n".join(lines), "evidence": ev, "citations": [e["id"] for e in ev], "grounded": True,
-                  "insufficient_evidence": False, "mode": "rule", "understanding": q.as_dict(), "schemes": [], "retrieved": ev}
-    else:
-        result = agent.answer(db, body.message, lang, query=q, history=history)
+    prev = next((m for m in reversed(history_msgs) if m.role == "assistant"), None)
+    result = agent.answer(db, body.message, lang, query=q, history=history,
+                          previous_evidence=(prev.evidence or []) if prev else [])
 
     reply = Message(conversation_id=conv.id, role="assistant", content=result["answer"], evidence=result["evidence"],
                     meta={"grounded": result["grounded"], "insufficient_evidence": result["insufficient_evidence"], "mode": result["mode"],

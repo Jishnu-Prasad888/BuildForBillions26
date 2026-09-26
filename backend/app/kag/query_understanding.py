@@ -29,6 +29,16 @@ INTENT_PATTERNS = {
 }
 
 
+# Conversational turns that need a friendly reply, not a retrieval. Only matched on short messages
+# that mention no scheme or life event, so "hi, rain destroyed my crop" still goes through KAG.
+SMALLTALK_PATTERNS = {
+    # (?!\w) rather than \b: Indic words often end in a vowel sign, which \b does not treat as a word character
+    "thanks": r"^\W*(ok(ay)? thanks?|thank you|thanks|thank|thx|ty|धन्यवाद|शुक्रिया|ಧನ್ಯವಾದಗಳು|ಧನ್ಯವಾದ)(?!\w)",
+    "greeting": r"^\W*(good (morning|afternoon|evening)|namaskara|namaskar|namaste|hello+|hey+|hi+|नमस्ते|नमस्कार|ಹಲೋ|ನಮಸ್ಕಾರ|ನಮಸ್ತೆ)(?!\w)",
+    "about": r"who are you|what (can|do) you do|what are you|how (can|do) you help|how does this work|"
+             r"तुम कौन|आप कौन|आप क्या कर|ನೀನು ಯಾರು|ನೀವು ಯಾರು|ನೀವು ಏನು ಮಾಡ",
+}
+
 DISCOVER_PATTERN = (r"what help|any help|help me|can i get|what can i do|scheme|support|assistance|relief|compensation|"
                     r"मदद|सहायता|योजना|राहत|ಸಹಾಯ|ನೆರವು|ಯೋಜನೆ|ಪರಿಹಾರ")
 
@@ -43,6 +53,7 @@ class QueryContext:
     scheme_codes: list[str] = field(default_factory=list)
     state: str | None = None
     translated: bool = False
+    from_context: bool = False  # schemes inherited from the conversation, not named in this question
 
     def as_dict(self) -> dict:
         return {
@@ -50,6 +61,7 @@ class QueryContext:
             "life_event": {"code": self.life_event["code"], "name": self.life_event["name"],
                            "context": self.life_event.get("context")} if self.life_event else None,
             "scheme_codes": self.scheme_codes, "state": self.state, "translated": self.translated,
+            "from_context": self.from_context,
         }
 
 
@@ -78,9 +90,29 @@ def _translate_for_retrieval(text: str) -> str | None:
     return out.strip() if out else None
 
 
+def _smalltalk(question: str) -> str | None:
+    text = question.strip().lower()
+    if len(text) > 60:
+        return None
+    for name, pat in SMALLTALK_PATTERNS.items():
+        m = re.search(pat, text)
+        if not m:
+            continue
+        if name == "about":
+            return name
+        # "hi" / "thanks a lot" are small talk; "hi, what documents do I need?" is a real question
+        rest = text[m.end():]
+        if len(re.findall(r"\w+", rest)) <= 3 and "?" not in rest:
+            return name
+    return None
+
+
 def understand(question: str, language_hint: str | None = None, context_schemes: list[str] | None = None,
                state: str | None = None) -> QueryContext:
     lang = detect_language(question, language_hint or "en")
+    chat = _smalltalk(question)
+    if chat and not detect_scheme_mentions(question) and not _detect_life_event(question):
+        return QueryContext(question=question, language=lang, retrieval_query=question, intent=chat, state=state)
     retrieval_query, translated = question, False
     if lang != "en":
         tr = _translate_for_retrieval(question)
@@ -104,7 +136,13 @@ def understand(question: str, language_hint: str | None = None, context_schemes:
                 intent = name
             break
     schemes = detect_scheme_mentions(retrieval_query) or detect_scheme_mentions(question)
+    from_context = False
     if not schemes and context_schemes:
-        schemes = list(context_schemes)
+        schemes, from_context = list(context_schemes), True
+        # A follow-up about one or two schemes: name them so document search finds the right text.
+        if len(schemes) <= 2 and not life_event:
+            g = get_graph()
+            names = [(s.get("short_name") or s["name"]) for s in (g.get_scheme(c) for c in schemes[:2]) if s]
+            retrieval_query = f"{retrieval_query} {' '.join(names)}".strip()
     return QueryContext(question=question, language=lang, retrieval_query=retrieval_query, life_event=life_event,
-                        intent=intent, scheme_codes=schemes, state=state, translated=translated)
+                        intent=intent, scheme_codes=schemes, state=state, translated=translated, from_context=from_context)

@@ -79,31 +79,90 @@ def _scheme_chunk(result: KAGResult, code: str) -> Evidence | None:
     return result.anchors.get(code)
 
 
-def compose_fallback(result: KAGResult) -> tuple[str, list[str]]:
+def _fid(code: str) -> str:
+    return "fact_" + re.sub(r"[^a-z0-9]+", "_", code.lower())
+
+
+def _chunk_steps(chunk: Evidence, limit: int = 6) -> list[str]:
+    """Numbered/bulleted lines of a procedure chunk, without its heading."""
+    lines = [ln.strip() for ln in chunk.text.splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+    steps = [re.sub(r"^(\d+[.)]|[-*•])\s*", "", ln) for ln in lines if re.match(r"^(\d+[.)]|[-*•])\s", ln)]
+    return (steps or [s_ for s_ in _sentences(chunk.text)])[:limit]
+
+
+def _other_schemes_note(result: KAGResult, lang: str) -> list[str]:
+    """When a follow-up could refer to several schemes, say which one was answered."""
+    if not result.query.from_context or len(result.schemes) < 2:
+        return []
+    first, rest = result.schemes[0], result.schemes[1:]
+    others = ", ".join((s.get("short_name") or localized_name(s, lang)) for s in rest)
+    return ["", "_" + t("other_schemes", lang, scheme=first.get("short_name") or localized_name(first, lang), others=others) + "_"]
+
+
+def insufficient_text(q: QueryContext) -> str:
+    text = f"{t('insufficient', q.language)} {t('insufficient_hint', q.language)}"
+    if not q.life_event and (q.from_context or not q.scheme_codes):
+        # nothing in the question itself tied it to a scheme: remind the citizen what the assistant covers
+        text += "\n\n" + t("out_of_scope_hint", q.language)
+    return text
+
+
+def compose_fallback(result: KAGResult, channel: str = "web") -> tuple[str, list[str]]:
     """Deterministic, citation-preserving answer used when no LLM is reachable."""
     q, lang = result.query, result.query.language
     idx = result.evidence_index
+    compact = channel == "telegram"
     lines: list[str] = []
     if q.intent == "discover" and q.life_event and result.schemes:
         lines.append(t("life_event_intro", lang, event=localized_name(q.life_event, lang)))
         lines.append("")
         for s in result.schemes:
-            fid = "fact_" + re.sub(r"[^a-z0-9]+", "_", s["code"].lower())
+            fid = _fid(s["code"])
             lines.append(f"**{localized_name(s, lang)}** — {s.get('summary', '')} [{fid}]")
-            if s.get("rules"):
+            if s.get("rules") and not compact:
                 r = s["rules"][0]
                 rid = "fact_" + r["code"].lower()
                 lines.append(f"- {t('why_applies', lang)}: {r['text']} [{rid}]")
             if s.get("benefit"):
                 ch = _scheme_chunk(result, s["code"])
                 lines.append(f"- {t('benefit', lang)}: {s['benefit']}" + (f" [{ch.id}]" if ch else ""))
-            if s.get("documents"):
+            if s.get("documents") and not compact:
                 did = fid + "_docs"
                 lines.append(f"- {t('documents', lang)}: " + ", ".join(localized_name(d, lang) for d in s["documents"]) + f" [{did}]")
             lines.append("")
         if lang != "en":
             lines.append(t("english_note", lang))
-        lines.append(t("next_apply", lang))
+        lines.append(t("next_apply_chat" if compact else "next_apply", lang))
+    elif q.intent == "amount" and result.schemes:
+        s = result.schemes[0]
+        lines.append(t("amount_intro", lang, scheme=localized_name(s, lang)))
+        if s.get("benefit"):
+            lines.append(f"- {s['benefit']} [{_fid(s['code'])}]")
+        ch = _scheme_chunk(result, s["code"])
+        if ch:
+            quotes = _best_sentences(ch, q.retrieval_query + " amount benefit rupees per year", 2, min_overlap=1)
+            if quotes:
+                lines.append("")
+                lines += [f"> {x} [{ch.id}]" for x in quotes]
+        lines += _other_schemes_note(result, lang)
+        if lang != "en":
+            lines.append(t("english_note", lang))
+    elif q.intent == "how_to_apply" and result.schemes:
+        s = result.schemes[0]
+        lines.append(t("apply_intro", lang, scheme=localized_name(s, lang)))
+        ch = _scheme_chunk(result, s["code"])
+        steps = _chunk_steps(ch) if ch else []
+        lines += [f"{i}. {x}" for i, x in enumerate(steps, 1)]
+        if ch and steps:
+            lines.append(f"[{ch.id}]")
+        portal = s.get("portal") or {}
+        if portal.get("name"):
+            lines.append("")
+            lines.append(t("apply_portal", lang, portal=portal["name"] + (f" ({portal['url']})" if portal.get("url") else ""))
+                         + f" [{_fid(s['code'])}]")
+        lines += _other_schemes_note(result, lang)
+        if lang != "en":
+            lines.append(t("english_note", lang))
     elif q.intent == "documents" and result.schemes:
         s = result.schemes[0]
         fid = "fact_" + re.sub(r"[^a-z0-9]+", "_", s["code"].lower()) + "_docs"
@@ -111,10 +170,14 @@ def compose_fallback(result: KAGResult) -> tuple[str, list[str]]:
         for d in s.get("documents", []):
             lines.append(f"- {localized_name(d, lang)}")
         lines.append(f"[{fid}]")
-        ch = next((c for c in result.chunks if "document" in (c.meta.get("section") or "").lower() and c.meta.get("relevant")), None)
+        # quote the scheme's own documents section, never another scheme's list
+        pool = [c for c in [result.anchors.get(s["code"]), *result.chunks]
+                if c is not None and s["code"] in (c.meta.get("scheme_codes") or [])]
+        ch = next((c for c in pool if "document" in (c.meta.get("section") or "").lower()), None)
         if ch:
             lines.append("")
             lines += [f"> {s_} [{ch.id}]" for s_ in _best_sentences(ch, q.retrieval_query, 2)]
+        lines += _other_schemes_note(result, lang)
     elif q.intent == "eligibility" and result.schemes:
         s = result.schemes[0]
         lines.append(t("elig_intro", lang, scheme=localized_name(s, lang)))
@@ -125,6 +188,7 @@ def compose_fallback(result: KAGResult) -> tuple[str, list[str]]:
         if quotes:
             lines.append("")
             lines += [f"> {x} [{c.id}]" for c, x in quotes]
+        lines += _other_schemes_note(result, lang)
         if lang != "en":
             lines.append(t("english_note", lang))
     else:
@@ -136,9 +200,17 @@ def compose_fallback(result: KAGResult) -> tuple[str, list[str]]:
         cands = [x for x in cands if x[0] >= 2]
         cands.sort(key=lambda x: (-x[0], x[1]))
         picked = [(c, s_) for _, _, c, s_ in cands[:3]]
-        if not picked:
-            return f"{t('insufficient', lang)} {t('insufficient_hint', lang)}", []
-        lines.append(t("general_intro", lang))
+        if not picked and result.schemes and not q.from_context:
+            # a question naming a scheme with no closer match: describe the scheme from the graph
+            for s in result.schemes[:2]:
+                lines.append(f"**{localized_name(s, lang)}** — {s.get('summary', '')} [{_fid(s['code'])}]")
+                if s.get("benefit"):
+                    lines.append(f"- {t('benefit', lang)}: {s['benefit']}")
+                lines.append("")
+        elif not picked:
+            return insufficient_text(q), []
+        else:
+            lines.append(t("general_intro", lang))
         for c, s_ in picked:
             lines.append(f"- {s_} [{c.id}]")
         if lang != "en":
@@ -165,23 +237,50 @@ def scheme_card(s: dict, lang: str) -> dict:
     }
 
 
+SMALLTALK_INTENTS = ("greeting", "thanks", "about")
+
+
+def explain_previous(previous_evidence: list[dict], lang: str) -> tuple[str, list[dict]]:
+    """Answer "why did you tell me this?" from the evidence stored with the previous reply."""
+    ev = previous_evidence or []
+    lines = [t("why_answer", lang) if ev else t("why_none", lang)]
+    for i, e in enumerate(ev, 1):
+        lines.append(f"{i}. **{e.get('publisher') or e.get('source_title')}** — {e.get('source_title')}"
+                     + (f" · {e.get('section')}" if e.get("section") else "") + f" [{e['id']}]")
+    return "\n".join(lines), ev
+
+
+def _conversational(q: QueryContext, text: str, evidence: list[dict] | None = None) -> dict:
+    ev = evidence or []
+    return {"answer": text, "language": q.language, "citations": [e["id"] for e in ev], "evidence": ev, "retrieved": ev,
+            "grounded": True, "insufficient_evidence": False, "mode": "rule", "understanding": q.as_dict(),
+            "schemes": [], "retrieval": {}}
+
+
 def answer(db: Session, question: str, language: str | None = None, *, context_schemes: list[str] | None = None,
            state: str | None = None, extra_context: str = "", history: str = "", extra_query: str = "",
-           query: QueryContext | None = None) -> dict:
+           query: QueryContext | None = None, channel: str = "web", previous_evidence: list[dict] | None = None) -> dict:
+    """``channel`` ("web" | "telegram") adapts length and formatting. ``previous_evidence`` (the evidence of
+    the last assistant reply) enables answering "why did you tell me this?" without a new retrieval."""
     q = query or understand(question, language, context_schemes, state)
     if language and language in ("en", "hi", "kn"):
         q.language = language  # user's chosen UI/voice language wins for the response
+    if q.intent in SMALLTALK_INTENTS:
+        return _conversational(q, t(q.intent, q.language))
+    if q.intent == "why" and previous_evidence is not None:
+        text, ev = explain_previous(previous_evidence, q.language)
+        return _conversational(q, text, ev)
     result = retrieve(db, q, extra_query=extra_query)
     allowed = set(result.evidence_index)
     mode = "llm"
 
     if not result.has_relevant_evidence():
-        text = f"{t('insufficient', q.language)} {t('insufficient_hint', q.language)}"
-        return _package(result, text, [], grounded=True, insufficient=True, mode="rule")
+        return _package(result, insufficient_text(q), [], grounded=True, insufficient=True, mode="rule")
 
     raw = get_ai().generate_json([
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": build_user_prompt(question, build_context(result), q.language, extra_context, history)},
+        {"role": "user", "content": build_user_prompt(question, build_context(result), q.language, extra_context, history,
+                                                      channel=channel, scheme_note=_scheme_note(q, result))},
     ])
     if raw and isinstance(raw.get("answer"), str) and raw["answer"].strip():
         text, used = _clean_citations(raw["answer"], allowed)
@@ -194,10 +293,22 @@ def answer(db: Session, question: str, language: str | None = None, *, context_s
             text += "\n\n" + t("unverified", q.language)
     else:
         mode = "fallback"
-        text, used = compose_fallback(result)
+        text, used = compose_fallback(result, channel)
         insufficient = not used
         grounded = True
     return _package(result, text, used, grounded=grounded, insufficient=insufficient, mode=mode)
+
+
+def _scheme_note(q: QueryContext, result: KAGResult) -> str:
+    if not result.schemes:
+        return ""
+    names = ", ".join(s["name"] for s in result.schemes)
+    if q.from_context:
+        return (f"The citizen is asking a follow-up about schemes from the earlier conversation: {names}. "
+                "If the question clearly refers to one of them, answer for that one; otherwise answer briefly for each.")
+    if q.life_event:
+        return f"The citizen's situation matches the life event '{q.life_event['name']}'. Schemes linked in the graph: {names}."
+    return f"Schemes relevant to this question: {names}."
 
 
 def _package(result: KAGResult, text: str, used: list[str], *, grounded: bool, insufficient: bool, mode: str) -> dict:
