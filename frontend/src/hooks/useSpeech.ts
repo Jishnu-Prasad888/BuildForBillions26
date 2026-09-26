@@ -10,23 +10,54 @@ export function speechSupported(): boolean {
   return typeof window !== "undefined" && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 }
 
+const MAX_NETWORK_RETRIES = 2;
+
+function isBrave(): boolean {
+  return !!(navigator as any).brave;
+}
+
+function voiceErrorMessage(code: string): string {
+  switch (code) {
+    case "not-allowed":
+    case "service-not-allowed":
+      return "Microphone permission was denied. Allow microphone access in your browser's site settings.";
+    case "audio-capture":
+      return "No microphone was found. Check that a microphone is connected.";
+    case "language-not-supported":
+      return "Voice input isn't available for this language in your browser. Please type instead.";
+    case "network":
+      if (!navigator.onLine) return "You appear to be offline. Voice input needs an internet connection.";
+      if (isBrave()) return "Brave blocks the speech service voice input depends on. Please use Chrome or Edge, or type instead.";
+      return "Couldn't reach the browser's speech service. Check your connection (VPNs and firewalls can block it) and try again, or type instead.";
+    default:
+      return `Voice error: ${code}`;
+  }
+}
+
 export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
   const [error, setError] = useState<string | null>(null);
   const recRef = useRef<Recognition | null>(null);
+  const retriesRef = useRef(0);
   const cbRef = useRef(onFinal);
   cbRef.current = onFinal;
 
   const stop = useCallback(() => {
     recRef.current?.stop();
+    recRef.current = null;
     setListening(false);
   }, []);
 
-  const start = useCallback(() => {
+  const begin = useCallback((isRetry: boolean) => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
       setError("Voice input is not supported in this browser. Please use Chrome or Edge, or type instead.");
+      return;
+    }
+    if (!isRetry) retriesRef.current = 0;
+    if (isBrave()) {
+      setError(voiceErrorMessage("network"));
       return;
     }
     window.speechSynthesis?.cancel();
@@ -49,18 +80,39 @@ export function useSpeechInput(lang: Lang, onFinal: (text: string) => void) {
         cbRef.current(fin.trim());
       }
     };
+    let retrying = false;
     rec.onerror = (e: any) => {
-      if (e.error !== "no-speech" && e.error !== "aborted") setError(e.error === "not-allowed" ? "Microphone permission was denied." : `Voice error: ${e.error}`);
+      if (e.error === "network" && navigator.onLine && retriesRef.current < MAX_NETWORK_RETRIES) {
+        retriesRef.current += 1;
+        retrying = true;
+        return;
+      }
+      if (e.error !== "no-speech" && e.error !== "aborted") setError(voiceErrorMessage(e.error));
       setListening(false);
     };
-    rec.onend = () => setListening(false);
+    rec.onend = () => {
+      if (retrying && recRef.current === rec) {
+        setTimeout(() => { if (recRef.current === rec) beginRef.current(true); }, 500);
+        return;
+      }
+      setListening(false);
+    };
     recRef.current = rec;
     setError(null);
     setListening(true);
-    rec.start();
+    try {
+      rec.start();
+    } catch {
+      setError("Couldn't start voice input. Please try again.");
+      setListening(false);
+    }
   }, [lang]);
 
-  useEffect(() => () => recRef.current?.abort?.(), []);
+  const beginRef = useRef(begin);
+  beginRef.current = begin;
+  const start = useCallback(() => begin(false), [begin]);
+
+  useEffect(() => () => { recRef.current?.abort?.(); recRef.current = null; }, []);
   return { listening, interim, error, start, stop, supported: speechSupported() };
 }
 
