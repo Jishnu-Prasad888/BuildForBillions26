@@ -21,7 +21,7 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 
 - **Life-event discovery** — English, Hindi, and Kannada (script detection + translation for retrieval).
 - **Knowledge-augmented generation (KAG)** — Neo4j scheme graph + pgvector document chunks; citations are validated in the backend, not trusted from the LLM.
-- **Screen-aware form help** — structured screen context (and optional vision frames that are never stored).
+- **Screen-aware form help** — structured screen context, plus a vision model or Tesseract OCR fallback to read shared tabs (frames are never stored). Values are filled only after the citizen approves them.
 - **Citizen wallet** — documents, notes, application tracker with a mock status timeline.
 - **Admin knowledge ops** — upload PDFs/HTML/MD/DOCX, fetch URLs, watch ingestion stages, inspect chunks, add schemes.
 - **Telegram bot** — same KAG pipeline, long-polling in the FastAPI process (optional token).
@@ -56,6 +56,15 @@ docker compose up --build
 
 The `ollama-pull` service pulls models named in `backend/.env` (`EMBEDDING_MODEL`, `LLM_MODEL`, and `VISION_MODEL` if set). Until they are ready, the app uses a clearly labelled fallback (deterministic answers + lexical embeddings). Status is in **Admin → Overview → AI system** and `GET /api/health/ai`. When the embedding model appears, chunks are re-embedded automatically.
 
+To pull models by hand:
+
+```bash
+docker compose exec ollama ollama pull nomic-embed-text
+docker compose exec ollama ollama pull qwen3:8b
+# optional, for screenshot understanding:
+docker compose exec ollama ollama pull qwen2.5vl:7b   # then set VISION_MODEL=qwen2.5vl:7b
+```
+
 Ollama on the host instead of Compose: `OLLAMA_BASE_URL=http://host.docker.internal:11434`.
 
 ### Demo accounts
@@ -75,7 +84,7 @@ The sign-in page has one-click buttons for both.
 
 **Admin:** Overview stats and pipeline → **Knowledge Base → Upload document** (e.g. `data/documents/crop-damage-field-survey-advisory-DEMO.md`) → watch Uploaded → … → Complete. Playground query should cite the new chunks. **Sources → Fetch & index** for a URL. **Schemes** shows the Neo4j neighbourhood; **Users** for roles and disable.
 
-A longer walkthrough lives in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#citizen-and-admin-journeys).
+A step-by-step walkthrough lives in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#13-citizen-and-admin-journeys).
 
 ---
 
@@ -127,6 +136,7 @@ Copy `backend/.env.example`. Important variables:
 |---|---|
 | `LLM_PROVIDER` | `ollama` \| `openai` \| `kimi` |
 | `LLM_MODEL` / `EMBEDDING_MODEL` / `VISION_MODEL` | Generation, vectors, optional screen vision |
+| `OCR_ENABLED` / `TESSERACT_CMD` | Tesseract fallback for screen reading when no vision model (Docker image includes it) |
 | `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; `pgvector` or `json` cosine fallback |
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
 | `JWT_SECRET_KEY` | Change outside local demo |
@@ -141,7 +151,7 @@ API keys are never returned by the API. Interactive OpenAPI: `/docs`.
 
 - Passwords hashed with bcrypt; JWT on protected routes; admin routes require `ADMIN`.
 - Uploads checked by type and size. Disabled accounts cannot sign in.
-- Screen frames are not stored. Aadhaar and account numbers are masked in chat and review.
+- Screen frames are not stored and are sent only with questions. Aadhaar and account numbers are masked to the last 4 digits, and OTP/PIN/password values are redacted, before messages are stored (web assistant, form assistant, Telegram).
 - Forgot-password surfaces the reset token only when `DEMO_MODE` is true (no email service).
 - Intentionally out of scope: SSO, rich RBAC, queues, production observability.
 

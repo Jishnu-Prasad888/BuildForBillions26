@@ -397,9 +397,11 @@ flowchart LR
 
 `backend/app/services/form_assistant.py`, `/api/screen-assistance`. Form JSON: `data/seed/forms/crop_relief_form.json`.
 
-Screen context is **not** stored as images: field labels, required flags, filled/empty, focus, buttons, warnings; optional JPEG if `VISION_MODEL` is set.
+Screen context is **not** stored as images: field labels, required flags, filled/empty, focus, buttons, warnings. A downscaled JPEG frame is sent only with messages that look like questions. It is read by `VISION_MODEL` when set; otherwise, or if vision fails, `services/ocr.py` reads it with Tesseract (`OCR_ENABLED`, `TESSERACT_CMD`; en/hi/kn) and turns detected labels and radio options into screen context. Frames are decoded in memory and discarded; only redacted text is used and only labels are persisted.
 
-Dialogue: state machine + validators (dates, mobile, Aadhaar vs 16-digit VID, DL, IFSC, survey numbers, land units, option synonyms). Fail → LLM extract → validators again. Where-to-find hints are cited form-guide chunks. AI notes regenerate each turn; user notes only after accept. Declaration is never auto-ticked.
+Dialogue: state machine + validators (dates, mobile, Aadhaar vs 16-digit VID, DL, IFSC, survey numbers, land units, option synonyms). Fail → LLM extract → validators again. A parsed value is only **proposed** (ID and account numbers masked); it is written to the form after an explicit yes, via **Fill field / Don't fill** or by voice, and a pending value survives a clarifying question. Where-to-find hints are cited form-guide chunks. AI notes regenerate each turn; user notes only after accept. Declaration is never auto-ticked.
+
+Privacy: `services/redact.py` masks long numbers (Aadhaar, account numbers) to their last 4 digits and redacts OTP/PIN/CVV/password values before messages are stored by the assistant, the form assistant and the Telegram bot. The form assistant refuses OTPs and passwords as answers.
 
 ```mermaid
 sequenceDiagram
@@ -537,6 +539,33 @@ flowchart TD
   A5 --> A6[KAG playground]
   A6 --> A7[Upsert scheme / manage users]
 ```
+
+### Citizen walkthrough
+
+1. Sign in as **Ramesh**, then open **Talk to Assistant**.
+2. Say or type: *"Heavy rain destroyed my crop. What help can I get?"* This also works in Hindi or Kannada: switch the language, then press the mic.
+3. The assistant detects the life event **Crop Damage**, retrieves the linked schemes from Neo4j plus document evidence, and answers with numbered citation chips. **Sources used** shows each evidence chunk (publisher, document, section, URL, retrieval method, content hash); **How this answer was grounded** shows each KAG step.
+4. Ask *"Why did you tell me this?"*. The assistant lists the exact sources behind its previous answer.
+5. Choose **Apply** on *Crop Damage Assistance* to open the mock government form.
+6. Click **Help Me Fill This Form**, then **Start Screen Assistance** (pick *This tab* in the share dialog). A "Screen sharing active" indicator with **Stop Sharing** and a preview of what the AI sees stays visible.
+7. Talk naturally:
+   - *"yes"* accepts a profile suggestion or approves a proposed value (**Fill field**).
+   - *"What should I put here?"* explains the current or focused field, with evidence.
+   - *"Aadhaar"* answers which ID you have; the next field becomes *Aadhaar number*.
+   - *"I don't know"* marks the field for later and suggests a note you can add to **My notes**.
+   - *"Where do I find the IFSC?"*, *"change the address"*, *"2 acres 20 guntas"*, *"yesterday"*, *"heavy rain"* also work.
+8. Watch the form fill, the progress panel update and the **AI notes** refresh. The assistant never ticks the declaration box.
+9. At 100%, open **Review**, check every answer, confirm and submit (demo). The application appears in **Applications** with a timeline, evidence and the conversation. Try **Simulate status update**.
+10. Leave the form part-way and come back later. The assistant resumes with: *"You were filling … We completed your … The next section requires your …"*
+
+### Admin walkthrough ("the system is not hard-coded")
+
+1. Sign in as **Admin**. **Overview** shows knowledge-base stats, AI provider status and the ingestion pipeline.
+2. **Knowledge Base → Upload document**: upload `data/documents/hailstorm-guidance-note-DEMO.pdf` (or `crop-damage-field-survey-advisory-DEMO.md`) and watch Uploaded → Extracting → Chunking → Embedding → Indexing → Complete.
+3. **View chunks + metadata** shows each chunk with its provenance JSON.
+4. In the **KAG retrieval playground**, ask *"What should I do after hailstorm damage? Can I clear the field?"*. Evidence from the new document appears in the answer, and citizens asking the same question now get it too.
+5. **Sources → Fetch & index** fetches, cleans, chunks, embeds and indexes an official web page URL.
+6. **Schemes** shows the Neo4j graph per scheme (life event → scheme → rules / documents / department / portal) and a form for adding schemes. **Users** lets you search, change roles and disable accounts.
 
 ---
 
