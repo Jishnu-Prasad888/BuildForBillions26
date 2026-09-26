@@ -91,7 +91,8 @@ def update_me(body: ProfileIn, user: User = Depends(get_current_user), db: Sessi
     if body.preferred_language:
         user.preferred_language = body.preferred_language
     if body.profile is not None:
-        allowed = {"phone", "state", "district", "taluk", "village", "occupation", "land_acres"}
+        allowed = {"phone", "state", "district", "taluk", "village", "occupation", "land_acres",
+                   "father_name", "dob", "nationality", "address", "pincode", "country", "email"}  # never PAN/Aadhaar: those are typed on the form
         user.profile = {**(user.profile or {}), **{k: v for k, v in body.profile.items() if k in allowed}}
     db.commit()
     return user

@@ -399,3 +399,150 @@ class TestAssistant:
         self.say(client, alice, fid, "")
         assert client.post(f"/api/forms/{fid}/assistant/end", json={}, headers=alice["headers"]).json() == {"ok": True}
         assert client.get(f"/api/forms/{fid}/assistant", headers=alice["headers"]).json()["active"] is False
+
+
+# ------------------------------------------------------------------ writing values onto the PDF
+def _kyc_field(fid, label, ftype, bbox):
+    return {"field_id": fid, "label": label, "type": ftype, "page": 1, "bbox": bbox, "options": [], "required": True, "source": "layout", "meta": {}}
+
+
+def _write(tmp_path, fields, values, **kw):
+    from app.services.formdoc import fill
+
+    doc = fitz.open()
+    doc.new_page(width=612, height=792)
+    out = tmp_path / "out.pdf"
+    warnings = fill.generate_pdf(doc.tobytes(), "pdf", {}, {1: (612, 792)}, fields, values, out, **kw)
+    with fitz.open(str(out)) as d:
+        return warnings, d[0].get_text()
+
+
+class TestWritingValues:
+    NAME = _kyc_field("n", "Name of the Applicant", "name", [178.1, 119.8, 479.9, 131.7])  # 11.9pt tall, like a real form's ruled line
+
+    def test_value_is_written_in_a_short_single_line_box(self, tmp_path):
+        # Regression: insert_textbox wants a box ~1.7x the font size tall, so real forms' 10-12pt lines got nothing written
+        # while the API still said the form was ready.
+        warnings, text = _write(tmp_path, [self.NAME], {"n": "Jishnu Prasad"})
+        assert warnings == [] and "Jishnu Prasad" in text
+
+    def test_multiline_value_on_a_single_ruled_line_is_still_written(self, tmp_path):
+        addr = _kyc_field("a", "Residence Address", "multiline", [166.8, 247.9, 544.0, 259.8])
+        warnings, text = _write(tmp_path, [addr], {"a": "12 Temple Road, Koppa, Maddur"})
+        assert warnings == [] and "12 Temple Road, Koppa, Maddur" in text
+
+    def test_value_too_wide_for_the_box_is_reported_not_dropped_silently(self, tmp_path):
+        warnings, text = _write(tmp_path, [self.NAME], {"n": "Very Long Name " * 20})
+        assert len(warnings) == 1 and "Name of the Applicant" in warnings[0] and "too long" in warnings[0]
+        assert "Very Long" not in text
+
+    def test_block_letters_uppercase_text_but_not_emails(self, tmp_path):
+        email = _kyc_field("e", "Email id", "email", [178.1, 150.0, 479.9, 161.9])
+        warnings, text = _write(tmp_path, [self.NAME, email], {"n": "Jishnu Prasad", "e": "ramesh@demo.in"}, block_letters=True)
+        assert warnings == [] and "JISHNU PRASAD" in text and "Jishnu" not in text
+        assert "ramesh@demo.in" in text and "RAMESH@DEMO.IN" not in text
+
+    def test_block_letters_detection(self):
+        from app.services.formdoc.block_letters import asks_for_block_letters as asks
+
+        assert asks(["Please fill this form in ENGLISH and in BLOCK LETTERS."])
+        assert asks(["", "write in capital letters"]) and asks(["Use Block Capitals"])
+        assert not asks(["Name of applicant", None, ""])
+
+
+class TestBlockLettersFlow:
+    @staticmethod
+    def _form_asking_for_block_letters() -> bytes:
+        with fitz.open(stream=sample_form_pdf(), filetype="pdf") as d:
+            d[0].insert_text((50, 800), "Please fill this form in ENGLISH and in BLOCK LETTERS.", fontsize=9, fontname="helv")
+            return d.tobytes()
+
+    @staticmethod
+    def _fill_and_generate(client, user, fid, body):
+        sch = schema(client, user, fid)
+        ids = {f["label"]: f["field_id"] for f in sch["fields"]}
+        vals = {ids["Name of Applicant"]: "Alice Rao", ids["Gender"]: "Female", ids["Land Survey Number"]: "45/2A", ids["Taluk"]: "Maddur"}
+        assert client.post(f"/api/forms/{fid}/autofill", headers=user["headers"], json={"values": vals}).json()["errors"] == {}
+        g = client.post(f"/api/forms/{fid}/generate", json={"allow_blank": [v for v in ids.values() if v not in vals], **body}, headers=user["headers"])
+        assert g.status_code == 200, g.text
+        with fitz.open(stream=client.get(f"/api/forms/{fid}/download", headers=user["headers"]).content, filetype="pdf") as d:
+            return g.json()["warnings"], d[0].get_text()
+
+    def test_review_says_whether_the_form_asks_for_block_letters(self, client, alice):
+        plain = ready_form(client, alice)
+        asking = ready_form(client, alice, self._form_asking_for_block_letters())
+        assert client.get(f"/api/forms/{plain}/review", headers=alice["headers"]).json()["block_letters"] is False
+        assert client.get(f"/api/forms/{asking}/review", headers=alice["headers"]).json()["block_letters"] is True
+
+    def test_form_that_asks_for_block_letters_is_written_in_capitals_by_default(self, client, alice):
+        fid = ready_form(client, alice, self._form_asking_for_block_letters())
+        warnings, text = self._fill_and_generate(client, alice, fid, {})
+        assert warnings == [] and "ALICE RAO" in text and "MADDUR" in text and "Alice Rao" not in text
+
+    def test_citizen_can_turn_block_letters_off_or_on(self, client, alice):
+        asking = ready_form(client, alice, self._form_asking_for_block_letters())
+        _, text = self._fill_and_generate(client, alice, asking, {"block_letters": False})
+        assert "Alice Rao" in text and "ALICE RAO" not in text
+        plain = ready_form(client, alice)
+        _, text = self._fill_and_generate(client, alice, plain, {"block_letters": True})
+        assert "ALICE RAO" in text
+
+
+# ------------------------------------------------------------------ "Use my profile"
+class TestProfileDetails:
+    PROFILE = {"phone": "9876543210", "state": "Karnataka", "village": "Koppa", "father_name": "Rajanna Gowda", "dob": "14/08/1985",
+               "nationality": "Indian", "address": "12 Temple Road, Koppa, Maddur", "pincode": "571428", "country": "India", "email": "ramesh@demo.in"}
+
+    def test_kyc_form_details_come_from_the_profile(self):
+        from app.services.formdoc.values import profile_suggestions
+
+        rows = [("Name of the Applicant", "name"), ("Father’s/ Spouse Name", "name"), ("Date of birth", "date"), ("Nationality", "text"),
+                ("Residence Address", "multiline"), ("City/town/village", "text"), ("Pin Code", "pincode"), ("State", "text"), ("Country", "text"),
+                ("Contact Details: Tel. (Off.)", "phone"), ("Tel. (Res.)", "phone"), ("Mobile No", "phone"), ("Email id", "email"),
+                # none of these may be guessed from the profile:
+                ("Specify the proof of address submitted for", "multiline"), ("Father's occupation", "text"), ("PAN", "identity_number"),
+                ("Aadhaar Number, if any", "identity_number"), ("Date", "date"), ("Signature of the Applicant", "signature")]
+        fields = [{"field_id": f"f{i}", "label": label, "type": t} for i, (label, t) in enumerate(rows)]
+        got = profile_suggestions(fields, "Ramesh Gowda", self.PROFILE)
+        assert got == {"f0": "Ramesh Gowda", "f1": "Rajanna Gowda", "f2": "14/08/1985", "f3": "Indian", "f4": "12 Temple Road, Koppa, Maddur",
+                       "f5": "Koppa", "f6": "571428", "f7": "Karnataka", "f8": "India", "f11": "9876543210", "f12": "ramesh@demo.in"}
+
+    def test_profile_endpoint_saves_form_details_but_never_identity_numbers(self, client, alice):
+        r = client.patch("/api/users/me", headers=alice["headers"], json={"profile": {**self.PROFILE, "aadhaar": "234123412346", "pan": "ABCDE1234F"}})
+        assert r.status_code == 200
+        p = r.json()["profile"]
+        assert p["dob"] == "14/08/1985" and p["father_name"] == "Rajanna Gowda" and p["pincode"] == "571428"
+        assert "aadhaar" not in p and "pan" not in p
+
+    def test_use_my_profile_fills_and_validates_the_new_details(self, client, alice):
+        client.patch("/api/users/me", headers=alice["headers"], json={"profile": {"dob": "14/08/1985", "address": "12 Temple Road, Koppa"}})
+        fid = ready_form(client, alice)
+        sch = schema(client, alice, fid)
+        r = client.post(f"/api/forms/{fid}/autofill", headers=alice["headers"], json={"use_profile": True}).json()
+        assert r["values"][by_label(sch, "Date of Birth")["field_id"]] == "1985-08-14"  # validated and stored as an ISO date
+        assert r["values"][by_label(sch, "Address")["field_id"]] == "12 Temple Road, Koppa"
+        assert r["sources"][by_label(sch, "Address")["field_id"]] == "profile"
+
+    def test_demo_seed_tops_up_new_profile_keys_without_overwriting_edits(self, monkeypatch):
+        import os
+
+        from sqlalchemy import select
+
+        from app.database import SessionLocal
+        from app.models import User
+        from app.services import seed
+
+        email = f"demo-{os.urandom(3).hex()}@test.in"
+        monkeypatch.setattr(seed, "DEMO_USERS", [{"email": email, "full_name": "Demo Person", "password": "Demo@123", "role": "USER",
+                                                   "profile": {"village": "Koppa", "dob": "14/08/1985"}}])
+        db = SessionLocal()
+        try:
+            seed.seed_users(db)
+            u = db.scalars(select(User).where(User.email == email)).one()
+            u.profile = {"village": "Edited Village"}  # as if created before "dob" existed, and the citizen changed the village
+            db.commit()
+            seed.seed_users(db)
+            db.refresh(u)
+            assert u.profile == {"village": "Edited Village", "dob": "14/08/1985"}
+        finally:
+            db.close()

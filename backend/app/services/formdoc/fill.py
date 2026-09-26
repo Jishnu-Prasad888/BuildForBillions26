@@ -15,6 +15,7 @@ import re
 from pathlib import Path
 
 from app.config import settings
+from app.services.formdoc.block_letters import apply_block_letters
 from app.services.formdoc.values import NON_FILLABLE, to_display
 
 log = logging.getLogger("forms.fill")
@@ -47,26 +48,53 @@ def _latin(text: str) -> bool:
         return False
 
 
+_INK = (0.05, 0.1, 0.45)
+
+
+def _text_width(text: str, size: float, fontname: str, fontfile: str | None) -> float:
+    import fitz
+
+    if fontfile:
+        return fitz.Font(fontfile=fontfile).text_length(text, fontsize=size)
+    return fitz.get_text_length(text, fontname=fontname, fontsize=size)
+
+
+def _write_line(page, r, text: str, fontfile: str | None, fontname: str) -> bool:
+    """One line sitting on the bottom of the field, shrunk until it fits the WIDTH. Returns False if it can't.
+
+    Only the width decides. insert_textbox also insists on a box about 1.7x the font size tall, and the value boxes of real
+    forms are 10-12pt, so it rejected every value and the PDF came out unchanged.
+    """
+    size = max(6.0, min(11.0, r.height * 0.72))
+    while size >= 5.5 and _text_width(text, size, fontname, fontfile) > r.width:
+        size -= 0.5
+    if size < 5.5:
+        return False
+    kw = {"fontfile": fontfile} if fontfile else {}
+    page.insert_text((r.x0 + 1, r.y1 - min(r.height * 0.28, 4.0)), text, fontsize=size, fontname=fontname, color=_INK, **kw)
+    return True
+
+
 def _fit_text(page, rect, text: str, multiline: bool, fontfile: str | None, fontname: str, rotate: int) -> bool:
-    """Insert text into rect, shrinking the font until it fits. Returns False if it could not fit."""
+    """Write text into rect. Returns False if it could not fit (the caller warns the citizen)."""
     import fitz
 
     r = fitz.Rect(rect)
     if page.rotation:
         r = (r * page.derotation_matrix).normalize()
+    if not multiline and not page.rotation:
+        return _write_line(page, r, text, fontfile, fontname)
     kw = {"fontname": fontname, "rotate": rotate}
     if fontfile:
         kw["fontfile"] = fontfile
-    h_disp = abs(rect[3] - rect[1])
-    size = 11.0 if multiline else max(6.0, min(11.0, h_disp * 0.72))
+    size = 11.0 if multiline else max(6.0, min(11.0, abs(rect[3] - rect[1]) * 0.72))
     while size >= 5.5:
-        target = fitz.Rect(r)
-        if not multiline and not page.rotation:  # keep the text sitting on the line, not floating at the top
-            target.y0 = max(r.y0, r.y1 - size * 1.55)
-        rc = page.insert_textbox(target, text, fontsize=size, align=0, color=(0.05, 0.1, 0.45), **kw)
+        rc = page.insert_textbox(fitz.Rect(r), text, fontsize=size, align=0, color=_INK, **kw)
         if rc >= 0:
             return True
         size -= 0.5
+    if multiline and not page.rotation:  # the box is a single ruled line, too short to wrap in: write one shrunk line instead
+        return _write_line(page, r, text, fontfile, fontname)
     return False
 
 
@@ -124,7 +152,12 @@ def _mark(page, rect, rotate_page: bool) -> None:
     page.draw_line(r.tr, r.bl, color=color, width=1.3)
 
 
-def _fill_widgets(page, fields: list[dict], values: dict) -> set[str]:
+def _display(field: dict, value, block_letters: bool) -> str:
+    text = to_display(field, value)
+    return apply_block_letters(field["type"], text) if block_letters else text
+
+
+def _fill_widgets(page, fields: list[dict], values: dict, block_letters: bool = False) -> set[str]:
     done: set[str] = set()
     by_name: dict[str, list] = {}
     for w in page.widgets() or []:
@@ -147,7 +180,7 @@ def _fill_widgets(page, fields: list[dict], values: dict) -> set[str]:
         else:
             w = widgets[0]
             maxlen = f["meta"].get("maxlen")
-            text = to_display(f, v)
+            text = _display(f, v, block_letters)
             if _script(text) != "latn":
                 # Form-field appearances can only use Latin base fonts, so Hindi/Kannada would be invisible. Flatten this
                 # one field: remove the widget and let the caller draw shaped text in its place.
@@ -161,12 +194,14 @@ def _fill_widgets(page, fields: list[dict], values: dict) -> set[str]:
 
 
 def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, Path], pages: dict[int, tuple[float, float]],
-                 fields: list[dict], values: dict, out_path: Path) -> list[str]:
+                 fields: list[dict], values: dict, out_path: Path, block_letters: bool = False) -> list[str]:
     """``fields``: dicts with field_id,label,type,page,bbox,options,source,meta. ``values``: field_id -> stored value.
+    ``block_letters``: write text values in capitals (emails excepted).
     Returns warnings (strings meant for the citizen). Raises GenerationError; never leaves a partial file."""
     import fitz
 
     warnings: list[str] = []
+    written: list[tuple[int, dict, str]] = []  # (page index, field, text) drawn by us in Latin script, checked after saving
     font_file = _unicode_font()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     tmp = out_path.with_name(f".{out_path.name}.tmp")
@@ -188,7 +223,7 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                 on_page = [f for f in fields if f["page"] == pno + 1 and f["field_id"] in values and f["type"] not in NON_FILLABLE]
                 if not on_page:
                     continue
-                handled = _fill_widgets(page, on_page, values) if kind == "pdf" else set()
+                handled = _fill_widgets(page, on_page, values, block_letters) if kind == "pdf" else set()
                 s = 1.0 if kind == "pdf" else IMAGE_PAGE_WIDTH_PT / pages[1][0]
                 for f in on_page:
                     if f["field_id"] in handled:
@@ -209,7 +244,7 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                             boxes = f["meta"].get("option_boxes") or [bbox]
                             _mark(page, [c * s for c in boxes[0]], False)
                         continue
-                    text = to_display(f, v)
+                    text = _display(f, v, block_letters)
                     if not text:
                         continue
                     multiline = f["type"] == "multiline" or (bbox[3] - bbox[1]) > 26 * max(s, 1e-6) and len(text) > 30
@@ -225,6 +260,8 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                     if not ok:
                         log.warning("Value for field %s did not fit its box on page %s", f["field_id"], f["page"])
                         warnings.append(f"“{f['label']}”: the text is too long for the space on the form and was not written. Shorten it or write it by hand.")
+                    elif script == "latn":
+                        written.append((pno, f, text))
             doc.save(str(tmp), garbage=3, deflate=True)
         finally:
             doc.close()
@@ -232,8 +269,13 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
         try:
             if check.page_count != expected_pages:
                 raise GenerationError("page count changed")
-            for p in check:  # every page must still parse
-                p.get_text()
+            page_text = {}
+            for pno, p in enumerate(check):  # every page must still parse
+                page_text[pno] = re.sub(r"\s+", "", p.get_text()).lower()
+            for pno, f, text in written:  # nothing may be silently dropped: each value we drew must be readable on its page
+                if re.sub(r"\s+", "", text).lower()[:12] not in page_text.get(pno, ""):
+                    log.warning("Value for field %s was drawn but is not readable on page %s", f["field_id"], pno + 1)
+                    warnings.append(f"“{f['label']}”: I couldn't confirm this value on the PDF. Please check it on the completed form.")
         finally:
             check.close()
         if tmp.stat().st_size < 200:

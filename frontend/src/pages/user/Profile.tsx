@@ -7,10 +7,18 @@ import { LANGUAGES, useI18n } from "@/i18n";
 import type { Lang, User } from "@/types";
 import { PageHeader, ProgressBar, Spinner } from "@/components/ui";
 
-const FIELDS: [string, string][] = [["phone", "Mobile number"], ["state", "State"], ["district", "District"], ["taluk", "Taluk"], ["village", "Village"], ["occupation", "Occupation"], ["land_acres", "Land (acres)"]];
+// Everything "Use my profile" can put on a form. PAN and Aadhaar numbers are deliberately not here: you type those on the form itself.
+const FIELDS: [string, string][] = [
+  ["phone", "Mobile number"], ["email", "Email for forms"], ["father_name", "Father's / spouse's name"], ["dob", "Date of birth"], ["nationality", "Nationality"],
+  ["address", "Address"], ["state", "State"], ["district", "District"], ["taluk", "Taluk"], ["village", "Village / town"], ["pincode", "PIN code"], ["country", "Country"],
+  ["occupation", "Occupation"], ["land_acres", "Land (acres)"],
+];
 const LABEL = Object.fromEntries(FIELDS);
-const PLACE = ["state", "district", "taluk", "village"];
+const PERSONAL = ["email", "father_name", "dob", "nationality"];
+const PLACE = ["address", "state", "district", "taluk", "village", "pincode", "country"];
 const WORK = ["occupation", "land_acres"];
+const WIDE = ["address"];
+const PLACEHOLDER: Record<string, string> = { dob: "DD/MM/YYYY", pincode: "6 digits", phone: "10-digit mobile number" };
 
 function Section({ icon: Icon, title, hint, children, delay }: { icon: LucideIcon; title: string; hint: string; children: ReactNode; delay: number }) {
   return (
@@ -52,12 +60,15 @@ export default function Profile() {
   const pct = Math.round((filled / (FIELDS.length + 1)) * 100);
   const initials = (name || "?").split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   const field = (k: string) => (
-    <div key={k}><label className="label" htmlFor={`p-${k}`}>{LABEL[k]}</label><input id={`p-${k}`} className="input" value={profile[k] ?? ""} onChange={(e) => setProfile({ ...profile, [k]: e.target.value })} /></div>
+    <div key={k} className={WIDE.includes(k) ? "sm:col-span-2" : ""}>
+      <label className="label" htmlFor={`p-${k}`}>{LABEL[k]}</label>
+      <input id={`p-${k}`} className="input" value={profile[k] ?? ""} placeholder={PLACEHOLDER[k]} onChange={(e) => setProfile({ ...profile, [k]: e.target.value })} />
+    </div>
   );
 
   return (
     <div className="max-w-3xl">
-      <PageHeader eyebrow="Your details" title="Profile" subtitle="The assistant uses these details to suggest answers on forms — it always asks before filling them in." />
+      <PageHeader eyebrow="Your details" title="Profile" subtitle="Details you can put on a form with “Use my profile”. Identity numbers such as PAN and Aadhaar are never stored here." />
       {params.get("welcome") && <p className="mb-4 animate-popIn rounded-lg bg-leaf-50 px-4 py-3 text-leaf-700">Welcome! Add a few details so the assistant can help you faster.</p>}
 
       <div className="greet-surface mb-5 flex animate-riseIn flex-col gap-4 rounded-xl border border-paper-300 p-5 shadow-card sm:flex-row sm:items-center">
@@ -77,7 +88,8 @@ export default function Profile() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div><label className="label" htmlFor="p-name">Full name</label><input id="p-name" className="input" value={name} onChange={(e) => setName(e.target.value)} /></div>
             {field("phone")}
-            <div className="sm:col-span-2"><label className="label" htmlFor="p-email">Email</label><input id="p-email" className="input bg-paper-100" value={user?.email} disabled /></div>
+            {PERSONAL.map(field)}
+            <div className="sm:col-span-2"><label className="label" htmlFor="p-account-email">Sign-in email</label><input id="p-account-email" className="input bg-paper-100" value={user?.email} disabled /></div>
           </div>
         </Section>
 
@@ -90,7 +102,7 @@ export default function Profile() {
           </div>
         </Section>
 
-        <Section icon={MapPin} title="Where you live" hint="Helps find schemes for your state and district." delay={240}>
+        <Section icon={MapPin} title="Where you live" hint="Helps find schemes for your area, and fills the address on forms." delay={240}>
           <div className="grid gap-4 sm:grid-cols-2">{PLACE.map(field)}</div>
         </Section>
 

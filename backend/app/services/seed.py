@@ -23,7 +23,8 @@ DEMO_USERS = [
     {"email": "admin@demo.gov.in", "full_name": "Anita Rao (Admin)", "password": "Admin@123", "role": "ADMIN", "profile": {}},
     {"email": "ramesh@demo.in", "full_name": "Ramesh Gowda", "password": "Demo@123", "role": "USER",
      "profile": {"phone": "9876543210", "state": "Karnataka", "district": "Mandya", "taluk": "Maddur", "village": "Koppa",
-                 "occupation": "Farmer", "land_acres": 3}},
+                 "occupation": "Farmer", "land_acres": 3, "father_name": "Rajanna Gowda", "dob": "14/08/1985", "nationality": "Indian",
+                 "address": "12 Temple Road, Koppa, Maddur", "pincode": "571428", "country": "India", "email": "ramesh@demo.in"}},
     {"email": "lakshmi@demo.in", "full_name": "Lakshmi Devi", "password": "Demo@123", "role": "USER", "preferred_language": "kn",
      "profile": {"state": "Karnataka", "district": "Hassan", "occupation": "Farmer"}},
     {"email": "suresh@demo.in", "full_name": "Suresh Kumar", "password": "Demo@123", "role": "USER", "is_active": False,
@@ -33,7 +34,12 @@ DEMO_USERS = [
 
 def seed_users(db: Session) -> None:
     for u in DEMO_USERS:
-        if db.scalars(select(User).where(User.email == u["email"])).first():
+        existing = db.scalars(select(User).where(User.email == u["email"])).first()
+        if existing:
+            # Add profile details introduced after this demo user was first created; never overwrite what the user has edited.
+            merged = {**u["profile"], **(existing.profile or {})}
+            if merged != (existing.profile or {}):
+                existing.profile = merged
             continue
         db.add(User(email=u["email"], full_name=u["full_name"], password_hash=hash_password(u["password"]), role=u["role"],
                     profile=u["profile"], is_active=u.get("is_active", True), preferred_language=u.get("preferred_language", "en")))

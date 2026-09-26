@@ -204,30 +204,44 @@ def is_sensitive(field: dict) -> bool:
 
 
 # --------------------------------------------------------------------------- profile suggestions
-_PROFILE_MAP = [
-    (re.compile(r"\bstate\b", re.I), "state"),
-    (re.compile(r"district", re.I), "district"),
-    (re.compile(r"taluk|taluka|tehsil", re.I), "taluk"),
-    (re.compile(r"village", re.I), "village"),
-    (re.compile(r"occupation|profession", re.I), "occupation"),
+_TEXT = ("text", "name")
+_PROFILE_MAP = [  # (label pattern, profile key, field types it may fill)
+    # "Father's/ Spouse Name" but not "Father's occupation": the label has to be asking for a name.
+    (re.compile(r"^(?=.*\b(?:father|spouse|husband)\b)(?=.*\bname\b)", re.I), "father_name", _TEXT),
+    (re.compile(r"date of birth|\bdob\b|birth\s*date", re.I), "dob", ("date",)),
+    (re.compile(r"nationality|citizenship", re.I), "nationality", _TEXT),
+    # Starts with "address" (optionally "Residence address" etc.), so "Specify the proof of address submitted" doesn't match.
+    (re.compile(r"^(?:(?:residen\w*|permanent|current|present|correspondence)\s+)?address\b", re.I), "address", ("multiline", "text")),
+    (re.compile(r"pin\s*-?code|postal code|\bzip\b", re.I), "pincode", ("pincode",)),
+    (re.compile(r"\bcountry\b", re.I), "country", _TEXT),
+    (re.compile(r"e-?mail", re.I), "email", ("email",)),
+    (re.compile(r"\bstate\b", re.I), "state", _TEXT),
+    (re.compile(r"district", re.I), "district", _TEXT),
+    (re.compile(r"taluk|taluka|tehsil", re.I), "taluk", _TEXT),
+    (re.compile(r"village", re.I), "village", _TEXT),
+    (re.compile(r"occupation|profession", re.I), "occupation", _TEXT),
 ]
+# A phone field is only filled with the citizen's mobile number when the label doesn't ask for someone else's or another line.
+_NOT_MY_MOBILE = re.compile(r"father|mother|guardian|alternate|office|\boff\b|\bres\b|resid|fax|landline", re.I)
 
 
 def profile_suggestions(fields: list[dict], user_full_name: str, profile: dict) -> dict[str, str]:
-    """Values from the citizen's own profile for fields whose meaning is unambiguous. Suggestions only."""
+    """Values from the citizen's own profile for fields whose meaning is unambiguous. Suggestions only; code, never an LLM."""
     out: dict[str, str] = {}
     for f in fields:
-        label = f["label"]
-        if f["type"] in ("choice", "checkbox", "signature"):
+        label, ftype = f["label"], f["type"]
+        if ftype in ("choice", "checkbox", "signature"):
             continue
-        if f["type"] == "name" and re.search(r"applicant|full name|^name$|^name of", label, re.I) and not re.search(r"father|mother|husband|spouse|guardian|nominee", label, re.I):
+        if ftype == "name" and re.search(r"applicant|full name|^name$|^name of", label, re.I) and not re.search(r"father|mother|husband|spouse|guardian|nominee", label, re.I):
             if user_full_name:
                 out[f["field_id"]] = user_full_name
-        elif f["type"] == "phone" and profile.get("phone") and not re.search(r"father|mother|guardian|alternate|office", label, re.I):
-            out[f["field_id"]] = str(profile["phone"])
-        else:
-            for rx, key in _PROFILE_MAP:
-                if rx.search(label) and profile.get(key) and f["type"] in ("text", "name"):
-                    out[f["field_id"]] = str(profile[key])
-                    break
+            continue
+        if ftype == "phone":
+            if profile.get("phone") and not _NOT_MY_MOBILE.search(label):
+                out[f["field_id"]] = str(profile["phone"])
+            continue
+        for rx, key, types in _PROFILE_MAP:
+            if ftype in types and profile.get(key) and rx.search(label):
+                out[f["field_id"]] = str(profile[key])
+                break
     return out

@@ -19,6 +19,7 @@ from app.database import SessionLocal, get_db
 from app.models import Form, FormAssistanceSession, FormField, FormNote, FormPage, FormValue, User
 from app.models.common import new_id, utcnow
 from app.services.formdoc import analyze, fill, service, storage
+from app.services.formdoc.block_letters import asks_for_block_letters
 from app.services.formdoc.assistant import FormAssistant
 from app.services.formdoc.validate import UploadRejected, validate_upload
 from app.services.formdoc.values import profile_suggestions
@@ -293,11 +294,14 @@ def review(form_id: str, user: User = Depends(get_current_user), db: Session = D
     values, skipped, blank = service.split_values(service.load_value_rows(db, form))
     items = service.review_items(fields, values, skipped, blank)
     missing = [i for i in items if i["required"] and i["status"] in ("missing", "skipped")]
-    return {"items": items, "missing": [{"field_id": i["field_id"], "label": i["label"]} for i in missing], "can_generate": not missing}
+    page_texts = db.scalars(select(FormPage.extracted_text).where(FormPage.form_id == form.id, FormPage.user_id == user.id)).all()
+    return {"items": items, "missing": [{"field_id": i["field_id"], "label": i["label"]} for i in missing], "can_generate": not missing,
+            "block_letters": asks_for_block_letters(page_texts)}
 
 
 class GenerateIn(BaseModel):
     allow_blank: list[str] = Field(default_factory=list)  # required fields the citizen explicitly chose to leave empty
+    block_letters: bool | None = None  # None = write in capitals only if the form itself asks for BLOCK LETTERS
 
 
 @router.post("/{form_id}/generate")
@@ -323,9 +327,11 @@ def generate(form_id: str, body: GenerateIn | None = None, user: User = Depends(
         data = src.read_bytes()  # read-only: the original is never opened for writing
         if hashlib.sha256(data).hexdigest() != form.sha256:
             raise fill.GenerationError("original changed")
-        pages = {p.page_number: (p.width, p.height) for p in db.scalars(select(FormPage).where(FormPage.form_id == form.id, FormPage.user_id == user.id))}
+        page_rows = db.scalars(select(FormPage).where(FormPage.form_id == form.id, FormPage.user_id == user.id)).all()
+        pages = {p.page_number: (p.width, p.height) for p in page_rows}
         images = {n: storage.page_image_path(user.id, form.id, n) for n in pages}
-        warnings = fill.generate_pdf(data, form.kind, images, pages, fields, values, storage.completed_path(user.id, form.id))
+        block = body.block_letters if body and body.block_letters is not None else asks_for_block_letters(p.extracted_text for p in page_rows)
+        warnings = fill.generate_pdf(data, form.kind, images, pages, fields, values, storage.completed_path(user.id, form.id), block_letters=block)
         if hashlib.sha256(src.read_bytes()).hexdigest() != form.sha256:  # belt and braces
             log.error("Original file digest changed during generation")
             storage.completed_path(user.id, form.id).unlink(missing_ok=True)
