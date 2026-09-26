@@ -12,6 +12,7 @@ from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.database.session import ensure_extensions, ensure_migrations
 from app.ingestion import scheme_folder
+from app.monitoring import init_sentry
 from app.ratelimit import RateLimitMiddleware
 from app.services.seed import maybe_reembed, run_all
 
@@ -20,6 +21,7 @@ for noisy in ("httpx", "httpcore", "neo4j", "multipart"):
     logging.getLogger(noisy).setLevel(logging.WARNING)
 logging.getLogger("neo4j.notifications").setLevel(logging.ERROR)
 log = logging.getLogger("app")
+init_sentry()  # before the app is created so the ASGI/FastAPI integrations wrap it
 
 
 async def reembed_when_ready() -> None:
