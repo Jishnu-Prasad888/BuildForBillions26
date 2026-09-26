@@ -56,6 +56,9 @@ const D: Dict = {
   how_to_use: { en: "How to use", hi: "कैसे इस्तेमाल करें", kn: "ಹೇಗೆ ಬಳಸುವುದು" },
   admin_console: { en: "Admin console", hi: "एडमिन कंसोल", kn: "ಆಡ್ಮಿನ್ ಕನ್ಸೋಲ್" },
   close: { en: "Close", hi: "बंद करें", kn: "ಮುಚ್ಚಿ" },
+  listen: { en: "Listen", hi: "सुनें", kn: "ಕೇಳಿ" },
+  fill_field: { en: "Fill field", hi: "भरें", kn: "ತುಂಬಿ" },
+  dont_fill: { en: "Don't fill", hi: "न भरें", kn: "ತುಂಬಬೇಡಿ" },
 };
 
 interface I18nCtx {

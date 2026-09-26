@@ -127,7 +127,7 @@ export default function Assistant() {
                   </div>
                   <div className="flex flex-wrap items-center gap-3">
                     <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
-                    <button className="mt-2 text-sm font-semibold text-ink-500 hover:text-ink-800" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />Listen</button>
+                    <button className="mt-2 text-sm font-semibold text-ink-500 hover:text-ink-800" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />{t("listen")}</button>
                   </div>
                   <KagTrace meta={{ ...m.meta }} cited={ordered.length} />
                   {cards.length > 0 && (
