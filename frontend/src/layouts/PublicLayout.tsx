@@ -14,18 +14,15 @@ export default function PublicLayout() {
   const tr = useTr();
   const links = [
     { to: "/welcome", end: true, label: tr({ en: "Home", hi: "मुख्य पृष्ठ", kn: "ಮುಖಪುಟ" }) },
-    { to: "/welcome#guide", label: tr({ en: "How to use", hi: "कैसे इस्तेमाल करें", kn: "ಹೇಗೆ ಬಳಸುವುದು" }), hash: true },
+    { to: "/guide", label: tr({ en: "How to use", hi: "कैसे इस्तेमाल करें", kn: "ಹೇಗೆ ಬಳಸುವುದು" }) },
     { to: "/docs", label: tr({ en: "Docs", hi: "जानकारी", kn: "ಮಾಹಿತಿ" }) },
   ];
   const home = user ? (user.role === "ADMIN" ? "/admin" : "/") : "/signin";
   const homeLabel = user ? tr({ en: "Open my account", hi: "मेरा खाता खोलें", kn: "ನನ್ನ ಖಾತೆ ತೆರೆಯಿರಿ" }) : tr({ en: "Sign in", hi: "साइन इन", kn: "ಸೈನ್ ಇನ್" });
 
-  const renderLink = (l: (typeof links)[number]) =>
-    l.hash ? (
-      <Link key={l.to} to={l.to} className={navCls({ isActive: false })}>{l.label}</Link>
-    ) : (
-      <NavLink key={l.to} to={l.to} end={l.end} className={navCls}>{l.label}</NavLink>
-    );
+  const renderLink = (l: (typeof links)[number]) => (
+    <NavLink key={l.to} to={l.to} end={l.end} className={navCls}>{l.label}</NavLink>
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -65,7 +62,7 @@ export default function PublicLayout() {
           </div>
           <div className="space-y-2.5">
             <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">{tr({ en: "Help", hi: "मदद", kn: "ಸಹಾಯ" })}</div>
-            <Link to="/welcome#guide" className="block text-ink-600 transition-colors hover:text-forest-800">{links[1].label}</Link>
+            <Link to="/guide" className="block text-ink-600 transition-colors hover:text-forest-800">{links[1].label}</Link>
             <Link to="/docs" className="block text-ink-600 transition-colors hover:text-forest-800">{links[2].label}</Link>
           </div>
           <div className="space-y-2.5">

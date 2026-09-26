@@ -94,7 +94,7 @@ export default function UserLayout() {
         <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/90 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
           <Link to="/" className="lg:hidden" aria-label="Sahayak home"><Logo sub={false} /></Link>
           <div className="flex items-center gap-2">
-            <Link to="/welcome#guide" className="btn-ghost btn-sm" title={t("how_to_use")}>
+            <Link to="/guide" className="btn-ghost btn-sm" title={t("how_to_use")}>
               <CircleHelp size={18} /> <span className="hidden sm:inline">{t("how_to_use")}</span>
             </Link>
             <LanguageSwitcher />
@@ -157,7 +157,7 @@ export default function UserLayout() {
                   <Icon size={20} className="text-forest-600" /> {label}
                 </Link>
               ))}
-              <Link to="/welcome#guide" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+              <Link to="/guide" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
                 <CircleHelp size={20} className="text-forest-600" /> {t("how_to_use")}
               </Link>
               {user?.role === "ADMIN" && (

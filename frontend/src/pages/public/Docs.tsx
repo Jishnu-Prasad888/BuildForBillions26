@@ -46,7 +46,7 @@ export default function Docs() {
         <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">Documentation</div>
         <h1 className="mt-2 font-display text-3xl font-bold sm:text-4xl">Sahayak</h1>
         <p className="mt-2 max-w-xl text-lg text-ink-600">
-          An AI assistant for government schemes. <Link to="/welcome#guide" className="link">See the guide</Link> for step-by-step help.
+          An AI assistant for government schemes. <Link to="/guide" className="link">See the guide</Link> for step-by-step help.
         </p>
       </header>
 

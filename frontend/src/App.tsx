@@ -9,6 +9,7 @@ import PublicLayout from "@/layouts/PublicLayout";
 import Landing from "@/pages/public/Landing";
 import LandingV2 from "@/pages/public/LandingV2";
 import Docs from "@/pages/public/Docs";
+import UserGuide from "@/pages/public/UserGuide";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
@@ -77,10 +78,10 @@ export default function App() {
       </Route>
 
       <Route path="/welcome" element={<LandingV2 />} />
-      <Route path="/guide" element={<Navigate to="/welcome#guide" replace />} />
 
       <Route element={<PublicLayout />}>
         <Route path="/docs" element={<Docs />} />
+        <Route path="/guide" element={<UserGuide />} />
       </Route>
 
       <Route path="/applications/:id/form" element={<Protected><FormPage /></Protected>} />
