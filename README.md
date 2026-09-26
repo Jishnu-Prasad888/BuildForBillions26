@@ -13,6 +13,7 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design, data stores, KAG pipeline, ingestion, form assistance, bots |
 | [docs/API.md](docs/API.md) | REST API: auth, schemes, assistant, applications, admin, health |
 | [TELEGRAM_SETUP.md](TELEGRAM_SETUP.md) | End-to-end Telegram bot setup |
+| [WHATSAPP_SETUP.md](WHATSAPP_SETUP.md) | End-to-end WhatsApp bot setup (Meta Cloud API) |
 | [whisper-chat-app/README.md](whisper-chat-app/README.md) | Optional on-device Whisper STT companion app |
 
 ---
@@ -141,6 +142,7 @@ Copy `backend/.env.example`. Important variables:
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
 | `JWT_SECRET_KEY` | Change outside local demo (the backend refuses the default when `APP_ENV=production`) |
 | `TELEGRAM_BOT_TOKEN` | Empty disables the bot |
+| `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET` | WhatsApp Cloud API bot (webhook at `/api/webhooks/whatsapp`); empty token disables it |
 | `DEMO_MODE` | Mock submit / status; forgot-password returns the reset token |
 | `REDIS_URL`, `RATE_LIMIT_*` | Rate limits (`count/period:burst`); Redis shares them across replicas |
 | `RUN_BACKGROUND_TASKS` | Run the Telegram bot and re-embed loop here; exactly one container in production |

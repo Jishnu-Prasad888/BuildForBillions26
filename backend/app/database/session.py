@@ -33,3 +33,6 @@ def ensure_migrations() -> None:
         conn.execute(text(
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_id VARCHAR(32) UNIQUE"
         ))
+        conn.execute(text(
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp_id VARCHAR(32) UNIQUE"
+        ))

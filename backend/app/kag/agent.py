@@ -111,7 +111,7 @@ def compose_fallback(result: KAGResult, channel: str = "web") -> tuple[str, list
     """Deterministic, citation-preserving answer used when no LLM is reachable."""
     q, lang = result.query, result.query.language
     idx = result.evidence_index
-    compact = channel == "telegram"
+    compact = channel in ("telegram", "whatsapp")
     lines: list[str] = []
     if q.intent == "discover" and q.life_event and result.schemes:
         lines.append(t("life_event_intro", lang, event=localized_name(q.life_event, lang)))
@@ -260,7 +260,7 @@ def _conversational(q: QueryContext, text: str, evidence: list[dict] | None = No
 def answer(db: Session, question: str, language: str | None = None, *, context_schemes: list[str] | None = None,
            state: str | None = None, extra_context: str = "", history: str = "", extra_query: str = "",
            query: QueryContext | None = None, channel: str = "web", previous_evidence: list[dict] | None = None) -> dict:
-    """``channel`` ("web" | "telegram") adapts length and formatting. ``previous_evidence`` (the evidence of
+    """``channel`` ("web" | "telegram" | "whatsapp") adapts length and formatting. ``previous_evidence`` (the evidence of
     the last assistant reply) enables answering "why did you tell me this?" without a new retrieval."""
     q = query or understand(question, language, context_schemes, state)
     if language and language in ("en", "hi", "kn"):

@@ -2,7 +2,7 @@
 
 How the Build for Billions prototype is put together: processes, data stores, knowledge-augmented generation (KAG), ingestion, form assistance, and Telegram.
 
-Companion docs: [README](../README.md), [API](API.md), [Telegram setup](../TELEGRAM_SETUP.md).
+Companion docs: [README](../README.md), [API](API.md), [Telegram setup](../TELEGRAM_SETUP.md), [WhatsApp setup](../WHATSAPP_SETUP.md).
 
 ---
 
@@ -494,7 +494,7 @@ Typical Compose: `LLM_PROVIDER=ollama`, `LLM_MODEL=qwen3:8b`, `EMBEDDING_MODEL=n
 
 ## 10. Telegram bot
 
-`backend/app/bot/`: `telegram.py` (lifespan polling), `handlers.py`, `keyboards.py`, `formatter.py`.
+`backend/app/bot/`: `telegram.py` (lifespan polling), `handlers.py`, `keyboards.py`, `formatter.py`, plus `conversation.py` (users, conversations and KAG turns) and `copy.py` (multilingual text), both shared with the WhatsApp bot.
 
 Users keyed by `telegram_id` (language preset from the Telegram client language). Empty token disables the bot; API still runs.
 
@@ -514,6 +514,29 @@ flowchart TB
   KAG --> PG[(Postgres conversations)]
   H --> FMT[HTML formatter]
   FMT --> U
+```
+
+---
+
+## 10a. WhatsApp bot
+
+Setup: [WHATSAPP_SETUP.md](../WHATSAPP_SETUP.md). Uses the Meta WhatsApp Cloud API. Meta pushes messages to a webhook instead of the bot polling, so the webhook runs in every API replica and is independent of `RUN_BACKGROUND_TASKS`.
+
+- `api/whatsapp.py`: `GET /api/webhooks/whatsapp` answers Meta's verify handshake (`WHATSAPP_VERIFY_TOKEN`). `POST` checks `X-Hub-Signature-256` against `WHATSAPP_APP_SECRET`, returns 200 at once and handles the payload in a `BackgroundTasks` job. The path is exempt from the API rate limiter.
+- `bot/whatsapp_handlers.py`: the same flow as Telegram through `conversation.process_message(..., channel="whatsapp")`. Scheme suggestions and **Sources** are a list message, and the per-scheme **Documents / Eligibility / How to apply / Benefit** questions are a second list. Commands (`start`, `help`, `language`, `new`, `sources`, and greetings) only count when they are the whole message. Message IDs are deduplicated in memory against Meta retries.
+- `bot/whatsapp_client.py`: Graph API calls for text (split at 4000 chars), reply buttons, list messages, and read receipts with a typing indicator.
+- Users are keyed by `whatsapp_id` (the phone number) and conversations use `kind = "whatsapp"`. Empty `WHATSAPP_TOKEN` or `WHATSAPP_PHONE_NUMBER_ID` disables the bot.
+
+```mermaid
+flowchart TB
+  U[WhatsApp user] --> META[Meta Cloud API]
+  META -->|POST webhook| WH[api/whatsapp.py]
+  WH -->|background task| H[whatsapp_handlers]
+  H --> TH["asyncio.to_thread"]
+  TH --> KAG[kag agent]
+  KAG --> PG[(Postgres conversations)]
+  H --> C[WhatsAppClient]
+  C -->|Graph API /messages| META
 ```
 
 ---

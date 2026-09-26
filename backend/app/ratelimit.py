@@ -116,7 +116,7 @@ class RedisStore:
 AUTH_PATHS = re.compile(r"^/api/auth/(signin|signup|forgot-password|reset-password)$")
 AI_PATHS = re.compile(r"^/api/(assistant/chat|kag/query|screen-assistance/sessions(/[^/]+/messages)?)$")
 UPLOAD_PATHS = re.compile(r"^/api/(documents|applications/[^/]+/documents|admin/(documents|sources|reembed))$")
-EXEMPT_PATHS = re.compile(r"^/api/health(/.*)?$")
+EXEMPT_PATHS = re.compile(r"^/api/(health(/.*)?|webhooks/whatsapp)$")
 
 
 class RateLimiter:

@@ -20,6 +20,7 @@ class User(Base):
     # Citizen profile (kept as JSON for the prototype): phone, state, district, village, occupation...
     profile: Mapped[dict] = mapped_column(JSON, default=dict)
     telegram_id: Mapped[str | None] = mapped_column(String(32), unique=True, nullable=True, index=True)
+    whatsapp_id: Mapped[str | None] = mapped_column(String(32), unique=True, nullable=True, index=True)
     reset_token: Mapped[str | None] = mapped_column(String(64), nullable=True)
     reset_token_expires: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
