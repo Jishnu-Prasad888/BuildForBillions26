@@ -534,3 +534,28 @@ curl -s http://localhost:8000/api/admin/documents \
 ## OpenAPI as source of truth
 
 Request field constraints and response models that use Pydantic `response_model` are fully described at `/docs`. This document adds ownership rules, demo behaviour, and payloads that the routers return as plain `dict`s.
+
+---
+
+## AI Form Assistant — `/api/forms`
+
+Upload any form, let the app read it, collect values and produce a completed PDF. Everything is scoped to the signed-in user; another user's form returns `404`. Design notes: [FORM_ASSISTANT.md](FORM_ASSISTANT.md).
+
+| Method & path | Purpose |
+|---|---|
+| `POST /api/forms/upload` (multipart `file`) | Validate (extension, magic bytes, MIME, size, encryption) and store the original. `201` → form. `413` too large, `422` rejected. |
+| `GET /api/forms` | The user's forms, newest first. |
+| `GET /api/forms/{id}` | One form: `status` (`UPLOADED`, `ANALYZING`, `READY`, `FAILED`, `COMPLETED`), `error`, `output_ready`. |
+| `DELETE /api/forms/{id}` | Delete the form, derived files, values, notes and output. |
+| `POST /api/forms/{id}/analyze` `{force?}` | Start analysis in the background (`202`); poll `GET /api/forms/{id}`. |
+| `GET /api/forms/{id}/schema` | Pages (`width`, `height`, coordinate space), fields (`field_id`, `label`, `description`, `type`, `page`, `bbox`, `options`, `required`, `confidence`, `source`), `values`, `summary`, `ai_notes`, `profile_suggestions`. `409` until analysed. |
+| `POST /api/forms/{id}/autofill` `{values, use_profile?, skip?, rename?}` | Validate and save values. Returns the schema plus `saved` and per-field `errors`. Empty string clears a value. |
+| `POST /api/forms/{id}/assistant` `{message, current_field_id?, language, frame?, screen_shared?}` | Conversational turn. Empty `message` starts/greets. Returns `sections` (`form_observation` \| `knowledge` \| `assistant`), `ask`, `choices`, `clarification`, `field_updates`, `summary`, `evidence`. |
+| `GET /api/forms/{id}/assistant` | Stored transcript (no entered values). |
+| `POST /api/forms/{id}/assistant/end` | End the session. |
+| `GET /api/forms/{id}/review` | Per-field review items (identity/bank numbers masked), `missing`, `can_generate`. |
+| `POST /api/forms/{id}/generate` `{allow_blank?}` | Create `completed.pdf` from a copy. `422 {code: "missing_required", missing: [...]}` unless the fields are filled or listed in `allow_blank`. `500` “I couldn't generate the completed PDF. Your original form has not been modified.” |
+| `GET /api/forms/{id}/preview?page=1&source=original\|completed` | PNG of a page (`Cache-Control: private, no-store`). |
+| `GET /api/forms/{id}/download` | The completed PDF. |
+| `GET/POST /api/forms/{id}/notes`, `PATCH/DELETE /api/forms/{id}/notes/{nid}` | The citizen's own notes (`GET` also returns the derived `ai_notes`; they are separate and AI notes cannot be edited). |
+

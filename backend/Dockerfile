@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr t
     && rm -rf /var/lib/apt/lists/*
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN useradd --create-home --uid 1000 app && mkdir -p /data/uploads && chown -R app:app /data
+RUN useradd --create-home --uid 1000 app && mkdir -p /data/uploads /data/users && chown -R app:app /data
 COPY --chown=app:app app ./app
 USER app
 EXPOSE 8000

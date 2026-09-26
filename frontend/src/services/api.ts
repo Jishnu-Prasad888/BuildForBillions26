@@ -38,7 +38,24 @@ async function request<T>(method: string, path: string, body?: unknown, isForm =
   return data as T;
 }
 
+/** Authenticated binary download (images / PDFs live behind the API, never at a public URL). */
+async function blobRequest(path: string): Promise<Blob> {
+  const token = tokenStore.get();
+  const res = await fetch(path, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  if (res.status === 401 && token) {
+    tokenStore.clear();
+    if (!location.pathname.startsWith("/signin")) location.href = "/signin?expired=1";
+  }
+  if (!res.ok) {
+    let msg = res.statusText;
+    try { msg = (await res.json())?.detail ?? msg; } catch { /* not JSON */ }
+    throw new ApiError(res.status, String(msg));
+  }
+  return res.blob();
+}
+
 export const api = {
+  blob: blobRequest,
   get: <T>(p: string) => request<T>("GET", p),
   post: <T>(p: string, b?: unknown) => request<T>("POST", p, b ?? {}),
   patch: <T>(p: string, b: unknown) => request<T>("PATCH", p, b),

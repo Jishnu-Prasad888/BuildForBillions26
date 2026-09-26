@@ -92,7 +92,7 @@ Clients are keyed by user id when a valid token is present, and otherwise by IP.
 |------|-----------|-----|----------------|
 | `auth` | `POST /api/auth/{signin,signup,forgot-password,reset-password}` | IP | `20/minute:10` |
 | `ai` | `POST /api/assistant/chat`, `/api/kag/query`, screen-assistance sessions and messages | user | `20/minute:8` |
-| `upload` | document uploads, admin ingestion and re-embedding | user | `10/minute:5` |
+| `upload` | document uploads, form uploads / analysis / PDF generation, admin ingestion and re-embedding | user | `10/minute:5` |
 | `default` | every other `/api/*` request (health checks exempt) | user / IP | `180/minute:60` |
 
 A request consumes its specific tier and the default tier. If the specific tier rejects it, the default allowance is
@@ -122,7 +122,7 @@ $C exec postgres pg_dump -U postgres public_service_ai | gzip > backup-$(date +%
 $C exec neo4j neo4j-admin database dump neo4j --to-stdout > neo4j-$(date +%F).dump   # stop neo4j first on Community
 ```
 
-Back up the `pgdata`, `neo4jdata` and `uploads` volumes. Redis holds only rate-limit counters and needs no backup.
+Back up the `pgdata`, `neo4jdata`, `uploads` and `userforms` (citizens' private forms) volumes. Redis holds only rate-limit counters and needs no backup.
 
 Resource limits (CPU and memory per container) are set in the compose file. Raise `neo4j` and `postgres` memory for
 larger knowledge bases.

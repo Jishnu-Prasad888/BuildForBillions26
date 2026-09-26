@@ -470,6 +470,10 @@ stateDiagram-v2
 
 ---
 
+### 8.1 AI Form Assistant (any uploaded form)
+
+A separate, generic path from the mock crop-relief form above: the citizen uploads their own PDF or photo, which is stored privately per user, analysed into a field schema (`form_fields`), filled through the AutoFill panel and the conversational assistant, and written to a new PDF. It reuses KAG for factual questions and the provider layer for optional type refinement. See [FORM_ASSISTANT.md](FORM_ASSISTANT.md).
+
 ## 9. AI provider layer
 
 `backend/app/services/ai/` — callers use `get_ai()` only. `GET /api/health/ai` never returns keys.

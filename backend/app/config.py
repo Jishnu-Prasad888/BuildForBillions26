@@ -55,6 +55,14 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./data/uploads"
     MAX_UPLOAD_SIZE: int = 50 * 1024 * 1024
 
+    # AI Form Assistant: private per-user storage (<FORMS_DIR>/<user_id>/forms/<form_id>/...).
+    # Never place this under a directory that is served publicly.
+    FORMS_DIR: str = "./data/users"
+    MAX_FORM_SIZE_MB: int = 25
+    MAX_FORM_PAGES: int = 40
+    FORM_LLM_ENABLED: bool = True  # let the LLM refine field types/required flags (labels only, never values)
+    FORM_FONT_PATH: str = ""  # optional TTF used for non-Latin text (Hindi/Kannada) when filling PDFs
+
     SEED_DIR: str = "../data/seed"
     CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
 
@@ -104,6 +112,17 @@ class Settings(BaseSettings):
         p = p if p.is_absolute() else (BACKEND_DIR / p).resolve()
         p.mkdir(parents=True, exist_ok=True)
         return p
+
+    @property
+    def forms_path(self) -> Path:
+        p = Path(self.FORMS_DIR)
+        p = p if p.is_absolute() else (BACKEND_DIR / p).resolve()
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    @property
+    def max_form_bytes(self) -> int:
+        return self.MAX_FORM_SIZE_MB * 1024 * 1024
 
     @property
     def cors_origins(self) -> list[str]:

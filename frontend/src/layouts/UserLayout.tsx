@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CircleHelp, FileText, FolderOpen, Home, LogOut, Menu, MessageCircle, NotebookPen, Search, ShieldCheck, UserRound, X } from "lucide-react";
+import { CircleHelp, FileText, FileUp, FolderOpen, Home, LogOut, Menu, MessageCircle, NotebookPen, Search, ShieldCheck, UserRound, X } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -29,6 +29,7 @@ export default function UserLayout() {
     { to: "/assistant", icon: MessageCircle, label: t("assistant") },
     { to: "/schemes", icon: Search, label: t("schemes") },
     { to: "/applications", icon: FileText, label: t("applications") },
+    { to: "/forms", icon: FileUp, label: "AI Form Assistant" },
     { to: "/documents", icon: FolderOpen, label: t("documents") },
     { to: "/notes", icon: NotebookPen, label: t("notes") },
     { to: "/profile", icon: UserRound, label: t("profile") },

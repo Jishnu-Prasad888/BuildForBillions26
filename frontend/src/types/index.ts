@@ -240,3 +240,80 @@ export interface KnowledgeDoc {
   retrieved_at?: string | null;
   created_at: string;
 }
+
+/* ---------- AI Form Assistant ---------- */
+export type FormFieldType =
+  | "text" | "name" | "multiline" | "date" | "phone" | "email" | "identity_number" | "bank_account" | "ifsc"
+  | "pincode" | "amount" | "number" | "choice" | "checkbox" | "signature";
+export type FieldStatus = "filled" | "missing" | "skipped" | "blank" | "manual";
+export type FormStatus = "UPLOADED" | "ANALYZING" | "READY" | "FAILED" | "COMPLETED";
+export type FormValueT = string | boolean | string[];
+
+export interface UserForm {
+  id: string;
+  original_filename: string;
+  mime_type: string;
+  kind: "pdf" | "image";
+  file_size: number;
+  page_count: number;
+  status: FormStatus;
+  error: string | null;
+  analysis: { fillable?: boolean; ocr_pages?: number[]; unreadable_pages?: number[]; field_count?: number; warnings?: string[] };
+  output_ready: boolean;
+  output_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FormFieldDef {
+  field_id: string;
+  label: string;
+  description: string;
+  type: FormFieldType;
+  page: number;
+  bbox: [number, number, number, number];
+  options: string[];
+  required: boolean;
+  confidence: number;
+  source: string;
+  manual: boolean;
+  meta: { option_boxes?: number[][]; multiple?: boolean; table?: boolean; layout_guess?: boolean };
+}
+
+export interface FormSummary {
+  detected: number;
+  fillable: number;
+  completed: number;
+  pending: number;
+  required_missing: number;
+  clarification_needed: number;
+  status: Record<string, FieldStatus>;
+}
+
+export interface FormAINotes { form: string; detected: number; completed: number; pending: number; clarification_needed: number; notes: string[] }
+
+export interface FormSchema {
+  form: UserForm;
+  pages: { page: number; width: number; height: number; text_source: string; ocr_confidence: number | null; warnings: string[] }[];
+  fields: FormFieldDef[];
+  values: Record<string, FormValueT>;
+  sources: Record<string, string>;
+  summary: FormSummary;
+  ai_notes: FormAINotes;
+  profile_suggestions: Record<string, string>;
+}
+
+export interface FormAssistSection { kind: "form_observation" | "knowledge" | "assistant"; text: string; evidence?: Evidence[] }
+export interface FormAssistResponse {
+  reply: string;
+  sections: FormAssistSection[];
+  ask: { field_id: string; label: string; type: FormFieldType; options: string[] } | null;
+  choices: string[] | null;
+  clarification: boolean;
+  field_updates: Record<string, FormValueT | null>;
+  summary: FormSummary;
+  evidence: Evidence[];
+}
+
+export interface FormReviewItem { field_id: string; label: string; page: number; type: FormFieldType; required: boolean; status: FieldStatus; display: string; options: string[] }
+export interface FormUserNote { id: string; content: string; done: boolean; created_at: string; updated_at: string }
