@@ -1,38 +1,86 @@
-import { FileText } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, FileText, Plus, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
 import type { Application } from "@/types";
-import { EmptyState, PageHeader, ProgressBar, StatusPill, formatDate } from "@/components/ui";
+import { ApplicationCard } from "@/components/apps/WorkCard";
+import { CardGridSkeleton, LoadError } from "@/components/apps/Skeleton";
+import { bucketOf, isActive, nextAction, type Bucket } from "@/components/apps/status";
+import { EmptyState, PageHeader, ProgressBar } from "@/components/ui";
+
+type Filter = "all" | Bucket;
+const FILTERS: [Filter, string][] = [["all", "All"], ["active", "In progress"], ["submitted", "Submitted"], ["approved", "Approved"]];
+
+/** The one application worth resuming: the most recently touched open one that has a form. */
+function ResumeBanner({ app }: { app: Application }) {
+  const na = nextAction(app);
+  return (
+    <section className="mb-6 overflow-hidden rounded-lg bg-forest-800 p-5 text-white shadow-card sm:p-6" aria-label="Pick up where you left off">
+      <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-200">Pick up where you left off</div>
+      <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0 flex-1 basis-64">
+          <h2 className="font-display text-xl font-bold leading-snug text-white sm:text-2xl">{app.scheme_name}</h2>
+          <p className="mt-1 text-sm text-forest-100">{na.hint}</p>
+          <div className="mt-3 flex max-w-md items-center gap-3">
+            <ProgressBar value={app.progress} className="!bg-forest-900" />
+            <span className="text-sm font-bold">{app.progress}%</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link to={na.to} className="btn bg-white text-forest-900 hover:bg-forest-50">{na.label} <ArrowRight size={16} /></Link>
+          {na.assistTo && <Link to={na.assistTo} className="btn border border-forest-500 text-white hover:bg-forest-700"><Sparkles size={16} /> Help me fill</Link>}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Applications() {
   const { t } = useI18n();
   const [apps, setApps] = useState<Application[] | null>(null);
-  useEffect(() => {
-    api.get<Application[]>("/api/applications").then(setApps);
+  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<Filter>("all");
+
+  const load = useCallback(() => {
+    setError(null);
+    api.get<Application[]>("/api/applications").then(setApps).catch((e) => setError(e.message));
   }, []);
+  useEffect(load, [load]);
+
+  const resume = apps?.find((a) => isActive(a) && a.form_id);
+  const count = (f: Filter) => (apps ?? []).filter((a) => f === "all" || bucketOf(a.status) === f).length;
+  const shown = (apps ?? []).filter((a) => filter === "all" || bucketOf(a.status) === filter);
+
   return (
     <div>
-      <PageHeader eyebrow="Tracker" title={t("applications")} subtitle="Every application you started, with its status and next step." />
-      {apps && apps.length === 0 && <EmptyState icon={<FileText />} title="No applications yet">Start from the assistant or the schemes page.</EmptyState>}
-      {!!apps?.length && (
-        <div className="card divide-y divide-paper-300 overflow-hidden">
-          {apps.map((a) => (
-            <Link key={a.id} to={`/applications/${a.id}`} className="flex flex-col gap-3 px-4 py-4 hover:bg-paper-100 sm:flex-row sm:items-center sm:gap-4 sm:px-5">
-              <div className="min-w-0 flex-1">
-                <div className="font-semibold text-ink-900">{a.scheme_name}</div>
-                <div className="text-sm text-ink-500">
-                  {a.reference_number ? `Ref ${a.reference_number} · ` : ""}Updated {formatDate(a.updated_at)}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 sm:contents">
-                <div className="flex flex-1 items-center gap-2 sm:w-56 sm:flex-none"><ProgressBar value={a.progress} /><span className="w-10 text-right text-sm font-semibold">{a.progress}%</span></div>
-                <div className="sm:w-44 sm:text-right"><StatusPill status={a.status} /></div>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <PageHeader eyebrow="Track" title={t("applications")}
+        subtitle="Everything you have started, where it stands, and what to do next."
+        actions={<Link to="/forms" className="btn-primary"><Plus size={17} /> Start a new form</Link>} />
+
+      {error ? <LoadError message={error} onRetry={load} /> : apps === null ? <CardGridSkeleton /> : apps.length === 0 ? (
+        <EmptyState icon={<FileText size={28} />} title="No applications yet">
+          <p>Choose a government form and the assistant will help you fill it, or ask it which scheme suits you.</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <Link to="/forms" className="btn-primary btn-sm"><Sparkles size={15} /> Browse forms</Link>
+            <Link to="/assistant" className="btn-secondary btn-sm">Ask the assistant</Link>
+          </div>
+        </EmptyState>
+      ) : (
+        <>
+          {resume && <ResumeBanner app={resume} />}
+          <div className="mb-4 flex flex-wrap gap-1.5" role="group" aria-label="Filter applications">
+            {FILTERS.map(([id, label]) => (
+              <button key={id} onClick={() => setFilter(id)} aria-pressed={filter === id}
+                className={`chip px-3 py-1 text-sm ${filter === id ? "bg-forest-800 text-white" : "bg-white text-ink-700 ring-1 ring-ink-200 hover:bg-ink-50"}`}>
+                {label} <span className={filter === id ? "text-forest-200" : "text-ink-400"}>{count(id)}</span>
+              </button>
+            ))}
+          </div>
+          {shown.length === 0 ? <EmptyState title="Nothing in this view" /> : (
+            <div className="grid gap-4 md:grid-cols-2">{shown.map((a) => <ApplicationCard key={a.id} app={a} />)}</div>
+          )}
+        </>
       )}
     </div>
   );
