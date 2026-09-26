@@ -9,6 +9,7 @@ import MockGovForm from "@/components/MockGovForm";
 import AssistPanel from "@/components/AssistPanel";
 import { AINotesPanel, UserNotesPanel } from "@/components/Notes";
 import Logo from "@/components/Logo";
+import { LoadError } from "@/components/apps/Skeleton";
 import { Modal, ProgressBar, Spinner } from "@/components/ui";
 import { allFields, fieldLabel, isFilled } from "@/components/formUtils";
 
@@ -31,6 +32,7 @@ export default function FormPage() {
   const [assistLang, setAssistLang] = useState<Lang>(lang);
   const [starting, setStarting] = useState(false);
   const [saved, setSaved] = useState<string>("");
+  const [loadError, setLoadError] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const focused = useRef<string | null>(null);
   const saveTimer = useRef<number>();
@@ -48,9 +50,8 @@ export default function FormPage() {
     setUserNotes(a.user_notes);
   }, [id, nav]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  const loadOrFail = useCallback(() => { setLoadError(null); load().catch((e) => setLoadError(e.message)); }, [load]);
+  useEffect(loadOrFail, [loadOrFail]);
 
   const scrollTo = (fid: string) => {
     const el = formRef.current?.querySelector(`[data-field-id="${fid}"]`);
@@ -126,6 +127,7 @@ export default function FormPage() {
     setUserNotes((u) => [...u, n]);
   };
 
+  if (loadError && !app) return <div className="mx-auto max-w-lg p-8"><LoadError message={loadError} onRetry={loadOrFail} /></div>;
   if (!app || !app.form) return <div className="p-10"><Spinner className="h-6 w-6" /></div>;
   const form = app.form;
   const fields = allFields(form);
