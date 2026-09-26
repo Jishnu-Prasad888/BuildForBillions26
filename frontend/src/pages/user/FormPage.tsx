@@ -135,9 +135,9 @@ export default function FormPage() {
     <div className="flex h-screen flex-col">
       <div className="tricolor-rule h-1" />
       <DemoStrip />
-      <header className="flex items-center gap-4 border-b border-paper-300 bg-white px-5 py-2.5">
+      <header className="flex items-center gap-2 border-b border-paper-300 bg-white px-3 py-2.5 sm:gap-4 sm:px-5">
         <Link to={`/applications/${id}`} className="btn-ghost btn-sm"><ArrowLeft size={16} /> Back</Link>
-        <Logo sub={false} />
+        <div className="hidden sm:block"><Logo sub={false} /></div>
         <div className="ml-4 hidden min-w-0 flex-1 items-center gap-3 md:flex">
           <span className="truncate font-semibold text-ink-800">{app.scheme_name}</span>
           <div className="w-48"><ProgressBar value={progress} /></div>
@@ -145,10 +145,16 @@ export default function FormPage() {
           {saved && <span className="text-xs text-ink-400">Saved {saved}</span>}
         </div>
         <div className="ml-auto flex items-center gap-2">
-          {progress >= 100 && <button className="btn-accent btn-sm" onClick={() => nav(`/applications/${id}/review`)}><CheckCircle2 size={16} /> {t("review")}</button>}
-          {!session && <button className="btn-primary btn-sm" onClick={() => setStartOpen(true)}><Sparkles size={16} /> {t("help_me_fill_this")}</button>}
+          {progress >= 100 && <button className="btn-accent btn-sm whitespace-nowrap" onClick={() => nav(`/applications/${id}/review`)}><CheckCircle2 size={16} /> {t("review")}</button>}
+          {!session && <button className="btn-primary btn-sm whitespace-nowrap" onClick={() => setStartOpen(true)}><Sparkles size={16} /> {t("help_me_fill_this")}</button>}
         </div>
       </header>
+      {/* The header's progress bar is hidden on phones, so show a slim one here instead. */}
+      <div className="flex items-center gap-3 border-b border-paper-300 bg-white px-4 py-2 md:hidden">
+        <span className="min-w-0 flex-1 truncate text-sm font-semibold text-ink-800">{app.scheme_name}</span>
+        <div className="w-24"><ProgressBar value={progress} /></div>
+        <span className="text-sm font-bold text-ink-700">{progress}%</span>
+      </div>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_410px]">
         <aside className="hidden min-h-0 space-y-4 overflow-y-auto pb-6 lg:block">
