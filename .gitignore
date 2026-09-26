@@ -19,5 +19,7 @@ dist/
 # Runtime data
 data/uploads/
 backend/data/uploads/
+data/users/
+backend/data/users/
 
 .DS_Store

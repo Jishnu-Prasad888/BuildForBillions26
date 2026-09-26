@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app import models  # noqa: F401  (register tables)
-from app.api import admin, applications, assistant, auth, documents, health, notes, schemes, screen
+from app.api import admin, applications, assistant, auth, documents, forms, health, notes, schemes, screen
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.database.session import ensure_extensions, ensure_migrations
@@ -93,7 +93,7 @@ app.add_middleware(RateLimitMiddleware)  # added first, so CORS wraps it and 429
 app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 for r in (auth.router, auth.users_router, health.router, schemes.router, assistant.router, assistant.kag_router,
-          applications.router, notes.router, documents.router, screen.router, admin.router):
+          applications.router, notes.router, documents.router, screen.router, forms.router, admin.router):
     app.include_router(r)
 
 

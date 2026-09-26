@@ -1,4 +1,4 @@
-import { FileText, FolderOpen, Home, LogOut, MessageCircle, NotebookPen, Search, ShieldCheck, UserRound } from "lucide-react";
+import { FileText, FileUp, FolderOpen, Home, LogOut, MessageCircle, NotebookPen, Search, ShieldCheck, UserRound } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -21,6 +21,7 @@ export default function UserLayout() {
     { to: "/", icon: Home, label: t("dashboard"), end: true },
     { to: "/assistant", icon: MessageCircle, label: t("assistant") },
     { to: "/schemes", icon: Search, label: t("schemes") },
+    { to: "/forms", icon: FileUp, label: "AI Form Assistant" },
     { to: "/applications", icon: FileText, label: t("applications") },
     { to: "/documents", icon: FolderOpen, label: t("documents") },
     { to: "/notes", icon: NotebookPen, label: t("notes") },
