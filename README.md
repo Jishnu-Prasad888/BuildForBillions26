@@ -188,6 +188,7 @@ backend/app/
 data/seed/                      graph.json, demo documents (marked DEMO), demo form definition
 data/documents/                 sample documents for the admin upload demo
 frontend/src/                   pages (auth, user, admin), components, layouts, hooks (speech, screen capture), i18n
+whisper-chat-app/               Expo app: on-device whisper-small speech-to-text (needs a dev build, see its README)
 ```
 
 ## API overview
