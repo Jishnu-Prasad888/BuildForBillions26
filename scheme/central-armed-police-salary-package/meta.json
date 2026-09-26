@@ -1,0 +1,21 @@
+{
+  "slug": "central-armed-police-salary-package",
+  "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Central Armed Police Salary Package (CAPSP)",
+  "origin": "data-folder",
+  "source_files": [
+    "Central Armed Police Salary Package(CAPSP).txt"
+  ],
+  "links": [
+    {
+      "name": "Central Armed Police Salary Package (CAPSP)",
+      "url": "https://sbi.co.in/web/personal-banking/accounts/salary-account"
+    }
+  ],
+  "char_count": 5800
+}

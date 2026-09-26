@@ -1,0 +1,24 @@
+{
+  "slug": "sbi-home-loan",
+  "source_url": "https://homeloans.sbi/",
+  "final_url": "https://homeloans.sbi/",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Home Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "home loan.txt",
+    "Home Loans.txt",
+    "Home Loan eligibility.txt",
+    "Tax benefits on a Home Loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Home Loan",
+      "url": "https://homeloans.sbi/"
+    }
+  ],
+  "char_count": 72724
+}

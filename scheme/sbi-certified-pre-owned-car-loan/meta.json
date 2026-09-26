@@ -1,0 +1,21 @@
+{
+  "slug": "sbi-certified-pre-owned-car-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Certified Pre-Owned Car Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "SBI Certified Pre Owned Car Loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Certified Pre-Owned Car Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/auto-loans"
+    }
+  ],
+  "char_count": 4059
+}

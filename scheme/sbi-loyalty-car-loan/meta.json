@@ -1,0 +1,21 @@
+{
+  "slug": "sbi-loyalty-car-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Loyalty Car Loan (Vehicle Loan) Scheme",
+  "origin": "data-folder",
+  "source_files": [
+    "SBI Loyalty Car Loan (Vehicle Loan) Scheme and interest rates for auto load.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Loyalty Car Loan (Vehicle Loan) Scheme",
+      "url": "https://sbi.co.in/web/personal-banking/loans/auto-loans"
+    }
+  ],
+  "char_count": 3348
+}

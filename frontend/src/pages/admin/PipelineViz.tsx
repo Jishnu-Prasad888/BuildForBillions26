@@ -5,7 +5,7 @@ const STEPS = [
   { key: "EXTRACTING", label: "Extract & clean", sub: "text, sections, pages" },
   { key: "CHUNKING", label: "Chunk", sub: "~900 chars, provenance kept" },
   { key: "EMBEDDING", label: "Embed", sub: "Ollama embedding model" },
-  { key: "INDEXING", label: "Index", sub: "pgvector + full-text + Neo4j" },
+  { key: "INDEXING", label: "Index", sub: "Chroma + full-text + Neo4j" },
   { key: "COMPLETE", label: "Searchable", sub: "available to KAG" },
 ];
 

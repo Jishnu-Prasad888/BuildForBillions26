@@ -1,0 +1,21 @@
+{
+  "slug": "indian-coast-guard-salary-package",
+  "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Indian Coast Guard Salary Package (ICGSP)",
+  "origin": "data-folder",
+  "source_files": [
+    "Indian Coast Guard Salary Package (ICGSP).txt"
+  ],
+  "links": [
+    {
+      "name": "Indian Coast Guard Salary Package (ICGSP)",
+      "url": "https://sbi.co.in/web/personal-banking/accounts/salary-account"
+    }
+  ],
+  "char_count": 5301
+}

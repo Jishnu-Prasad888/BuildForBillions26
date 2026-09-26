@@ -1,0 +1,333 @@
+{
+  "slug": "portal-raitamitra-en",
+  "source_url": "https://raitamitra.karnataka.gov.in/en",
+  "final_url": "https://raitamitra.karnataka.gov.in/en",
+  "kind": "portal",
+  "content_type": "text/html; charset=utf-8",
+  "fetched_at": "2026-09-26T15:14:31",
+  "status": "ok",
+  "title": "Department of Agriculture(KSDA) - Index",
+  "links": [
+    {
+      "name": "ಕನ್ನಡ",
+      "url": "https://raitamitra.karnataka.gov.in/kn"
+    },
+    {
+      "name": "DEPARTMENT RELATED WEBSITE",
+      "url": "https://raitamitra.karnataka.gov.in/5/department-related-website/en"
+    },
+    {
+      "name": "Contacts",
+      "url": "https://raitamitra.karnataka.gov.in/2/contacts/en"
+    },
+    {
+      "name": "Head Office",
+      "url": "https://raitamitra.karnataka.gov.in/3/head-office/en"
+    },
+    {
+      "name": "District Office",
+      "url": "https://raitamitra.karnataka.gov.in/uploads/CUGENG_1785132276.pdf"
+    },
+    {
+      "name": "Photo and Video",
+      "url": "https://raitamitra.karnataka.gov.in/7/photo-and-video/en"
+    },
+    {
+      "name": "Chitradurga.",
+      "url": "https://raitamitra.karnataka.gov.in/162/chitradurga./en"
+    },
+    {
+      "name": "Raichur.",
+      "url": "https://raitamitra.karnataka.gov.in/161/raichur./en"
+    },
+    {
+      "name": "Chamrajnagar",
+      "url": "https://raitamitra.karnataka.gov.in/160/chamrajnagar/en"
+    },
+    {
+      "name": "Vijayapura",
+      "url": "https://raitamitra.karnataka.gov.in/159/vijayapura/en"
+    },
+    {
+      "name": "Haveri",
+      "url": "https://raitamitra.karnataka.gov.in/8/haveri/en"
+    },
+    {
+      "name": "Gadag",
+      "url": "https://raitamitra.karnataka.gov.in/9/gadag/en"
+    },
+    {
+      "name": "Chikkamagaluru",
+      "url": "https://raitamitra.karnataka.gov.in/13/chikkamagaluru/en"
+    },
+    {
+      "name": "Hassan",
+      "url": "https://raitamitra.karnataka.gov.in/14/hassan/en"
+    },
+    {
+      "name": "TUMKUR",
+      "url": "https://raitamitra.karnataka.gov.in/17/tumkur/en"
+    },
+    {
+      "name": "Kalburgi",
+      "url": "https://raitamitra.karnataka.gov.in/18/kalburgi/en"
+    },
+    {
+      "name": "Dharwad",
+      "url": "https://raitamitra.karnataka.gov.in/19/dharwad/en"
+    },
+    {
+      "name": "Hassan",
+      "url": "https://raitamitra.karnataka.gov.in/21/hassan/en"
+    },
+    {
+      "name": "BIDAR",
+      "url": "https://raitamitra.karnataka.gov.in/22/bidar/en"
+    },
+    {
+      "name": "Mysore",
+      "url": "https://raitamitra.karnataka.gov.in/23/mysore/en"
+    },
+    {
+      "name": "Mysore",
+      "url": "https://raitamitra.karnataka.gov.in/31/mysore/en"
+    },
+    {
+      "name": "Bangalore Rural",
+      "url": "https://raitamitra.karnataka.gov.in/32/bangalore-rural/en"
+    },
+    {
+      "name": "Bagalkote",
+      "url": "https://raitamitra.karnataka.gov.in/36/bagalkote/en"
+    },
+    {
+      "name": "Ramangara",
+      "url": "https://raitamitra.karnataka.gov.in/39/ramangara/en"
+    },
+    {
+      "name": "Ramangara",
+      "url": "https://raitamitra.karnataka.gov.in/40/ramangara/en"
+    },
+    {
+      "name": "Belgavi",
+      "url": "https://raitamitra.karnataka.gov.in/41/belgavi/en"
+    },
+    {
+      "name": "Mandya",
+      "url": "https://raitamitra.karnataka.gov.in/42/mandya/en"
+    },
+    {
+      "name": "Kolar",
+      "url": "https://raitamitra.karnataka.gov.in/43/kolar/en"
+    },
+    {
+      "name": "Farmer advisories",
+      "url": "https://raitamitra.karnataka.gov.in/Davangere"
+    },
+    {
+      "name": "Vijayapura",
+      "url": "https://raitamitra.karnataka.gov.in/10/vijayapura/en"
+    },
+    {
+      "name": "Chikkaballapura",
+      "url": "https://raitamitra.karnataka.gov.in/12/chikkaballapura/en"
+    },
+    {
+      "name": "Yadgiri",
+      "url": "https://raitamitra.karnataka.gov.in/15/yadgiri/en"
+    },
+    {
+      "name": "Shimoga",
+      "url": "https://raitamitra.karnataka.gov.in/16/shimoga/en"
+    },
+    {
+      "name": "Koppala",
+      "url": "https://raitamitra.karnataka.gov.in/20/koppala/en"
+    },
+    {
+      "name": "Chitradurga",
+      "url": "https://raitamitra.karnataka.gov.in/24/chitradurga/en"
+    },
+    {
+      "name": "Ramanagara",
+      "url": "https://raitamitra.karnataka.gov.in/25/ramanagara/en"
+    },
+    {
+      "name": "Chikkaballapura",
+      "url": "https://raitamitra.karnataka.gov.in/26/chikkaballapura/en"
+    },
+    {
+      "name": "Chikkamangalore",
+      "url": "https://raitamitra.karnataka.gov.in/27/chikkamangalore/en"
+    },
+    {
+      "name": "Raichur",
+      "url": "https://raitamitra.karnataka.gov.in/28/raichur/en"
+    },
+    {
+      "name": "Bagalkot",
+      "url": "https://raitamitra.karnataka.gov.in/29/bagalkot/en"
+    },
+    {
+      "name": "Davangere",
+      "url": "https://raitamitra.karnataka.gov.in/30/davangere/en"
+    },
+    {
+      "name": "KALBURGI",
+      "url": "https://raitamitra.karnataka.gov.in/33/kalburgi/en"
+    },
+    {
+      "name": "VIjayapura",
+      "url": "https://raitamitra.karnataka.gov.in/34/vijayapura/en"
+    },
+    {
+      "name": "Belagavi",
+      "url": "https://raitamitra.karnataka.gov.in/35/belagavi/en"
+    },
+    {
+      "name": "Davangere",
+      "url": "https://raitamitra.karnataka.gov.in/37/davangere/en"
+    },
+    {
+      "name": "Davangere",
+      "url": "https://raitamitra.karnataka.gov.in/38/davangere/en"
+    },
+    {
+      "name": "Vijaynagar",
+      "url": "https://raitamitra.karnataka.gov.in/44/vijaynagar/en"
+    },
+    {
+      "name": "Feedback",
+      "url": "https://raitamitra.karnataka.gov.in/feedback/en"
+    },
+    {
+      "name": "Events",
+      "url": "https://raitamitra.karnataka.gov.in/events"
+    },
+    {
+      "name": "1 10 months ago Krishivarthi Monthly Magazine",
+      "url": "https://raitamitra.karnataka.gov.in/146/krishivarthi-monthly-magazine/en"
+    },
+    {
+      "name": "2 4 years ago State Scholarship Portal Helpline -1902",
+      "url": "https://raitamitra.karnataka.gov.in/132/state-scholarship-portal-helpline--1902/en"
+    },
+    {
+      "name": "3 7 years ago Raitha Call Center Toll Free No: 1800 425 3553/8277003553",
+      "url": "https://raitamitra.karnataka.gov.in/131/raitha-call-center--toll-free-no:-1800-425-3553/8277003553/en"
+    },
+    {
+      "name": "CITIZEN CHARTER",
+      "url": "https://raitamitra.karnataka.gov.in/51/citizen--charter/en"
+    },
+    {
+      "name": "Guideline",
+      "url": "https://raitamitra.karnataka.gov.in/50/guideline/en"
+    },
+    {
+      "name": "POLICY",
+      "url": "https://raitamitra.karnataka.gov.in/49/policy/en"
+    },
+    {
+      "name": "Vision Objectives Mission",
+      "url": "https://raitamitra.karnataka.gov.in/46/vision-objectives-mission/en"
+    },
+    {
+      "name": "Organization Structure",
+      "url": "https://raitamitra.karnataka.gov.in/47/organization-structure/en"
+    },
+    {
+      "name": "History",
+      "url": "https://raitamitra.karnataka.gov.in/48/history/en"
+    },
+    {
+      "name": "Raita Siri",
+      "url": "https://raitamitra.karnataka.gov.in/90/raita-siri/en"
+    },
+    {
+      "name": "Fertilizer and Biofertilizer Quality Control Laboratory",
+      "url": "https://raitamitra.karnataka.gov.in/89/fertilizer-and--biofertilizer-quality-control-laboratory/en"
+    },
+    {
+      "name": "Karnataka Raitha Suraksha Pradhana Mantri Fasal Bima Yojana",
+      "url": "https://raitamitra.karnataka.gov.in/88/karnataka-raitha-suraksha-pradhana-mantri-fasal-bima-yojana/en"
+    },
+    {
+      "name": "Guidelines And Circular",
+      "url": "https://raitamitra.karnataka.gov.in/94/guidelines-and-circular/en"
+    },
+    {
+      "name": "National Mission on Edible Oil-Oilseeds (NMEO-OS)",
+      "url": "https://raitamitra.karnataka.gov.in/61/oil-seeds/en"
+    },
+    {
+      "name": "NMEO-Oil Seeds",
+      "url": "https://raitamitra.karnataka.gov.in/61/nmeo-oil-seeds/en"
+    },
+    {
+      "name": "National Mission on Natural Farming",
+      "url": "https://raitamitra.karnataka.gov.in/164/national-mission-on-natural-farming/en"
+    },
+    {
+      "name": "Mission for Aatmanirbharta in Pulses (MAP)",
+      "url": "https://raitamitra.karnataka.gov.in/156/mission-for-aatmanirbharta-in-pulses-%28map%29/en"
+    },
+    {
+      "name": "Mission for Cotton Productivity (MCP)",
+      "url": "https://raitamitra.karnataka.gov.in/157/mission-for-cotton-productivity-%28mcp%29/en"
+    },
+    {
+      "name": "Plant Protection",
+      "url": "https://raitamitra.karnataka.gov.in/76/plant-protection/en"
+    },
+    {
+      "name": "Quality Control",
+      "url": "https://raitamitra.karnataka.gov.in/92/quality-control/en"
+    },
+    {
+      "name": "Pesticides related Information",
+      "url": "https://raitamitra.karnataka.gov.in/99/pesticides-related-information/en"
+    },
+    {
+      "name": "Circular",
+      "url": "https://raitamitra.karnataka.gov.in/91/circular/en"
+    },
+    {
+      "name": "Verified Principal Certificate",
+      "url": "https://raitamitra.karnataka.gov.in/100/verified-principal-certificate/en"
+    },
+    {
+      "name": "Plant Protection Guidelines",
+      "url": "https://raitamitra.karnataka.gov.in/101/plant-protection-guidelines/en"
+    },
+    {
+      "name": "Rate Contract PP",
+      "url": "https://raitamitra.karnataka.gov.in/76/rate-contract-pp/en"
+    },
+    {
+      "name": "RKVY - Crop Diversification Programme (CDP)",
+      "url": "https://raitamitra.karnataka.gov.in/158/rkvy---crop-diversification-programme/en"
+    },
+    {
+      "name": "Raitha Samparka Kendra",
+      "url": "https://raitamitra.karnataka.gov.in/95/raitha-samparka-kendra/en"
+    },
+    {
+      "name": "Crop Survey Scheme",
+      "url": "https://raitamitra.karnataka.gov.in/96/crop-survey-scheme/en"
+    },
+    {
+      "name": "Maize D B T",
+      "url": "https://raitamitra.karnataka.gov.in/97/maize-d-b-t/en"
+    },
+    {
+      "name": "Conservation and Promotion of Landraces",
+      "url": "https://raitamitra.karnataka.gov.in/1"
+    },
+    {
+      "name": "Proceedings of Advisory Committee Meetings",
+      "url": "https://raitamitra.karnataka.gov.in/150/proceedings-of-advisory-committee-meetings/en"
+    }
+  ],
+  "char_count": 19915
+}

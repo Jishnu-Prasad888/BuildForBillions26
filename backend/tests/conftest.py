@@ -7,7 +7,7 @@ from pathlib import Path
 _TMP = Path(tempfile.mkdtemp(prefix="forms-test-"))
 os.environ.update(
     DATABASE_URL=f"sqlite:///{_TMP}/test.db", VECTOR_BACKEND="json", FORMS_DIR=str(_TMP / "users"), UPLOAD_DIR=str(_TMP / "uploads"),
-    RATE_LIMIT_ENABLED="false", OLLAMA_BASE_URL="http://127.0.0.1:9", TELEGRAM_BOT_TOKEN="", NEO4J_URI="bolt://127.0.0.1:9", APP_ENV="development",
+    RATE_LIMIT_ENABLED="false", SCHEME_AUTO_SYNC="false", OLLAMA_BASE_URL="http://127.0.0.1:9", TELEGRAM_BOT_TOKEN="", NEO4J_URI="bolt://127.0.0.1:9", APP_ENV="development",
 )
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 

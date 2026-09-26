@@ -10,7 +10,6 @@ import { EvidenceDrawer, SourcesButton } from "@/components/Evidence";
 import SchemeCard from "@/components/SchemeCard";
 import VoiceButton from "@/components/VoiceButton";
 import KagTrace from "@/components/KagTrace";
-import { Spinner } from "@/components/ui";
 
 const SUGGESTIONS: Record<Lang, string[]> = {
   en: ["Heavy rain destroyed my crop. What help can I get?", "What documents do I need for crop damage relief?", "How many days do I have to report crop loss for insurance?", "Who is not eligible for PM-KISAN?"],
@@ -94,29 +93,32 @@ export default function Assistant() {
             <div className="max-w-2xl rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">{INTRO[lang]}</div>
           </div>
           {messages.length === 0 && (
-            <div className="flex flex-wrap gap-2 pl-12">
+            <div className="stagger flex flex-wrap gap-2 pl-12">
               {SUGGESTIONS[lang].map((s) => (
-                <button key={s} onClick={() => send(s)} className="rounded-full border border-paper-300 bg-white px-3.5 py-2 text-left text-sm font-medium text-ink-700 hover:border-saffron hover:bg-saffron-50">{s}</button>
+                <button key={s} onClick={() => send(s)} className="rounded-full border border-paper-300 bg-white px-3.5 py-2 text-left text-sm font-medium text-ink-700 transition-all hover:-translate-y-0.5 hover:border-saffron hover:bg-saffron-50 hover:shadow-card">{s}</button>
               ))}
             </div>
           )}
           {messages.map((m) => {
             if (m.role === "user")
               return (
-                <div key={m.id} className="flex justify-end">
+                <div key={m.id} className="flex animate-popIn justify-end">
                   <div className="max-w-xl rounded-lg rounded-tr-sm bg-ink-800 px-4 py-3 text-[1.02rem] text-white">{m.content}</div>
                 </div>
               );
-            if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
+            if (m.role === "system") return <div key={m.id} className="animate-popIn rounded-lg bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
             if (m.pending)
               return (
-                <div key={m.id} className="flex items-center gap-3 pl-12 text-ink-500"><Spinner /> {t("thinking")}</div>
+                <div key={m.id} className="flex animate-fadeIn items-center gap-3 pl-12 text-ink-500">
+                  <span className="flex gap-1" aria-hidden>{[0, 150, 300].map((d) => <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-forest-500" style={{ animationDelay: `${d}ms` }} />)}</span>
+                  {t("thinking")}
+                </div>
               );
             const order = citationOrderFrom(m.content, m.evidence.map((e) => e.id));
             const ordered = order.map((id) => m.evidence.find((e) => e.id === id)!).filter(Boolean);
             const cards = m.meta?.scheme_cards ?? [];
             return (
-              <div key={m.id} className="flex gap-3">
+              <div key={m.id} className="flex animate-popIn gap-3">
                 <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
                   <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[1.02rem]">

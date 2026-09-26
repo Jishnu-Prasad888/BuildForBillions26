@@ -59,6 +59,19 @@ const D: Dict = {
   listen: { en: "Listen", hi: "सुनें", kn: "ಕೇಳಿ" },
   fill_field: { en: "Fill field", hi: "भरें", kn: "ತುಂಬಿ" },
   dont_fill: { en: "Don't fill", hi: "न भरें", kn: "ತುಂಬಬೇಡಿ" },
+  hello: { en: "Hello", hi: "नमस्ते", kn: "ನಮಸ್ಕಾರ" },
+  form_assistant: { en: "Fill a Form", hi: "फ़ॉर्म भरें", kn: "ಫಾರ್ಮ್ ತುಂಬಿ" },
+  nav_apply: { en: "Find & apply", hi: "खोजें और आवेदन करें", kn: "ಹುಡುಕಿ ಮತ್ತು ಅರ್ಜಿ ಸಲ್ಲಿಸಿ" },
+  nav_records: { en: "My records", hi: "मेरे रिकॉर्ड", kn: "ನನ್ನ ದಾಖಲೆಗಳು" },
+  ask_home_placeholder: { en: "e.g. Rain damaged my crop. What help can I get?", hi: "जैसे: बारिश से फसल खराब हुई। क्या मदद मिलेगी?", kn: "ಉದಾ: ಮಳೆಯಿಂದ ಬೆಳೆ ಹಾಳಾಯಿತು. ಏನು ಸಹಾಯ ಸಿಗುತ್ತದೆ?" },
+  continue_where: { en: "Continue where you left off", hi: "जहाँ छोड़ा था वहीं से जारी रखें", kn: "ನಿಲ್ಲಿಸಿದಲ್ಲಿಂದ ಮುಂದುವರಿಸಿ" },
+  next_steps: { en: "Your next steps", hi: "आपके अगले कदम", kn: "ನಿಮ್ಮ ಮುಂದಿನ ಹಂತಗಳು" },
+  all_caught_up: { en: "You're all caught up.", hi: "सब काम पूरे हैं।", kn: "ಎಲ್ಲವೂ ಪೂರ್ಣಗೊಂಡಿದೆ." },
+  in_progress: { en: "In progress", hi: "जारी", kn: "ಪ್ರಗತಿಯಲ್ಲಿ" },
+  in_wallet: { en: "Documents saved", hi: "सहेजे दस्तावेज़", kn: "ಉಳಿಸಿದ ದಾಖಲೆಗಳು" },
+  to_do: { en: "Open to-dos", hi: "बाकी काम", kn: "ಬಾಕಿ ಕೆಲಸಗಳು" },
+  documents_sub: { en: "Aadhaar, land record, passbook", hi: "आधार, भूमि रिकॉर्ड, पासबुक", kn: "ಆಧಾರ್, ಭೂ ದಾಖಲೆ, ಪಾಸ್‌ಬುಕ್" },
+  more_ways: { en: "More ways to get help", hi: "मदद के और तरीके", kn: "ಸಹಾಯದ ಇನ್ನಷ್ಟು ಮಾರ್ಗಗಳು" },
 };
 
 interface I18nCtx {

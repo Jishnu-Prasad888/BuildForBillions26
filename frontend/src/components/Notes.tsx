@@ -5,7 +5,7 @@ import type { AINotes, Note } from "@/types";
 import { useI18n } from "@/i18n";
 import { formatDate } from "./ui";
 
-export function UserNotesPanel({ notes, applicationId, onChange, title }: { notes: Note[]; applicationId?: string; onChange: (n: Note[]) => void; title?: string }) {
+export function UserNotesPanel({ notes, applicationId, onChange, title, bare = false }: { notes: Note[]; applicationId?: string; onChange: (n: Note[]) => void; title?: string; bare?: boolean }) {
   const { t } = useI18n();
   const [text, setText] = useState("");
   const [kind, setKind] = useState<"todo" | "question">("todo");
@@ -37,11 +37,11 @@ export function UserNotesPanel({ notes, applicationId, onChange, title }: { note
   const questions = notes.filter((n) => n.item_type === "question");
 
   const row = (n: Note) => (
-    <li key={n.id} className="group flex items-start gap-2 rounded-md px-1 py-1 hover:bg-paper-100">
+    <li key={n.id} className="group flex animate-popIn items-start gap-2 rounded-md px-1 py-1 transition-colors hover:bg-paper-100">
       {n.item_type === "question" ? (
         <CircleHelp size={17} className="mt-0.5 flex-none text-ink-400" />
       ) : (
-        <button onClick={() => toggle(n)} aria-label={n.done ? "Mark not done" : "Mark done"} className="mt-0.5 flex-none text-ink-500 hover:text-leaf">
+        <button onClick={() => toggle(n)} aria-label={n.done ? "Mark not done" : "Mark done"} className="mt-0.5 flex-none text-ink-500 transition-transform hover:text-leaf active:scale-90">
           {n.done ? <CheckSquare size={17} className="text-leaf" /> : <Square size={17} />}
         </button>
       )}
@@ -51,7 +51,7 @@ export function UserNotesPanel({ notes, applicationId, onChange, title }: { note
           <button className="btn-ghost btn-sm" onClick={() => save(n)} aria-label="Save"><Check size={15} /></button>
         </div>
       ) : (
-        <span className={`flex-1 text-[0.93rem] ${n.done ? "text-ink-400 line-through" : "text-ink-800"}`}>
+        <span className={`flex-1 text-[0.93rem] transition-colors duration-300 ${n.done ? "text-ink-400 line-through" : "text-ink-800"}`}>
           {n.content}
           {n.origin === "ai_suggested" && <span className="ml-1.5 align-middle text-[0.65rem] font-bold uppercase text-saffron-600">AI suggested</span>}
         </span>
@@ -67,11 +67,13 @@ export function UserNotesPanel({ notes, applicationId, onChange, title }: { note
 
   return (
     <section className="card p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <StickyNote size={18} className="text-saffron-600" />
-        <h3 className="font-semibold uppercase tracking-wide text-ink-800">{title ?? t("my_notes")}</h3>
-      </div>
-      <div className="eyebrow mt-2">Things I need</div>
+      {!bare && (
+        <div className="mb-2 flex items-center gap-2">
+          <StickyNote size={18} className="text-saffron-600" />
+          <h3 className="font-semibold uppercase tracking-wide text-ink-800">{title ?? t("my_notes")}</h3>
+        </div>
+      )}
+      <div className={`eyebrow ${bare ? "" : "mt-2"}`}>Things I need</div>
       <ul className="mt-1 space-y-0.5">{todos.length ? todos.map(row) : <li className="px-1 py-1 text-sm text-ink-400">Nothing yet.</li>}</ul>
       <div className="eyebrow mt-3">Questions</div>
       <ul className="mt-1 space-y-0.5">{questions.length ? questions.map(row) : <li className="px-1 py-1 text-sm text-ink-400">No questions yet.</li>}</ul>

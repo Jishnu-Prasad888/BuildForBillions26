@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
+from app import vectorstore
 from app.config import settings
 from app.graph import get_graph
 from app.kag.query_understanding import QueryContext
@@ -119,6 +120,8 @@ def _tokens(q: str) -> list[str]:
 
 def vector_search(db: Session, query: str, limit: int = 20) -> list[tuple[str, float]]:
     [vec], model_id = get_ai().embed([query], kind="query")
+    if vectorstore.enabled():
+        return vectorstore.query(vec, model_id, limit)
     if settings.VECTOR_BACKEND == "pgvector":
         dist = KnowledgeChunk.embedding.cosine_distance(vec)
         rows = db.execute(

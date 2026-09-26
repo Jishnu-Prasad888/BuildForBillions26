@@ -1,0 +1,16 @@
+{
+  "slug": "term-loan-demand-loan-business",
+  "source_url": "local:data/Term Loan (TL) Demand Loan(DL) loans to buisness.txt",
+  "final_url": "local:data/Term Loan (TL) Demand Loan(DL) loans to buisness.txt",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Term Loan (TL) / Demand Loan (DL) for Business",
+  "origin": "data-folder",
+  "source_files": [
+    "Term Loan (TL) Demand Loan(DL) loans to buisness.txt"
+  ],
+  "links": [],
+  "char_count": 2507
+}

@@ -63,9 +63,12 @@ services:
       SEED_DIR: /data/seed
       UPLOAD_DIR: /data/uploads
       FORMS_DIR: /data/users
+      CHROMA_DIR: /data/chroma
+      SCHEME_DIR: /scheme
       CORS_ORIGINS: http://localhost:5173
     volumes:
       - ./data:/data
+      - ./scheme:/scheme:ro
     ports: ["8000:8000"]
     depends_on:
       postgres: { condition: service_healthy }

@@ -1,0 +1,22 @@
+{
+  "slug": "sbi-new-car-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI New Car / Vehicle Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "SBI New Car or Vehicle Loan.txt",
+    "FAQ Car Loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI New Car / Vehicle Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/auto-loans"
+    }
+  ],
+  "char_count": 14491
+}

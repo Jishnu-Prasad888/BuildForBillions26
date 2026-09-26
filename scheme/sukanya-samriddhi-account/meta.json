@@ -1,0 +1,23 @@
+{
+  "slug": "sukanya-samriddhi-account",
+  "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account.aspx",
+  "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account.aspx",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Sukanya Samriddhi Account (SSA)",
+  "origin": "data-folder",
+  "source_files": [
+    "SSA.txt",
+    "FAQ SSA Sukanya Samriddhi Account.txt",
+    "SSA versus PPF.txt"
+  ],
+  "links": [
+    {
+      "name": "Sukanya Samriddhi Account (SSA)",
+      "url": "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account.aspx"
+    }
+  ],
+  "char_count": 40733
+}

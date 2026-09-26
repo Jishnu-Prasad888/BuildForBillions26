@@ -9,7 +9,9 @@ from app.config import settings
 from app.database import get_db
 from app.graph import get_graph
 from app.ingestion.extract import ALLOWED_EXTENSIONS
-from app.ingestion.pipeline import STAGES, create_document_record, reembed_all, run_job, save_upload
+from app import vectorstore
+from app.ingestion import scheme_folder
+from app.ingestion.pipeline import STAGES, create_document_record, reembed_all, remove_document, run_job, save_upload
 from app.kag.agent import scheme_card
 from app.models import Application, IngestionJob, KnowledgeChunk, KnowledgeDocument, KnowledgeSource, User
 from app.schemas.common import AdminUserPatch, SchemeIn, SourceIn, UserOut
@@ -46,6 +48,7 @@ def overview(db: Session = Depends(get_db)):
         "recent_ingestion": [job_out(j) for j in jobs], "ai": get_ai().health(),
         "embeddings_by_model": [{"model": m, "chunks": c} for m, c in by_model],
         "vector_backend": settings.VECTOR_BACKEND, "pipeline_stages": STAGES,
+        "vectors": vectorstore.info().get("vectors") if vectorstore.enabled() else None,
     }
 
 
@@ -130,14 +133,7 @@ def delete_document(did: str, db: Session = Depends(get_db)):
     d = db.get(KnowledgeDocument, did)
     if not d:
         raise HTTPException(404, "Document not found")
-    for j in db.scalars(select(IngestionJob).where(IngestionJob.document_id == did)).all():
-        db.delete(j)
-    db.query(KnowledgeChunk).filter(KnowledgeChunk.document_id == did).delete()
-    if d.file_path:
-        Path(d.file_path).unlink(missing_ok=True)
-    db.delete(d)
-    db.commit()
-    get_graph().remove_document(did)
+    remove_document(db, d)
     return {"ok": True}
 
 
@@ -158,6 +154,31 @@ def reindex(did: str, background: BackgroundTasks, db: Session = Depends(get_db)
 @router.post("/reembed")
 def reembed(db: Session = Depends(get_db)):
     return reembed_all(db)
+
+
+# ---------------------------------------------------------------- scheme library (Chroma)
+@router.get("/knowledge")
+def knowledge(db: Session = Depends(get_db)):
+    """The scheme-folder library, its sync progress and the vector index it feeds."""
+    docs = scheme_folder.folder_documents(db)
+    vs = vectorstore.info() if vectorstore.enabled() else {"backend": settings.VECTOR_BACKEND, "vectors": None, "status": "not in use"}
+    return {
+        "folder": {"path": str(settings.scheme_path), "exists": settings.scheme_path.is_dir(), "documents": len(docs),
+                   "indexed": sum(d["status"] == "COMPLETE" for d in docs),
+                   "chunks": sum(d["chunk_count"] for d in docs)},
+        "sync": scheme_folder.status(),
+        "vector_store": vs,
+        "embedding_model": get_ai().embedding_model_id,
+        "documents": docs,
+    }
+
+
+@router.post("/knowledge/sync", status_code=202)
+def knowledge_sync(force: bool = False):
+    if not settings.scheme_path.is_dir():
+        raise HTTPException(404, f"Scheme folder not found: {settings.scheme_path}")
+    started = scheme_folder.start_background(force=force)
+    return {"started": started, "sync": scheme_folder.status()}
 
 
 # ---------------------------------------------------------------- sources

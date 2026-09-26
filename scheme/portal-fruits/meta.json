@@ -1,0 +1,29 @@
+{
+  "slug": "portal-fruits",
+  "source_url": "https://fruits.karnataka.gov.in/",
+  "final_url": "https://fruits.karnataka.gov.in/",
+  "kind": "portal",
+  "content_type": "text/html; charset=utf-8",
+  "fetched_at": "2026-09-26T15:14:19",
+  "status": "ok",
+  "title": "FRUITS",
+  "links": [
+    {
+      "name": "Citizen Login",
+      "url": "https://fruits.karnataka.gov.in/OnlineUserLogin.aspx"
+    },
+    {
+      "name": "Feedback",
+      "url": "https://fruits.karnataka.gov.in/Feedback.aspx"
+    },
+    {
+      "name": "More Charts",
+      "url": "https://fruits.karnataka.gov.in/Analysis/Dashboard/FruitsDataAnalysis.aspx"
+    },
+    {
+      "name": "Website policy",
+      "url": "https://fruits.karnataka.gov.in/PrivacyPolicy.aspx"
+    }
+  ],
+  "char_count": 2756
+}

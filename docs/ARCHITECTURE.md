@@ -226,7 +226,7 @@ Routers: see [API.md](API.md).
 
 ### 5.1 PostgreSQL
 
-`VECTOR_BACKEND=pgvector` uses `vector(EMBEDDING_DIM)`. `json` stores vectors as JSON and scores cosine in Python.
+`VECTOR_BACKEND=chroma` (default) keeps chunk text and metadata in Postgres and the vectors in a ChromaDB collection keyed by chunk id (embedded under `CHROMA_DIR`, or a server via `CHROMA_HOST`). `pgvector` uses `vector(EMBEDDING_DIM)`. `json` stores vectors as JSON and scores cosine in Python. Keyword search always runs on Postgres full-text search.
 
 ```mermaid
 erDiagram
@@ -398,7 +398,7 @@ Stages: **UPLOADED → EXTRACTING → CHUNKING → EMBEDDING → INDEXING → CO
 |---|---|
 | Admin file | `POST /api/admin/documents` — PDF, TXT, MD, HTML, DOCX |
 | URL | `POST /api/admin/sources` — HTTP GET, BeautifulSoup |
-| Seed | Startup from `data/seed/documents/` |
+| Scheme library | `scheme/<slug>/{meta.json,content.txt}` — synced in the background at startup, from **Admin → Knowledge Base → Sync**, or `python -m app.ingestion.scheme_folder [--force]`. Unchanged text is skipped; removed folders are de-indexed. |
 
 Blocks `{text, section, page}` keep provenance through the chunker. Indexing writes Postgres chunks and links Neo4j documents when scheme aliases match (`detect_scheme_mentions`). Jobs: `BackgroundTasks` + poll `GET /api/admin/ingestion/{id}`.
 

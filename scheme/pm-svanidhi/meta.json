@@ -1,0 +1,25 @@
+{
+  "slug": "pm-svanidhi",
+  "source_url": "https://pmsvanidhi.mohua.gov.in/",
+  "final_url": "https://pmsvanidhi.mohua.gov.in/",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+  "origin": "data-folder",
+  "source_files": [
+    "PM SVANidhi Scheme Guidelines.pdf"
+  ],
+  "links": [
+    {
+      "name": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+      "url": "https://pmsvanidhi.mohua.gov.in/"
+    },
+    {
+      "name": "pmsvanidhi.qcin.org",
+      "url": "https://pmsvanidhi.qcin.org/account/landing-page"
+    }
+  ],
+  "char_count": 27436
+}

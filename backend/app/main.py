@@ -11,6 +11,7 @@ from app.api import admin, applications, assistant, auth, documents, forms, heal
 from app.config import settings
 from app.database import Base, SessionLocal, engine
 from app.database.session import ensure_extensions, ensure_migrations
+from app.ingestion import scheme_folder
 from app.ratelimit import RateLimitMiddleware
 from app.services.seed import maybe_reembed, run_all
 
@@ -61,6 +62,9 @@ def initialize_database() -> None:
 async def lifespan(_: FastAPI):
     initialize_database()
     task = asyncio.create_task(reembed_when_ready()) if settings.RUN_BACKGROUND_TASKS else None
+    if settings.RUN_BACKGROUND_TASKS and settings.SCHEME_AUTO_SYNC and settings.scheme_path.is_dir():
+        # Runs in a thread so the API is up immediately; unchanged documents are skipped.
+        scheme_folder.start_background()
 
     bot_app = None
     if settings.TELEGRAM_BOT_TOKEN and settings.RUN_BACKGROUND_TASKS:

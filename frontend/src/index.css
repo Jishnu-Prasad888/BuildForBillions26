@@ -75,6 +75,38 @@ body::before {
   mask-image: linear-gradient(to right, #000 0%, #000 35%, transparent 85%), linear-gradient(to top, #000 0%, #000 55%, transparent 100%);
   mask-composite: intersect;
 }
+/* Children of .stagger rise in one after another (first 12; the rest arrive with the last). */
+@keyframes staggerRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.stagger > * { animation: staggerRise .5s cubic-bezier(.2,.8,.2,1) backwards; }
+.stagger > :nth-child(2) { animation-delay: 50ms; }
+.stagger > :nth-child(3) { animation-delay: 100ms; }
+.stagger > :nth-child(4) { animation-delay: 150ms; }
+.stagger > :nth-child(5) { animation-delay: 200ms; }
+.stagger > :nth-child(6) { animation-delay: 250ms; }
+.stagger > :nth-child(7) { animation-delay: 300ms; }
+.stagger > :nth-child(8) { animation-delay: 350ms; }
+.stagger > :nth-child(9) { animation-delay: 400ms; }
+.stagger > :nth-child(10) { animation-delay: 450ms; }
+.stagger > :nth-child(11) { animation-delay: 500ms; }
+.stagger > :nth-child(n+12) { animation-delay: 550ms; }
+
+.skeleton { @apply rounded-md bg-[linear-gradient(90deg,#e9f1ec_25%,#f5f8f6_50%,#e9f1ec_75%)] bg-[length:200%_100%] animate-skeleton; }
+
+/* Soft green hero panel used at the top of the home page. */
+.greet-surface { background: radial-gradient(120% 140% at 100% 0%, #d9efe5 0%, rgba(217,239,229,0) 55%), linear-gradient(135deg, #ffffff 0%, #f1f8f4 100%); }
+
+/* KAG retrieval map: nodes pop in, edges draw from the centre outwards, the question node breathes. */
+@keyframes kagPop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+@keyframes kagDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes kagPulse { 0%, 100% { opacity: .9; transform: scale(1); } 50% { opacity: .2; transform: scale(1.12); } }
+.kag-pop { transform-box: fill-box; transform-origin: center; animation: kagPop .45s cubic-bezier(.2,.8,.2,1) backwards; transition: opacity .2s; }
+.kag-edge { stroke-dasharray: 1; animation: kagDraw .7s ease-out backwards; transition: opacity .2s; }
+.kag-pulse { transform-box: fill-box; transform-origin: center; animation: kagPulse 2.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}
+
 /* Keeps content clear of the fixed mobile tab bar and the phone's home indicator. */
 .pb-safe { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
 @media (min-width: 1024px) { .pb-safe { padding-bottom: 2.5rem; } }

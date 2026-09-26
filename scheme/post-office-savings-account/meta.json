@@ -1,0 +1,25 @@
+{
+  "slug": "post-office-savings-account",
+  "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx",
+  "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Post Office Savings Account",
+  "origin": "data-folder",
+  "source_files": [
+    "Post Office savings account.txt"
+  ],
+  "links": [
+    {
+      "name": "Post Office Savings Account",
+      "url": "https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx"
+    },
+    {
+      "name": "egazette.nic.in",
+      "url": "https://egazette.nic.in/WriteReadData/2023/244822.pdf"
+    }
+  ],
+  "char_count": 18382
+}

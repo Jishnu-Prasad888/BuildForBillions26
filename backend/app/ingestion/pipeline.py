@@ -13,6 +13,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app import vectorstore
 from app.database import SessionLocal
 from app.graph import get_graph
 from app.ingestion.chunker import chunk_blocks
@@ -182,13 +183,21 @@ def _run(db: Session, job: IngestionJob, doc: KnowledgeDocument, raw: bytes | No
     _stage(db, job, "INDEXING", f"Embedding model: {model_id}")
     doc.status = "INDEXING"
     db.execute(delete(KnowledgeChunk).where(KnowledgeChunk.document_id == doc.id))
+    use_chroma = vectorstore.enabled()
+    if use_chroma:
+        vectorstore.delete_document(doc.id)
+    ids: list[str] = []
     for i, (c, vec) in enumerate(zip(chunks, vectors)):
         chunk_schemes = sorted(set(scheme_codes if len(scheme_codes) == 1 else []) | set(detect_scheme_mentions(c["text"])))
+        cid = new_chunk_id()
+        ids.append(cid)
         db.add(KnowledgeChunk(
-            id=new_chunk_id(), document_id=doc.id, chunk_index=i, content=c["text"], section=c.get("section"),
+            id=cid, document_id=doc.id, chunk_index=i, content=c["text"], section=c.get("section"),
             page=c.get("page"), language=doc.language, scheme_codes=chunk_schemes or scheme_codes,
-            content_hash=sha256(c["text"]), embedding=vec, embedding_model=model_id,
+            content_hash=sha256(c["text"]), embedding=None if use_chroma else vec, embedding_model=model_id,
         ))
+    if use_chroma:
+        vectorstore.upsert(ids, vectors, [{"document_id": doc.id, "chunk_index": i, "embedding_model": model_id} for i in range(len(ids))])
     doc.chunk_count = len(chunks)
     src = db.get(KnowledgeSource, doc.source_id) if doc.source_id else None
     get_graph().upsert_document(doc.id, doc.title, src.name if src else doc.publisher, doc.publisher, scheme_codes)
@@ -205,11 +214,32 @@ def reembed_all(db: Session) -> dict:
     chunks = db.scalars(select(KnowledgeChunk)).all()
     texts = [f"{c.section}\n{c.content}" if c.section else c.content for c in chunks]
     vectors, model_id = get_ai().embed(texts, kind="document") if texts else ([], get_ai().embedding_model_id)
+    use_chroma = vectorstore.enabled()
+    if use_chroma:
+        # A new model may have a different dimension, so rebuild the collection from scratch.
+        vectorstore.reset()
+        vectorstore.upsert([c.id for c in chunks], vectors,
+                           [{"document_id": c.document_id, "chunk_index": c.chunk_index, "embedding_model": model_id} for c in chunks])
     for c, v in zip(chunks, vectors):
-        c.embedding = v
+        c.embedding = None if use_chroma else v
         c.embedding_model = model_id
     db.commit()
     return {"chunks": len(chunks), "embedding_model": model_id}
+
+
+def remove_document(db: Session, doc: KnowledgeDocument) -> None:
+    """Delete a document with its jobs, chunks, vectors and graph node. Only admin uploads own
+    their file; folder and seed documents point at files that must stay where they are."""
+    doc_id = doc.id
+    db.execute(delete(IngestionJob).where(IngestionJob.document_id == doc_id))
+    db.execute(delete(KnowledgeChunk).where(KnowledgeChunk.document_id == doc_id))
+    if doc.kind == "upload" and doc.file_path:
+        Path(doc.file_path).unlink(missing_ok=True)
+    db.delete(doc)
+    db.commit()
+    if vectorstore.enabled():
+        vectorstore.delete_document(doc_id)
+    get_graph().remove_document(doc_id)
 
 
 def save_upload(data: bytes, filename: str) -> Path:

@@ -1,0 +1,161 @@
+2026-09-26 15:14:12,175 [INFO] GET https://samrakshane.karnataka.gov.in/
+2026-09-26 15:14:15,531 [INFO]   saved sheme/portal-samrakshane  title=::SAMRAKSHANE-KARNATAKA :: Crop Insurance Application - NIC-Bangalore
+2026-09-26 15:14:15,531 [INFO] GET https://fruits.karnataka.gov.in/
+2026-09-26 15:14:19,894 [INFO]   saved sheme/portal-fruits  title=FRUITS
+2026-09-26 15:14:19,895 [INFO] GET https://pmkisan.gov.in/
+2026-09-26 15:14:21,002 [INFO]   saved sheme/portal-pmkisan  title=PM-Kisan Samman Nidhi
+2026-09-26 15:14:21,002 [INFO] GET https://pmfby.gov.in/
+2026-09-26 15:14:21,786 [INFO]   saved sheme/portal-pmfby  title=Pradhan Mantri Fasal Bima Yojana - Crop Insurance | PMFBY - Crop Insur
+2026-09-26 15:14:21,787 [INFO] GET https://pmmsy.dof.gov.in/
+2026-09-26 15:14:29,114 [INFO]   saved sheme/portal-pmmsy  title=Pradhan Mantri Matsya Sampada Yojana | Department of Fisheries, MoCIT,
+2026-09-26 15:14:29,115 [INFO] GET https://raitamitra.karnataka.gov.in/en
+2026-09-26 15:14:31,170 [INFO]   saved sheme/portal-raitamitra-en  title=Department of Agriculture(KSDA) - Index
+2026-09-26 15:14:31,170 [INFO] GET https://raitamitra.karnataka.gov.in/5/department-related-website/en
+2026-09-26 15:14:35,789 [INFO]   saved sheme/portal-raitamitra-related-sites  title=Department of Agriculture(KSDA) - Department-related-website
+2026-09-26 15:14:35,790 [INFO] GET https://sevasindhu.karnataka.gov.in/Sevasindhu/English
+2026-09-26 15:14:47,164 [INFO]   saved sheme/portal-sevasindhu-en  title=Seva Sindhu Home Page
+2026-09-26 15:14:47,164 [INFO] GET https://www.nabard.org/content.aspx?id=23
+2026-09-26 15:14:54,868 [INFO]   saved sheme/nabard-govt-sponsored-index  title=GOVT. Sponsored Schemes - NABARD - National Bank For Agriculture And R
+2026-09-26 15:14:54,869 [INFO] GET https://www.nabard.org/content1.aspx?id=572&catid=23&mid=530
+2026-09-26 15:14:56,817 [INFO]   saved sheme/nabard-marketing-federations-credit  title=Credit Facilities to Marketing Federations - NABARD - National Bank Fo
+2026-09-26 15:14:56,817 [INFO] GET https://www.nabard.org/content1.aspx?id=591&catid=23&mid=23
+2026-09-26 15:14:59,057 [INFO]   saved sheme/nabard-deds  title=Dairy Entrepreneurship Development Scheme - NABARD - National Bank For
+2026-09-26 15:14:59,057 [INFO] GET https://www.nabard.org/content1.aspx?id=599&catid=23&mid=23
+2026-09-26 15:15:01,336 [INFO]   saved sheme/nabard-nlm  title=National Livestock Mission - EDEG - NABARD - National Bank For Agricul
+2026-09-26 15:15:01,336 [INFO] GET https://www.nabard.org/content1.aspx?id=595&catid=23&mid=23
+2026-09-26 15:15:03,571 [INFO]   saved sheme/nabard-acabc  title=Agri Clinic and Agribusiness Centres Scheme (ACABC Scheme) - NABARD - 
+2026-09-26 15:15:03,571 [INFO] GET https://www.nabard.org/content1.aspx?id=602&catid=23&mid=23
+2026-09-26 15:15:05,919 [INFO]   saved sheme/nabard-interest-subvention  title=Interest Subvention Scheme - NABARD - National Bank For Agriculture An
+2026-09-26 15:15:05,919 [INFO] GET https://www.nabard.org/content1.aspx?id=702&catid=23&mid=23
+2026-09-26 15:15:08,934 [INFO]   saved sheme/nabard-ami  title=New Agricultural Marketing Infrastructure(AMI) sub- scheme of Integrat
+2026-09-26 15:15:08,934 [INFO] GET https://www.nabard.org/content1.aspx?id=2791&catid=23&mid=23
+2026-09-26 15:15:12,297 [INFO]   saved sheme/nabard-npof  title=Commercial production units of organic inputs - National Project on Or
+2026-09-26 15:15:12,297 [INFO] GET https://www.nabard.org/content1.aspx?id=2802&catid=23&mid=23
+2026-09-26 15:15:18,494 [INFO]   saved sheme/nabard-sclcss  title=Special Credit Linked Capital Subsidy Scheme (SCLCSS) - NABARD - Natio
+2026-09-26 15:15:18,495 [INFO] GET https://www.nabard.org/content1.aspx?id=2801&catid=23&mid=23
+2026-09-26 15:15:21,403 [INFO]   saved sheme/nabard-standup-india  title=Stand up India - NABARD - National Bank For Agriculture And Rural Deve
+2026-09-26 15:15:21,403 [INFO] GET https://www.nabard.org/content1.aspx?id=2790&catid=23&mid=23
+2026-09-26 15:15:23,641 [INFO]   saved sheme/nabard-ethanol-sugar  title=Scheme for Extending Financial Assistance to Sugar Mills for Enhanceme
+2026-09-26 15:15:23,641 [INFO] GET https://www.nabard.org/content1.aspx?id=2803&catid=23&mid=23
+2026-09-26 15:15:25,459 [INFO]   saved sheme/nabard-adrws-2008  title=Agricultural Debt Waiver And Debt Relief Scheme, 2008 - NABARD - Natio
+2026-09-26 15:15:25,459 [INFO] GET https://agriculture.karnataka.gov.in
+2026-09-26 15:15:28,565 [INFO]   saved sheme/ka-agriculture  title=ಕೃಷಿ ಸಚಿವಾಲಯ - Index
+2026-09-26 15:15:28,565 [INFO] GET https://horticulturesec.karnataka.gov.in
+2026-09-26 15:15:29,836 [INFO]   saved sheme/ka-horticulture  title=ತೋಟಗಾರಿಕೆ ಇಲಾಖೆ - Index
+2026-09-26 15:15:29,836 [INFO] GET https://sericulturesecy.karnataka.gov.in
+2026-09-26 15:15:31,711 [INFO]   saved sheme/ka-sericulture  title=ರೇಷ್ಮೆ ಸಚಿವಾಲಯ - Index
+2026-09-26 15:15:31,711 [INFO] GET https://watershed.karnataka.gov.in
+2026-09-26 15:15:36,345 [INFO]   saved sheme/ka-watershed  title=ಜಲಾನಯನ ಅಭಿವೃದ್ಧಿ ಇಲಾಖೆ - Index
+2026-09-26 15:15:36,345 [INFO] GET https://landrecords.karnataka.gov.in/indexkn.aspx
+2026-09-26 15:15:41,064 [WARNING] robots.txt disallows: https://landrecords.karnataka.gov.in/indexkn.aspx
+2026-09-26 15:15:41,065 [INFO] GET https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf
+2026-09-26 15:15:43,231 [INFO]   saved sheme/pmkisan-guidelines-en  title=pmkisan-guidelines-en
+2026-09-26 15:15:43,232 [INFO] GET https://pmkisan.gov.in/Documents/FAQPMKISAN.PDF
+2026-09-26 15:15:45,341 [INFO]   saved sheme/pmkisan-faq  title=pmkisan-faq
+2026-09-26 15:15:45,341 [INFO] GET https://pmkisan.gov.in/Documents/Kcc.pdf
+2026-09-26 15:15:47,532 [INFO]   saved sheme/pmkisan-kcc-form  title=pmkisan-kcc-form
+2026-09-26 15:15:47,532 [INFO] GET https://pmkisan.gov.in/Documents/finalKCCCircular.pdf
+2026-09-26 15:15:54,749 [INFO]   saved sheme/pmkisan-kcc-circular  title=pmkisan-kcc-circular
+2026-09-26 15:15:54,750 [INFO] GET https://pmkisan.gov.in/Documents/PMKisanSamanNidhi.PDF
+2026-09-26 15:15:56,856 [INFO]   saved sheme/pmkisan-scheme-note  title=pmkisan-scheme-note
+2026-09-26 15:15:56,856 [INFO] GET https://pmkisan.gov.in/Documents/PM-KMY - Operational Guidelines.pdf
+2026-09-26 15:16:01,187 [INFO]   saved sheme/pmkmy-guidelines  title=pmkmy-guidelines
+2026-09-26 15:16:01,187 [INFO] GET https://pmkisan.gov.in/Documents/Operational Guidelines of Financing Facility under Agriculture Infrastructure Fund.pdf
+2026-09-26 15:16:04,427 [INFO]   saved sheme/aif-guidelines  title=aif-guidelines
+2026-09-26 15:16:04,427 [INFO] GET https://raitamitra.karnataka.gov.in/5/department-related-website/kn
+2026-09-26 15:16:06,391 [INFO]   saved sheme/ka-raitamitra  title=ಕೃಷಿ ಇಲಾಖೆ - Department-related-website
+2026-09-26 15:16:06,392 [INFO] GET https://raitamitra.karnataka.gov.in/2/contacts/en
+2026-09-26 15:16:09,771 [INFO]   saved sheme/ka-raitamitra-contacts  title=Department of Agriculture(KSDA) - Contacts
+2026-09-26 15:16:09,771 [INFO] GET https://raitamitra.karnataka.gov.in/3/head-office/en
+2026-09-26 15:16:13,757 [INFO]   saved sheme/ka-raitamitra-head-office  title=Department of Agriculture(KSDA) - Head-office
+2026-09-26 15:16:13,758 [INFO] GET https://raitamitra.karnataka.gov.in/uploads/CUGENG_1785132276.pdf
+2026-09-26 15:16:18,809 [INFO]   saved sheme/ka-raitamitra-district-office  title=ka-raitamitra-district-office
+2026-09-26 15:16:18,809 [INFO] GET https://raitamitra.karnataka.gov.in/7/photo-and-video/en
+2026-09-26 15:16:22,635 [INFO]   saved sheme/ka-raitamitra-photo-and-video  title=Department of Agriculture(KSDA) - Photo-and-video
+2026-09-26 15:16:22,635 [INFO] GET https://raitamitra.karnataka.gov.in/162/chitradurga./en
+2026-09-26 15:16:25,426 [INFO]   saved sheme/ka-raitamitra-chitradurga  title=Department of Agriculture(KSDA) - Chitradurga.
+2026-09-26 15:16:25,427 [INFO] GET https://raitamitra.karnataka.gov.in/161/raichur./en
+2026-09-26 15:16:27,661 [INFO]   saved sheme/ka-raitamitra-raichur  title=Department of Agriculture(KSDA) - Raichur.
+2026-09-26 15:16:27,662 [INFO] GET https://raitamitra.karnataka.gov.in/160/chamrajnagar/en
+2026-09-26 15:16:29,608 [INFO]   saved sheme/ka-raitamitra-chamrajnagar  title=Department of Agriculture(KSDA) - Chamrajnagar
+2026-09-26 15:16:29,608 [INFO] GET https://raitamitra.karnataka.gov.in/159/vijayapura/en
+2026-09-26 15:16:32,955 [INFO]   saved sheme/ka-raitamitra-vijayapura  title=Department of Agriculture(KSDA) - Vijayapura
+2026-09-26 15:16:32,956 [INFO] GET https://raitamitra.karnataka.gov.in/8/haveri/en
+2026-09-26 15:16:36,272 [INFO]   saved sheme/ka-raitamitra-haveri  title=Department of Agriculture(KSDA) - Haveri
+2026-09-26 15:16:36,272 [INFO] GET https://raitamitra.karnataka.gov.in/9/gadag/en
+2026-09-26 15:16:38,520 [INFO]   saved sheme/ka-raitamitra-gadag  title=Department of Agriculture(KSDA) - Gadag
+2026-09-26 15:16:38,521 [INFO] GET https://raitamitra.karnataka.gov.in/13/chikkamagaluru/en
+2026-09-26 15:16:40,336 [INFO]   saved sheme/ka-raitamitra-chikkamagaluru  title=Department of Agriculture(KSDA) - Chikkamagaluru
+2026-09-26 15:16:40,336 [INFO] GET https://raitamitra.karnataka.gov.in/14/hassan/en
+2026-09-26 15:16:42,791 [INFO]   saved sheme/ka-raitamitra-hassan  title=Department of Agriculture(KSDA) - Hassan
+2026-09-26 15:16:42,791 [INFO] GET https://raitamitra.karnataka.gov.in/17/tumkur/en
+2026-09-26 15:16:45,513 [ERROR] fetch failed https://raitamitra.karnataka.gov.in/17/tumkur/en: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2026-09-26 15:16:45,514 [INFO] GET https://raitamitra.karnataka.gov.in/18/kalburgi/en
+2026-09-26 15:16:47,784 [INFO]   saved sheme/ka-raitamitra-kalburgi  title=Department of Agriculture(KSDA) - Kalburgi
+2026-09-26 15:16:47,784 [INFO] GET https://raitamitra.karnataka.gov.in/19/dharwad/en
+2026-09-26 15:16:50,574 [INFO]   saved sheme/ka-raitamitra-dharwad  title=Department of Agriculture(KSDA) - Dharwad
+2026-09-26 15:16:50,574 [INFO] GET https://raitamitra.karnataka.gov.in/21/hassan/en
+2026-09-26 15:16:52,853 [INFO]   saved sheme/ka-raitamitra-hassan  title=Department of Agriculture(KSDA) - Hassan
+2026-09-26 15:16:52,853 [INFO] GET https://raitamitra.karnataka.gov.in/22/bidar/en
+2026-09-26 15:16:54,756 [INFO]   saved sheme/ka-raitamitra-bidar  title=Department of Agriculture(KSDA) - Bidar
+2026-09-26 15:16:54,756 [INFO] GET https://raitamitra.karnataka.gov.in/23/mysore/en
+2026-09-26 15:16:56,844 [INFO]   saved sheme/ka-raitamitra-mysore  title=Department of Agriculture(KSDA) - Mysore
+2026-09-26 15:16:56,844 [INFO] GET https://raitamitra.karnataka.gov.in/31/mysore/en
+2026-09-26 15:17:01,251 [INFO]   saved sheme/ka-raitamitra-mysore  title=Department of Agriculture(KSDA) - Mysore
+2026-09-26 15:17:01,251 [INFO] GET https://raitamitra.karnataka.gov.in/32/bangalore-rural/en
+2026-09-26 15:17:03,537 [INFO]   saved sheme/ka-raitamitra-bangalore-rural  title=Department of Agriculture(KSDA) - Bangalore-rural
+2026-09-26 15:17:03,537 [INFO] GET https://raitamitra.karnataka.gov.in/36/bagalkote/en
+2026-09-26 15:17:06,198 [INFO]   saved sheme/ka-raitamitra-bagalkote  title=Department of Agriculture(KSDA) - Bagalkote
+2026-09-26 15:17:06,198 [INFO] GET https://raitamitra.karnataka.gov.in/39/ramangara/en
+2026-09-26 15:17:08,453 [INFO]   saved sheme/ka-raitamitra-ramangara  title=Department of Agriculture(KSDA) - Ramangara
+2026-09-26 15:17:08,453 [INFO] GET https://raitamitra.karnataka.gov.in/40/ramangara/en
+2026-09-26 15:17:10,271 [INFO]   saved sheme/ka-raitamitra-ramangara  title=Department of Agriculture(KSDA) - Ramangara
+2026-09-26 15:17:10,271 [INFO] GET https://raitamitra.karnataka.gov.in/41/belgavi/en
+2026-09-26 15:17:14,346 [INFO]   saved sheme/ka-raitamitra-belgavi  title=Department of Agriculture(KSDA) - Belgavi
+2026-09-26 15:17:14,346 [INFO] GET https://raitamitra.karnataka.gov.in/42/mandya/en
+2026-09-26 15:17:16,504 [INFO]   saved sheme/ka-raitamitra-mandya  title=Department of Agriculture(KSDA) - Mandya
+2026-09-26 15:17:16,505 [INFO] GET https://raitamitra.karnataka.gov.in/43/kolar/en
+2026-09-26 15:17:18,573 [INFO]   saved sheme/ka-raitamitra-kolar  title=Department of Agriculture(KSDA) - Kolar
+2026-09-26 15:17:18,573 [INFO] GET https://raitamitra.karnataka.gov.in/5/department-related-website/Davangere
+2026-09-26 15:17:20,599 [INFO]   saved sheme/ka-raitamitra-farmer-advisories  title=ಕೃಷಿ ಇಲಾಖೆ - Department-related-website
+2026-09-26 15:17:20,599 [INFO] GET https://raitamitra.karnataka.gov.in/10/vijayapura/en
+2026-09-26 15:17:22,864 [INFO]   saved sheme/ka-raitamitra-vijayapura  title=Department of Agriculture(KSDA) - Vijayapura
+2026-09-26 15:17:22,864 [INFO] GET https://raitamitra.karnataka.gov.in/12/chikkaballapura/en
+2026-09-26 15:17:25,142 [INFO]   saved sheme/ka-raitamitra-chikkaballapura  title=Department of Agriculture(KSDA) - Chikkaballapura
+2026-09-26 15:17:25,143 [INFO] GET https://raitamitra.karnataka.gov.in/15/yadgiri/en
+2026-09-26 15:17:27,359 [INFO]   saved sheme/ka-raitamitra-yadgiri  title=Department of Agriculture(KSDA) - Yadgiri
+2026-09-26 15:17:27,359 [INFO] GET https://raitamitra.karnataka.gov.in/16/shimoga/en
+2026-09-26 15:17:29,559 [INFO]   saved sheme/ka-raitamitra-shimoga  title=Department of Agriculture(KSDA) - Shimoga
+2026-09-26 15:17:29,560 [INFO] GET https://raitamitra.karnataka.gov.in/20/koppala/en
+2026-09-26 15:17:37,145 [INFO]   saved sheme/ka-raitamitra-koppala  title=Department of Agriculture(KSDA) - Koppala
+2026-09-26 15:17:37,145 [INFO] GET https://raitamitra.karnataka.gov.in/24/chitradurga/en
+2026-09-26 15:17:39,704 [INFO]   saved sheme/ka-raitamitra-chitradurga  title=Department of Agriculture(KSDA) - Chitradurga
+2026-09-26 15:17:39,704 [INFO] GET https://raitamitra.karnataka.gov.in/25/ramanagara/en
+2026-09-26 15:17:42,076 [INFO]   saved sheme/ka-raitamitra-ramanagara  title=Department of Agriculture(KSDA) - Ramanagara
+2026-09-26 15:17:42,076 [INFO] GET https://raitamitra.karnataka.gov.in/26/chikkaballapura/en
+2026-09-26 15:17:43,974 [INFO]   saved sheme/ka-raitamitra-chikkaballapura  title=Department of Agriculture(KSDA) - Chikkaballapura
+2026-09-26 15:17:43,974 [INFO] GET https://raitamitra.karnataka.gov.in/27/chikkamangalore/en
+2026-09-26 15:17:46,747 [INFO]   saved sheme/ka-raitamitra-chikkamangalore  title=Department of Agriculture(KSDA) - Chikkamangalore
+2026-09-26 15:17:46,747 [INFO] GET https://raitamitra.karnataka.gov.in/28/raichur/en
+2026-09-26 15:17:49,019 [INFO]   saved sheme/ka-raitamitra-raichur  title=Department of Agriculture(KSDA) - Raichur
+2026-09-26 15:17:49,019 [INFO] GET https://raitamitra.karnataka.gov.in/29/bagalkot/en
+2026-09-26 15:17:51,629 [INFO]   saved sheme/ka-raitamitra-bagalkot  title=Department of Agriculture(KSDA) - Bagalkot
+2026-09-26 15:17:51,629 [INFO] GET https://www.nabard.org/content.aspx?id=2
+2026-09-26 15:17:52,372 [INFO]   saved sheme/nabard-who-we-are  title=Who We Are - NABARD - National Bank For Agriculture And Rural Developm
+2026-09-26 15:17:52,372 [INFO] GET https://www.nabard.org/content1.aspx?id=8&catid=8&mid=488
+2026-09-26 15:17:54,548 [INFO]   saved sheme/nabard-what-we-do  title=WHAT WE DO - NABARD - National Bank For Agriculture And Rural Developm
+2026-09-26 15:17:54,548 [INFO] GET https://www.nabard.org/content1.aspx?id=23&catid=23&mid=530
+2026-09-26 15:17:56,771 [INFO]   saved sheme/nabard-govt-sponsored-schemes  title=Government Sponsored Schemes - NABARD - National Bank For Agriculture 
+2026-09-26 15:17:56,771 [INFO] GET https://www.nabard.org/ftrcontent.aspx?id=660
+2026-09-26 15:17:58,803 [INFO]   saved sheme/nabard-career-notices  title=FAKE RECRUITMENT NOTICES AND APPOINTMENT LETTERS - NABARD - National B
+2026-09-26 15:17:58,803 [INFO] GET https://www.nabard.org/content1.aspx?id=702&catid=23&mid=530
+2026-09-26 15:18:01,221 [INFO]   saved sheme/nabard-new-agricultural-marketing-infrastructure-ami-sub-scheme-of-isam  title=New Agricultural Marketing Infrastructure(AMI) sub- scheme of Integrat
+2026-09-26 15:18:01,221 [INFO] GET https://www.nabard.org/content1.aspx?id=595&catid=23&mid=530
+2026-09-26 15:18:03,534 [INFO]   saved sheme/nabard-agri-clinics-and-agri-business-centres-scheme-acabc  title=Agri Clinic and Agribusiness Centres Scheme (ACABC Scheme) - NABARD - 
+2026-09-26 15:18:03,535 [INFO] GET https://www.nabard.org/content1.aspx?id=602&catid=23&mid=530
+2026-09-26 15:18:05,688 [INFO]   saved sheme/nabard-interest-subvention-scheme  title=Interest Subvention Scheme - NABARD - National Bank For Agriculture An
+2026-09-26 15:18:05,688 [INFO] GET https://www.nabard.org/content1.aspx?id=599&catid=23&mid=530
+2026-09-26 15:18:07,817 [INFO]   saved sheme/nabard-national-livestock-mission-entrepreneurship-development-employment-generation-nl  title=National Livestock Mission - EDEG - NABARD - National Bank For Agricul
+2026-09-26 15:18:07,817 [INFO] GET https://www.nabard.org/content1.aspx?id=591&catid=23&mid=530
+2026-09-26 15:18:09,875 [INFO]   saved sheme/nabard-dairy-entrepreneurship-development-scheme-deds-closed-temporarily-closed  title=Dairy Entrepreneurship Development Scheme - NABARD - National Bank For
+2026-09-26 15:18:09,878 [INFO] DONE 78 ok / 80 total → C:\Users\anshi\OneDrive\Assignment\billions_hack\sheme

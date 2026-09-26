@@ -1,0 +1,21 @@
+{
+  "slug": "kisan-credit-card-kcc",
+  "source_url": "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card",
+  "final_url": "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Kisan Credit Card (KCC)",
+  "origin": "data-folder",
+  "source_files": [
+    "Kisan Credit Card (KCC).txt"
+  ],
+  "links": [
+    {
+      "name": "Kisan Credit Card (KCC)",
+      "url": "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card"
+    }
+  ],
+  "char_count": 26561
+}

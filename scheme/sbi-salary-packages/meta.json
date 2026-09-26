@@ -1,0 +1,29 @@
+{
+  "slug": "sbi-salary-packages",
+  "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Salary Packages",
+  "origin": "data-folder",
+  "source_files": [
+    "ALL Salary Packager.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Salary Packages",
+      "url": "https://sbi.co.in/web/personal-banking/accounts/salary-account"
+    },
+    {
+      "name": "igod.gov.in",
+      "url": "https://igod.gov.in"
+    },
+    {
+      "name": "www.saiinida.gov.in",
+      "url": "http://www.saiinida.gov.in"
+    }
+  ],
+  "char_count": 22061
+}

@@ -9,6 +9,8 @@ import { PageHeader, Spinner, StatusPill } from "@/components/ui";
 import UploadModal from "./UploadModal";
 import PipelineViz from "./PipelineViz";
 import DocDrawer from "./DocDrawer";
+import SchemeLibrary from "./SchemeLibrary";
+import EvidenceMap from "./EvidenceMap";
 
 interface KagResult {
   answer?: string;
@@ -28,6 +30,7 @@ export default function KnowledgeBase() {
   const job = useJobPolling(jobId);
   const [q, setQ] = useState("");
   const [res, setRes] = useState<KagResult | null>(null);
+  const [asked, setAsked] = useState("");
   const [busy, setBusy] = useState(false);
 
   const ask = async (e: FormEvent) => {
@@ -36,6 +39,7 @@ export default function KnowledgeBase() {
     setBusy(true);
     try {
       setRes(await api.post<KagResult>("/api/kag/query", { question: q, generate: true }));
+      setAsked(q);
     } finally {
       setBusy(false);
     }
@@ -50,10 +54,12 @@ export default function KnowledgeBase() {
 
   return (
     <div>
-      <PageHeader eyebrow="Admin" title="Knowledge Base" subtitle="Add official documents and test how the KAG retriever uses them."
+      <PageHeader eyebrow="Admin" title="Knowledge Base" subtitle="The scheme library in ChromaDB, extra official documents, and a playground to test how the KAG retriever uses them."
         actions={<><Link to="/admin/sources" className="btn-secondary">Add website source</Link><button className="btn-primary" onClick={() => setUpload(true)}><Upload size={16} /> Upload document</button></>} />
 
-      <section className="card p-5">
+      <SchemeLibrary onOpen={setSel} />
+
+      <section className="card mt-6 p-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-bold">{job ? `Indexing: ${job.title}` : "Ingestion pipeline"}</h2>
           {job && <StatusPill status={job.status} />}
@@ -79,7 +85,15 @@ export default function KnowledgeBase() {
           <button className="btn-primary" disabled={busy}>{busy ? <Spinner /> : null} Run</button>
         </form>
         {res && (
-          <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_1fr]">
+          <div key={asked} className="mt-5 animate-fadeIn">
+            <div className="eyebrow mb-2">Retrieval map</div>
+            {/* Retrieved chunks plus cited anchors (which may not be in the ranked list), de-duplicated. */}
+            <EvidenceMap question={asked} cited={cited} onOpenDoc={setSel}
+              items={[...res.retrieved, ...(res.evidence ?? []).filter((e) => !res.retrieved.some((r) => r.id === e.id))]} />
+          </div>
+        )}
+        {res && (
+          <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
             <div>
               <div className="eyebrow mb-1">Understanding</div>
               <pre className="overflow-x-auto rounded-lg bg-ink-900 p-3 text-xs text-ink-100">{JSON.stringify({ ...res.understanding, ...res.retrieval, mode: res.mode }, null, 2)}</pre>

@@ -24,7 +24,7 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
   };
 
   return (
-    <div className="card flex flex-col p-4 sm:p-5">
+    <div className="card flex flex-col p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="font-semibold leading-snug text-ink-900">{scheme.display_name}</div>
@@ -49,11 +49,11 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
       )}
       {!compact && scheme.documents.length > 0 && (
         <div className="mt-3">
-          <div className="eyebrow mb-1">Required documents</div>
-          <ul className="space-y-0.5 text-sm text-ink-700">
+          <div className="eyebrow mb-1.5">Documents needed</div>
+          <ul className="flex flex-wrap gap-1.5 text-sm text-ink-700">
             {scheme.documents.map((d) => (
-              <li key={d.code} className="flex gap-1.5">
-                <FileCheck2 size={15} className="mt-0.5 flex-none text-ink-400" /> {d.display_name}
+              <li key={d.code} className="inline-flex items-center gap-1 rounded-full bg-paper-200 px-2.5 py-0.5 text-[0.8rem]">
+                <FileCheck2 size={13} className="flex-none text-forest-600" /> {d.display_name}
               </li>
             ))}
           </ul>

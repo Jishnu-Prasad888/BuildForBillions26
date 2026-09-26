@@ -1,0 +1,27 @@
+{
+  "slug": "sbi-education-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/education-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/education-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Education Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "SBi education loan.txt",
+    "FAQ Educational Loan.txt",
+    "80E Deduction Income Tax Act 1961 For Education Loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Education Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/education-loans"
+    },
+    {
+      "name": "www.sbi.co.in",
+      "url": "https://www.sbi.co.in/portal/web/interest"
+    }
+  ],
+  "char_count": 43462
+}

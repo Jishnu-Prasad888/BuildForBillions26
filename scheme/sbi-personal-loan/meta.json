@@ -1,0 +1,22 @@
+{
+  "slug": "sbi-personal-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/personal-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/personal-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Personal Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "SBI Personal Loan.txt",
+    "FAQ Personal Loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Personal Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/personal-loans"
+    }
+  ],
+  "char_count": 26563
+}
