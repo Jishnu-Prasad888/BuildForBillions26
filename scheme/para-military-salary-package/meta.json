@@ -1,0 +1,21 @@
+{
+  "slug": "para-military-salary-package",
+  "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Para Military Salary Package (PMSP)",
+  "origin": "data-folder",
+  "source_files": [
+    "PMSP Para Military Salary Package.txt"
+  ],
+  "links": [
+    {
+      "name": "Para Military Salary Package (PMSP)",
+      "url": "https://sbi.co.in/web/personal-banking/accounts/salary-account"
+    }
+  ],
+  "char_count": 4067
+}

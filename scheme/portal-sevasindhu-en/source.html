@@ -1,0 +1,3582 @@
+<!DOCTYPE html>
+ 
+    
+        
+
+
+
+
+
+<!doctype html>
+<html class="no-js" lang="en-kn">
+
+<script>var clour = 1;</script>
+
+
+<head>
+    <!-- META DATA -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- TITLE OF SITE -->
+    <title>Seva Sindhu Home Page</title>
+
+    <!-- for title img -->
+    <link rel="shortcut icon" type="image/icon" href="/assets/images/logo/favicon.png" />
+
+    <!--font-awesome.min.css-->
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/site.css">
+    <link href="/assets/css/datatables.css" rel="stylesheet">
+    
+
+
+    <!--animate.css-->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+
+    <!--hover.css-->
+    <link rel="stylesheet" href="/assets/css/hover.css">
+
+    <!--owl.carousel.css-->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <link href="/assets/css/owl.theme.default.min.css" rel="stylesheet" />
+
+    <!--bootstrap.min.css-->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+    <!-- bootsnav -->
+    <link href="/assets/css/bootsnav.css" rel="stylesheet" />
+
+    <!--style.css-->
+    <link rel="stylesheet" href="/assets/css/style_eng.css?v=2.0">
+
+    <!--responsive.css-->
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+ 
+    <style>
+        .mySlides {
+            display: none;
+        }
+		.chatbot-wrapper{
+		background:#fff !important;
+		}
+		.browser{
+		line-height:20px !important;
+		}
+
+        .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
+            display: block;
+        }
+
+.ticker-move {
+    display: inline-block;
+    white-space: nowrap;
+    /*padding-right: 100%;*/
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: ticker;
+    animation-duration: 25s !important;
+}
+
+
+
+
+       
+        .faq-cont ul li {
+            list-style-type: disc;
+            padding-bottom: 10px;
+            font-weight: normal;
+            margin-left: 32px;
+        }
+		
+		.navbar-nav li.dropdown:hover > .dropdown-menu {
+  display: block;
+}
+		
+		#aquaTheme .formBanner{
+           background: #4a7aff !important;
+        }
+		
+		.mainSection {
+    position: fixed;
+    bottom: 40px !important;
+    right: 0px !important;
+    width: 360px;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #6e7a89;
+    z-index: 99999;
+}
+
+        *:focus {
+            outline: 0 !important;
+        }
+    </style>
+    <style>
+        .button {
+            background-color: #fff;
+            border: none;
+            color: #000;
+            text-align: center;
+            font-size: 12px;
+            padding: 8px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+		
+		.sevasakhiiconfloat {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: #fff;
+    padding: 3px;
+}
+
+		
+		.dropdown-menu li a{
+		color:#000 !important;
+		}
+
+        .contact-us {
+            background: #f9faff;
+            padding: 150px 0 50px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+            .button span:after {
+                content: '\00bb';
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
+                transition: 0.5s;
+            }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .search-app-status-content .form-control {
+            width: 40% !important;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+
+        .service-cent a {
+            line-height: 30px !important;
+            height: 40px !important;
+        }
+
+        .page_button_inactive {
+            border: 1px solid #fff;
+            background: #fff;
+            padding: 10px;
+        }
+
+        .page_button_active {
+            border: 1px solid #facf5a;
+            background: #facf5a;
+            padding: 10px;
+        }
+		
+/* Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Active state */
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Popup Box */
+.popup-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+}
+
+/* Animation */
+.popup-overlay.active .popup-box {
+  transform: scale(1);
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Text */
+h2 {
+  margin-bottom: 10px;
+}
+.popup-left h3{
+	font-size:30px;
+	}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+/* Confetti canvas inside popup */
+#confetti-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+.popup-box {
+  position: relative; /* required for canvas positioning */
+  overflow: hidden;   /* keeps confetti inside */
+}
+
+.address p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* CTA Button */
+.cta-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+}
+
+    </style>
+    <script>var Disable = 0;</script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128048383-1"></script>
+	
+	  <script type="text/javascript">
+        if (document.layers) {
+            //Capture the MouseDown event.
+            document.captureEvents(Event.MOUSEDOWN);
+
+            //Disable the OnMouseDown event handler.
+            document.onmousedown = function () {
+                return false;
+            };
+        }
+        else {
+            //Disable the OnMouseUp event handler.
+            document.onmouseup = function (e) {
+                if (e != null && e.type == "mouseup") {
+                    //Check the Mouse Button which is clicked.
+                    if (e.which == 2 || e.which == 3) {
+                        //If the Button is middle or right then disable.
+                        return false;
+                    }
+                }
+            };
+        }
+
+        //Disable the Context Menu event.
+        document.oncontextmenu = function () {
+            return false;
+        };
+        document.onkeydown = ShowKeyCode;
+        function ShowKeyCode(evt) {
+            if (evt.keyCode == '123')
+                return false;
+            //For F12 Button 
+        }
+    </script>
+	
+    <script>
+    window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-128048383-1');</script>
+
+
+    <script>
+    function runScript(e) {
+
+            if (e.keyCode == 13) {
+                searchByAppNum()
+            }
+        }
+
+        function searchByAppNum() {
+            var appNum = document.getElementById("SearchAppNum").value;
+
+            appNum = appNum.trim();
+
+
+            if (appNum != '') {
+
+
+                var modalAppStatusInfo = document.getElementById("modalAppStatusInfo");
+
+
+                $.get("https://sevasindhu.karnataka.gov.in/CheckApplStatus/ApplStatus?GSCNo=" + appNum, function (AppInfo, status) {
+                    // $.get("/api/ApplicationDetailsFromSavesindhu/GetAppStatus?appId=" + appNum, function (AppInfo, status) {
+                    //  $.get("/api/ApplicationInfo/GetAppStatus?appId=" + appNum, function (AppInfo, status) {
+                    //getApplstatusReport
+                    //https://sevasindhu.karnataka.gov.in/CheckApplStatus/ApplStatus?GSCNo=RD0038882984672
+                    if (AppInfo) {
+                        try {
+
+                            var showAppNum = AppInfo.ApplicationNo;
+
+                            var status = AppInfo.status;
+                            var deptname = '';
+                            deptname = AppInfo.DepartmentName;
+                            var servicename = '';
+                            servicename = AppInfo.service_name;
+                            var submissionDate = '';
+                            submissionDate = AppInfo.submission_date;
+
+
+                            const changeDateFormatTo = date => {
+                                const [yy, mm, dd] = date.split(/-/g);
+                                return `${dd}/${mm}/${yy}`;
+                            };
+
+                            //submissionDate = changeDateFormatTo(submissionDate);
+
+                            var showAppStatusInfo = status;
+                            if (AppInfo == 'Bad Request') {//Please try after
+                                alert("Please try again after some time");
+                            }
+                            else {
+                                if (AppInfo.status != 'No Record Found' && AppInfo.status != 'Approved' && AppInfo.status != 'Delivered') {
+                                    if (deptname != 'Revenue Department') {
+                                        submissionDate = changeDateFormatTo(submissionDate);
+                                        $('#lbldeptname').show();
+                                        $('#lblSubmission').show();
+                                    } else {
+                                        $('#lbldeptname').show();
+                                        $('#lblSubmission').hide();
+                                    }
+
+                                } else if (AppInfo.status == 'No Record Found') {
+                                    $('#lbldeptname').hide();
+                                    $('#lblSubmission').hide();
+                                }
+                                if (AppInfo.status == 'Approved' || AppInfo.status == 'Delivered') {
+                                    $('#lbldeptname').show();
+                                    $('#lblSubmission').hide();
+                                }
+                                $('#applrefno').text(showAppNum);
+                                $('#applStatus').text(showAppStatusInfo);
+                                $('#deptname').text(deptname);
+                                $('#servicename').text(servicename);
+                                // $('#submissionDate').text(submissionDate);
+                                if (typeof submissionDate === 'undefined') {
+                                    $('#submissionDate').hide();
+                                }
+                                else {
+                                    $('#submissionDate').text(submissionDate);
+                                }
+                                modalAppStatusInfo.style.display = "block";
+                                window.onclick = function (event) {
+                                    if (event.target == modalAppStatusInfo) {
+                                        modalAppStatusInfo.style.display = "block";
+                                    }
+                                }
+                            }
+                        }
+
+                        catch (e) {
+                            console.log('Error while formatting the data : ' + e.message)
+                        }
+                    }
+                });
+            } else {
+                alert('Please enter Application Reference Number');
+            }
+        }
+        function dismissModal() {
+            modalAppStatusInfo.style.display = "none";
+        }</script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    function servfunction(id) {
+
+            $.get("/api/dept/" + id, function (serverdata, status) {
+                if (serverdata) {
+                    try {
+
+                        var serverdata_json = JSON.parse(serverdata);
+                        var html = '<div id="" class="" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"><ul>'
+                        var selection = '<select hidden id="mySelect' + id + '">'
+
+
+                        for (var i = 0; i < serverdata_json.length; i++) {
+                            if (serverdata_json[i].IsOtherService == 1) {
+                                html = html + '<li class="service-inactive">'
+                            }
+                            else {
+                                html = html + '<li>'
+                            }
+                            html = html + '<a onclick=servdetails(' + serverdata_json[i].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + serverdata_json[i].name + '</a></li>'
+                            selection = selection + ' <option>' + serverdata_json[i].name + '</option>'
+                        }
+                        selection = selection + ' </select>'
+                        var html = html + '</ul></div></div>' + selection
+                        var html1 = '<div></div>'
+
+
+                        for (var j = 0; j < serverdata_json[0].length + 1; j++) {
+                            if (j == serverdata_json[0].dept_id) {
+                                try {
+                                    var x = document.getElementById('#mySelect' + id).length;
+                                    $('#spldata' + j).html();
+                                } catch (e) {
+
+
+                                    $('#spldata' + j).html(html);
+                                }
+                                if (Disable == id) {
+                                    $('#spldata' + id).hide();
+                                    $('#addition' + id).show();
+                                    $('#substrion' + id).hide();
+                                    Disable = 0;
+                                }
+                                else {
+                                    $('#spldata' + id).show();
+                                    $('#addition' + id).hide();
+                                    $('#substrion' + id).show();
+                                    Disable = id;
+                                }
+                            }
+                            else {
+                                $('#spldata' + j).html(html1);
+                                $('#spldata' + j).hide();
+                                $('#addition' + j).show();
+                                $('#substrion' + j).hide();
+
+                            }
+                        }
+
+
+
+
+                    } catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+                    }
+                }
+
+
+
+            });
+        }
+        //$('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        //$('.panel-group').on('shown.bs.collapse', toggleIcon);</script>
+
+
+    <script>
+    function TopDeptFunctions(id) {
+
+            $.get("/api/dept/" + id, function (serverdata, status) {
+                if (serverdata) {
+                    try {
+
+                        var serverdata_json = JSON.parse(serverdata);
+                        var html = '<ul>'
+
+                        for (var i = 0; i < serverdata_json.length; i++) {
+
+                            html = html + '<li><a onclick=servdetails(' + serverdata_json[i].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + serverdata_json[i].name + '</a></li>'
+
+                        }
+                        var html = html + '</ul>'
+                        if (id == 1) {
+                            $('#topdept1').html(html);
+                        }
+                        else if (id == 4) {
+                            $('#topdept2').html(html);
+                        }
+                        else if (id == 5) {
+                            $('#topdept3').html(html);
+                        }
+                        else {
+                            $('#topdept4').html(html);
+                        }
+
+
+                    } catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+                    }
+                }
+
+
+
+            });
+        }
+        //$('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        //$('.panel-group').on('shown.bs.collapse', toggleIcon);</script>
+
+    <script>
+    function TopDeptFunctionsD(id) {
+
+            $.get("/api/dept/" + id, function (serverdata, status) {
+                if (serverdata) {
+                    try {
+
+                        var serverdata_json = JSON.parse(serverdata);
+                        var html = '<ul>'
+
+                        for (var i = 0; i < serverdata_json.length; i++) {
+
+                            html = html + '<li><a onclick=servdetails(' + serverdata_json[i].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + serverdata_json[i].name + '</a></li>'
+
+                        }
+                        var html = html + '</ul>'
+                        if (id == 1) {
+                            $('#topdept1').html(html);
+
+                        }
+                        else if (id == 4) {
+                            $('#topdept2').html(html);
+                        }
+                        else if (id == 2) {
+                            $('#topdept3').html(html);
+                        }
+                        else {
+                            $('#topdept4').html(html);
+                        }
+
+
+                    } catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+                    }
+                }
+
+
+
+            });
+        }
+        //$('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        //$('.panel-group').on('shown.bs.collapse', toggleIcon);</script>
+
+    <script>
+    function kannadaversion(id) {
+            $.get(" /Account/Register", function () {
+
+            });
+        }</script>
+    <script>
+    function servdetails(id) {
+
+            $.get("/api/Service/" + id, function (service, status) {
+                if (service) {
+                    try {
+
+                        var popup_html = '';
+                        var popup_html1 = '';
+                        var service_json = JSON.parse(service);
+
+
+                        popup_html1 = popup_html1 + '<div>'
+                            + '<button type="button" class="close" data-dismiss="modal">&times;</button>'
+                            + '<h4 class="modal-title"  >' + service_json[0].name + '</h4> </div>'
+                        if (service_json[0].IsOtherService == true) {
+                            popup_html = popup_html + '<div>'
+                                + '</div><div class="modal-body"><section class="container"><div class="row"><div class="container service-detals"><div class="panel-group">'
+                                + '<div class="panel panel-default"><div>'
+                                + '<div class="panel-body"><ul><li>Upon clicking the button, you will be redirected to the department website. Please follow the process mentioned in the department to avail the service.</li></ul></div></div></div></div></div></div></section></div><div class="modal-footer">'
+                        }
+                        else {
+                            popup_html = popup_html + '<div>'
+                                + '</div><div class="modal-body"><section class="container"><div class="row"><div class="container service-detals"><div class="panel-group">'
+                                + '<div class="panel panel-default"><div>'
+                                + '<div class="panel-body"><ul><li><span style="font-weight:bold;">Eligibility:</span> ' + service_json[0].eligibility + '</li><li><span style="font-weight:bold;">Supporting Document:</span><ul>'
+                                + '' + service_json[0].supporting_documents + ' </ul></li>'
+                                + '<li><span  style="font-weight:bold;">Application Fee :  </span>  ' + service_json[0].Applicationfee + ' </li>'
+                                + '<li><span  style="font-weight:bold;">Service Charge (Free for Online Submission) :  </span>  ' + service_json[0].chargers + ' </li>'
+                                + '<li><span  style="font-weight:bold;">Delivery Time (Days) :</span> ' + service_json[0].delivery + '  </li><li><span style="font-weight:bold;">Procedure for applying:</span><ul>'
+                                + '' + service_json[0].procedure + ''
+
+                                + '</ul></li></ul></div></div></div></div></div></div></section></div><div class="modal-footer">'
+                        }
+                        if (service_json[0].url == "serviceonline.gov.in/karnataka/" || service_json[0].url == "sevasindhu.karnataka.gov.in/page.html") {
+
+                            popup_html = popup_html + '<a href="https://' + service_json[0].url + '"  target="_blank"><button id="ApplyButton" type="button" class="btn btn-default" >Apply Online</button></a></div></div>'
+
+                        }
+                        else {
+                            popup_html = popup_html + '<a href="http://' + service_json[0].url + '"  target="_blank"><button id="ApplyButton" type="button" class="btn btn-default" >Apply Online</button></a></div></div>'
+
+                        }
+
+                        $('#servicepopup').html(popup_html);
+                        $('#servicepopup1').html(popup_html1);
+
+                    }
+
+
+
+
+
+
+                    catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+                    }
+                }
+
+
+
+            });
+        }</script>
+
+    <script>
+    function searchdata() {
+            var searchdatavalue = document.getElementById("Searchtext").value + ",Filter";
+
+            $.get("/api/Service/" + searchdatavalue, function (service, status) {
+                if (service) {
+                    try {
+
+                        var service_json = JSON.parse(service);
+                        var html = '<div class="col-lg-12 col-md-12" style="overflow-y: scroll; height: 500px;"> '
+                        if (service_json.Dept.length == 0) {
+                            html = html + '<h2 style="padding: 2%; text-align: center; ">No Service Available</h2>';
+                        }
+
+                        for (var i = 0; i < service_json.Dept.length; i++) {
+                            if (clour == 1) {
+                                html = html + '<div class="col-sm-4 col-md-4"> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                    + ' <a > ' + service_json.Dept[i].name + '</a></h4></div></div></div><div id="spldata' + service_json.Dept[i].id + '"style="  max-height: 300px; overflow-y: scroll; "><div id="" class="" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"><ul>';
+                                for (var j = 0; j < service_json.Service.length; j++) {
+                                    if (service_json.Service[j].dname == service_json.Dept[i].name) {
+                                        html = html + '<li><a onclick=servdetails(' + service_json.Service[j].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + service_json.Service[j].name + '</a></li>';
+
+                                    }
+                                }
+
+                            }
+                            if (clour == 2) {
+                                html = html + '<div class="col-sm-4 col-md-4"> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                    + ' <a > ' + service_json.Dept[i].name + '</a></h4></div></div></div><div id="spldata' + service_json.Dept[i].id + '"style="  max-height: 300px; overflow-y: scroll; "><div id="" class="" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"><ul>';
+                                for (var j = 0; j < service_json.Service.length; j++) {
+                                    if (service_json.Service[j].dname == service_json.Dept[i].name) {
+                                        html = html + '<li><a onclick=servdetails(' + service_json.Service[j].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + service_json.Service[j].name + '</a></li>';
+
+                                    }
+                                }
+                            }
+                            if (clour == 3) {
+                                html = html + '<div class="col-sm-4 col-md-4"> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                    + ' <a > ' + service_json.Dept[i].name + '</a></h4></div></div></div><div id="spldata' + service_json.Dept[i].id + '"style="  max-height: 300px; overflow-y: scroll; "><div id="" class="" role="tabpanel" aria-labelledby="headingTwo"> <div class="panel-body"><ul>';
+                                for (var j = 0; j < service_json.Service.length; j++) {
+                                    if (service_json.Service[j].dname == service_json.Dept[i].name) {
+                                        html = html + '<li><a onclick=servdetails(' + service_json.Service[j].id + ') href="#"  data-toggle="modal" data-target="#myModal">' + service_json.Service[j].name + '</a></li>';
+
+                                    }
+                                }
+                            }
+                            html = html + '</div></div></div></DIV>';
+                        }
+                        var html = html + '</div>'
+                        $('#spldata').html(html);
+
+
+                        for (var k = 0; k <= service_json.Dept.length; k++) {
+                            $('#spldata' + service_json.Dept[i].id).html(htmls);
+                            $('#spldata' + service_json.Dept[i].id).show();
+                        }
+
+
+
+                    }
+                    catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+
+                    }
+                }
+            });
+
+        }
+
+
+
+        function cleardata() {
+            var a = document.getElementById("Searchtext");
+            a.value = a.defaultValue;
+            $.get("/api/dept", function (data, status) {
+                if (data) {
+                    try {
+
+                        var jsondata = JSON.parse(data);
+                        var totalRecords = jsondata.length;
+                        var pageFlag = 0;
+                        var noOfPages = 0;
+                        var divClose = 0;
+                        var html = '';
+                        for (var i = 0; i < jsondata.length; i++) {
+                            if (pageFlag == 0) {
+                                noOfPages = noOfPages + 1;
+                                html = html + '<div id="divHomeDeparments_' + noOfPages + '" class="col-lg-12 col-md-12 HomeDepartments"> <div class="col-lg-4 col-md-4"> ';
+                            }
+                            if (pageFlag < 5) {
+                                if (clour == 1) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 2) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green " role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 3) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (divClose == 4) {
+                                    html = html + '</div><div class="col-lg-4 col-md-4">';
+                                }
+                            }
+                            if (pageFlag < 10 & pageFlag > 4) {
+                                if (clour == 1) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 2) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 3) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (divClose == 9) {
+                                    html = html + '</div><div class="col-lg-4 col-md-4">';
+                                }
+                            }
+                            if (pageFlag < 15 & pageFlag > 9) {
+
+                                if (clour == 1) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 2) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                                if (clour == 3) {
+                                    html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                        + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                        + jsondata[i].name
+                                        + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                }
+                            }
+                            pageFlag = pageFlag + 1;
+                            divClose = divClose + 1;
+                            //alert(pageFlag);
+                            if (pageFlag == 15) {
+                                html = html + '</div></div>';
+                                pageFlag = 0;
+                                divClose = 0;
+                                //alert('loop done');
+                            }
+                            if (totalRecords == (i + 1)) {
+                                html = html + '</div></div>';
+                                html = html + "<div style=\"float: right; margin-right: 27px;\">";
+                                for (var k = 1; k <= noOfPages; k++) {
+                                    if (k == 1) {
+                                        html = html + "<button type='button' class='HomeDeptPages page_button_active' id='" + k + "'>" + k + "</button>";
+                                    }
+                                    else {
+                                        html = html + "<button type='button' class='HomeDeptPages page_button_inactive' id='" + k + "'>" + k + "</button>";
+                                    }
+                                }
+                                html = html + "</div>";
+                            }
+                        }
+                        $('#spldata').html(html);
+                        $('.HomeDepartments').hide();
+                        $('#divHomeDeparments_1').show();
+                        IntAevnt();
+                        for (var j = 0; j < jsondata.length + 1; j++) {
+                            $('#substrion' + j).hide();
+                        }
+                    } catch (e) {
+                        console.log('Error while formatting the data : ' + e.message)
+                    }
+                }
+            });
+        }
+
+
+
+        $(document).ready(function () {
+            IntAevnt();
+            $("#myGrid").click(function () {
+                var a = document.getElementById("Searchtext");
+                a.value = a.defaultValue;
+                $.get("/api/dept", function (data, status) {
+                    if (data) {
+                        try {
+                            var jsondata = JSON.parse(data);
+                            var totalRecords = jsondata.length;
+                            var pageFlag = 0;
+                            var noOfPages = 0;
+                            var divClose = 0;
+                            var html = '';
+                            for (var i = 0; i < jsondata.length; i++) {
+                                if (pageFlag == 0) {
+                                    noOfPages = noOfPages + 1;
+                                    html = html + '<div id="divHomeDeparments_' + noOfPages + '" class="col-lg-12 col-md-12 HomeDepartments"> <div class="col-lg-4 col-md-4"> ';
+                                }
+                                if (pageFlag < 5) {
+                                    if (clour == 1) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 2) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 3) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 300px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (divClose == 4) {
+                                        html = html + '</div><div class="col-lg-4 col-md-4">';
+                                    }
+                                }
+                                if (pageFlag < 10 & pageFlag > 4) {
+                                    if (clour == 1) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 200px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 2) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 200px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 3) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 200px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (divClose == 9) {
+                                        html = html + '</div><div class="col-lg-4 col-md-4">';
+                                    }
+                                }
+
+                                if (pageFlag < 15 & pageFlag > 9) {
+
+                                    if (clour == 1) {
+
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 100px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 2) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 100px; overflow-y: scroll; "></div></div>';
+                                    }
+                                    if (clour == 3) {
+                                        html = html + '<div onclick=servfunction(' + jsondata[i].id + ')> <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"><div class="panel panel-default"><div class="panel-heading panel-heading-green panel-heading-blue" role="tab" id="headingTwo"><h4 class="panel-title">'
+                                            + ' <a > <i id="addition' + jsondata[i].id + '" class="more-less glyphicon glyphicon-plus"></i><i  id="substrion' + jsondata[i].id + '"class="glyphicon glyphicon-minus"></i>'
+                                            + jsondata[i].name
+                                            + '</a></h4></div></div></div><div id="spldata' + jsondata[i].id + '"style="  max-height: 100px; overflow-y: scroll; "></div></div>';
+                                    }
+                                }
+                                divClose = divClose + 1;
+                                pageFlag = pageFlag + 1;
+                                //alert(pageFlag);
+                                if (pageFlag == 15) {
+                                    html = html + '</div></div>';
+                                    pageFlag = 0;
+                                    divClose = 0;
+                                    //alert('loop done');
+                                }
+                                if (totalRecords == (i + 1)) {
+                                    html = html + '</div></div>';
+                                    html = html + "<div style=\"float: right; margin-right: 27px;\">";
+                                    for (var k = 1; k <= noOfPages; k++) {
+                                        if (k == 1) {
+                                            html = html + "<button type='button' class='HomeDeptPages page_button_active' id='" + k + "'>" + k + "</button>";
+                                        }
+                                        else {
+                                            html = html + "<button type='button' class='HomeDeptPages page_button_inactive' id='" + k + "'>" + k + "</button>";
+                                        }
+                                    }
+                                    html = html + "</div>";
+                                }
+                            }
+
+                            $('#spldata').html(html);
+                            $('.HomeDepartments').hide();
+                            $('#divHomeDeparments_1').show();
+                            IntAevnt();
+                            for (var j = 0; j < jsondata.length + 1; j++) {
+                                $('#substrion' + jsondata[j].id).hide();
+                            }
+                        } catch (e) {
+                            console.log('Error while formatting the data : ' + e.message)
+                        }
+                    }
+                });
+            });
+        });
+        function IntAevnt() {
+            $('.HomeDeptPages').off('click').on('click', function () {
+                $('.HomeDepartments').hide();
+                $('#divHomeDeparments_' + $(this).attr('id') + '').show();
+                $('.HomeDeptPages').attr('class', 'HomeDeptPages page_button_inactive');
+                $(this).attr('class', 'HomeDeptPages page_button_active');
+            })
+        }
+
+        /**/</script>
+</head>
+
+<body oncontextmenu="return false;">
+    <section>
+        <div>
+            <div class="top-section-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="browser"><span style="font-size:14px; color:#fff;">Note: Supported browser versions are Internet explorer 9+, Mozilla 50+ and Chrome 52+ <br> <a class="blink_me1" style="font-size:20px; color:red;" href="https://sevasindhu.karnataka.gov.in/Gramaone/gramaone_franchise.html">Click here to become Grama one franchise</a> | <a   style="font-size:14px;" href="https://www.janasevaka.karnataka.gov.in/index_eng.html" target="_blank">For Door Delivery of Citizen Services click here</a></span> | <span style="font-size:14px;color:#ff0000;">Guarantee scheme call centre number 1902</span> </div>
+                        </div>
+                        <div class="col-md-3">
+                            <table class="table-td" role="presentation">
+							  <tbody>
+								<tr>
+								  <td>
+									<a href="https://sevasindhu.karnataka.gov.in/Sevasindhu/ScreenReader">
+									  <img src="/assets/images/disabled-sign.png" alt="Accessibility options link">
+									</a>
+								  </td>
+								  <td>
+									<a href="https://www.facebook.com/sevasindhuofficial/">
+									  <img src="/assets/images/facebook.png" alt="Follow Seva Sindhu on Facebook">
+									</a>
+								  </td>
+								  <td>
+									<a href="https://twitter.com/GoK_SevaSindhu">
+									  <img src="/assets/images/twitter.png" alt="Follow Seva Sindhu on Twitter">
+									</a>
+								  </td>
+								  <td>
+									<a href="https://www.youtube.com/c/sevasindhuofficial">
+									  <img src="/assets/images/youtube.png" alt="Watch Seva Sindhu on YouTube">
+									</a>
+								  </td>
+								  <td style="background:#021644">
+									<div id="englishbt" class="eng-link">
+									  <p><a href="/Sevasindhu/English" lang="en">English version</a></p>
+									</div>
+								  </td>
+								  <td style="background:#021644">
+									<div id="kannadabt" class="eng-link">
+									  <p><a href="/Sevasindhu/Kannada" lang="kn">ಕನ್ನಡ ಆವೃತ್ತಿ</a></p>
+									</div>
+								  </td>
+								</tr>
+							  </tbody>
+							</table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="menubar">
+                <nav class="navbar navbar-default">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4">
+                                <div class="kar_logo" style="text-align:center; float:left;">
+                                    <a href="/Sevasindhu/English">
+                                        <img src="/assets/images/chief_minister_of_karrnataka_en.png"  alt="Photo of the Chief Minister of Karnataka">
+                                    </a>
+									
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <div class="sevasindhu-text" style="text-align:center;">
+                                    <div><img src="/assets/images/logo/sevasindhu-logo.jpg" width="124" height="106" alt="Seva Sindhu Government Service Portal logo"></div>
+                                    <h4 style="margin:0px;"><span class="sevasindhu-font-head">Government of Karnataka</span></h4>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 text-align-right">
+							    <!--<div class="sevasindhu_logo">
+                                   
+                                        <img src="~/assets/images/minister_pic.png" width="260" height="106" alt="Minister Photo">
+                                   
+                                </div>-->
+                                <!--<div class="sevasindhu_logo">
+                                    <a href="/Sevasindhu/English">
+                                        <img src="~/assets/images/karnataka_logo.jpg" width="124" height="106" alt="Government of Karnataka Official Logo">
+                                    </a>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="covid-19"> <div class="blink_me" style="float:left;"><button>DBT Schemes</button></div></div>-->
+                    <!--<div class="cm-section" style="text-align:center;"><img src="~/assets/images/CM_Section.png?bn=401" width="" height="" alt=" "></div>-->
+                    <div class="row topmenu-bg">
+                        <div>
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-2">
+                        </div>
+                        <div class="container">
+                            <div class="">
+                                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li><p class="smooth-menu service-cent"><a href="https://sevasindhu.karnataka.gov.in/Sevasindhu/English">Home</a> </p></li>
+                                        <li class="smooth-menu about"><a href="https://sevasindhu.karnataka.gov.in/about.html">About Seva Sindhu</a></li>
+                                        <li class="smooth-menu acc_menu"><a id="myGrid" href="https://sevasindhu.karnataka.gov.in/Sevasindhu/DepartmentServices">Departments & Services</a></li>
+                                        <li><p class="smooth-menu service-cent"><a href="https://sevasindhu.karnataka.gov.in/Sevasindhu/Servicecenters" target="_blank">Service Centers</a> </p></li>
+                                        <li class="dropdown">
+      <p class="smooth-menu service-cent">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          Grama One <span class="caret"></span>
+        </a>
+      </p>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="https://gramaone.karnataka.gov.in" target="_blank">
+            Grama One Portal
+          </a>
+        </li>
+        <li>
+          <a href="https://sevasindhu.karnataka.gov.in/Gramaone/gramaone_franchise.html">Apply for Grama one Franchise</a>
+        </li>
+       
+      </ul>
+    </li>
+
+										</p></li>
+										
+										 <li><a href="https://www.janasevaka.karnataka.gov.in/" target="_blank">Janasevaka (<span style="color:#fff200;">For Door Step Delivery</span>)</a></li>
+
+                                        <!--<li>
+                                            <p class="smooth-menu service-cent">
+                                                <form action="https://sevasindhuservices.karnataka.gov.in/citizenApplication.html" method="POST" target="_blank" id="myform">
+                                                    <input type="submit" value="Track Your Application Status" class="track-application">
+                                                </form>
+                                            </p>
+                                        </li>-->
+                                      <!--   <li class="smooth-menu contat"><a target="_blank" href="https://sevasindhu.karnataka.gov.in/cscadmin/OverallUsageServiceReport.aspx">Reports-DashBoard</a></li>-->
+                                        <li class="smooth-menu contat"><a href="https://sevasindhu.karnataka.gov.in/Faq.html">FAQ</a></li>
+                                        <li class="smooth-menu contat"><a href="https://sevasindhu.karnataka.gov.in/Department_contact_Eng.html">Department Contact Details</a></li>
+										<li class="smooth-menu contat"><a href="https://sevasindhu.karnataka.gov.in/Sevasindhu_Count/Service_CountList.aspx">Dashboard</a></li>
+										<li class="smooth-menu contat"><a href="https://sevaone.karnataka.gov.in/services/">Citizens Login</a></li>
+                                        <li class="smooth-menu contat"><a href="https://sevasindhu.karnataka.gov.in/contact.html">Contact us</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+
+        </div>
+    </section>
+	
+	
+
+    <div style="clear:both;"></div>
+    <section>
+
+        <!-- Slider 1 -->
+        <div class="slider" id="slider1">
+            <!-- Slides -->
+            <div><img src="/assets/images/Banner_105.jpg"></div>
+            <div><img src="/assets/images/Banner_716.png"></div>
+			 <div><img src="/assets/images/gandhi_bharada_logo.png"></div>
+			 <div><a href="https://sevasindhu.karnataka.gov.in/Gramaone/gramaone_franchise.html"><img src="/assets/images/gramaone_banner.jpg"></a></div>
+			 <!--<div><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=2622"><img src="~/assets/images/Applications_Republic_Day_English.gif"></a></div>-->
+
+            <!-- The Arrows -->
+            <i class="left" class="arrows" style="z-index:2; position:absolute;">
+                <svg viewBox="0 0 100 100">
+                    <path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z"></path>
+                </svg>
+            </i>
+            <i class="right" class="arrows" style="z-index:2; position:absolute;">
+                <svg viewBox="0 0 100 100">
+                    <path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" transform="translate(100, 100) rotate(180) "></path>
+                </svg>
+            </i>
+
+
+        </div>
+
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="latestnews"><h4>Latest updates</h4></div>
+            </div>
+            <div class="col-md-10" style="margin-left:-25px;">
+                <div class="tcontainer">
+                    <div class="ticker-wrap">
+                        <div class="ticker-move">
+                            <div class="ticker-item"> <a style="font-size:18px;" href="https://sevasindhu.karnataka.gov.in/GruhaJyothi_Delink/GetAadhaarData.aspx" target="_blank">Application for D-link "Gruha Jyothi" scheme made live </a>   <a  style="font-size:18px;" href="https://sevasindhu.karnataka.gov.in/Gramaone/gramaone_franchise.html" target="_blank">Application For Grama One Franchise Are Accepted From - 01st August Till 15th August 2026</a>  <!--<a  style="font-size:18px; color:red;" href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=2627" target="_blank">Citizen E- Pass for Independence Day 15 August 2026 at Manekshaw Parade Ground</a>--> </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+	
+
+
+    <section>
+        <div class="container" style="margin-top:10px;">
+		    <!--<div class="row">
+		        div class="col-sm-4 col-md-4 zoom">
+                    <div class="registered"><h4>Delegate Registration For 86th Akhila Bharata Kannada Sahitya Sammelana - Haveri</h4></div>
+                    <a style="width:100%" href="https://kasapa-app.com/mobile/registration"><div class="third-div"> <img src="~/assets/images/usericon.png"></div></a>
+                </div>
+                <div class="col-sm-6 col-md-6 zoom">
+                    <div class="new_user"><h4>Membership Registration of Kannada Sahitya Parishattu</h4></div>
+                    <a style="width:100%"  href="https://kannadasahithyaparishattu.in/app/home"><div class="second-div"><img src="~/assets/images/usericon.png"></div></a>
+                </div>
+				<div class="col-sm-6 col-md-6 zoom">
+                    <div class="new_user"><h4>G20</h4></div>
+                    <a style="width:100%"  href="https://www.g20.org/en/"><div class="second-div1" style="text-align:center;"><img src="~/assets/images/g-20-logo.jpg"></div></a>
+                </div>
+			</div>-->	
+            <div class="row">
+
+				
+                <!--<div class="col-sm-4 col-md-4 zoom">
+                    <div class="registered"><h4>Registered users login here</h4></div>
+                    <a style="width:100%" href="https://sevaone.karnataka.gov.in/services/"><div class="third-div"> <img src="~/assets/images/usericon.png"></div></a>
+                </div>-->
+				
+				<!--<div class="col-sm-6 col-md-6 zoom">
+                    <div><h4>Total Number of Application Received - Gruha Lakshmi</h4></div>
+                    <div class="search-app-status-head">
+					      <h4>11336291</h4>
+					</div>
+                </div>
+				
+                <div class="col-sm-6 col-md-6 zoom">
+                    <div class="search-app-status-head"><h4>Total Number of Application Received - Gruha Jyoti</h4></div>
+                    <div>
+					                <h4>1,75,18,065</h4>
+					</div>
+                </div>-->
+				
+	       <div class="col-md-4">
+                    <div class="search-app-status-head"><i class="fa fa-check" aria-hidden="true"></i>Total Number of Application Received - Gruha Lakshmi </div>
+                    <div class="search-content-home">
+                        <div class="app-count">
+                          <!--<h4>12860826</h4>-->
+						  <h4 id="glCount"></h4>
+                        </div>
+                    </div>
+                   
+                </div>
+				
+	      <div class="col-md-4">
+                    <div class="search-app-status-head"><i class="fa fa-check" aria-hidden="true"></i>Total Number of Application Received - Gruha Jyoti</div>
+                    <div class="search-content-home">
+                        <div class="app-count">
+                             <!--<h4>16445635</h4>-->
+							 <h4 id="gjCount"></h4>
+                        </div>
+                    </div>
+                   
+                </div>
+
+<div class="col-md-4">
+                    <div class="search-app-status-head"><i class="fa fa-check" aria-hidden="true"></i>Total Number of Application Received - Yuvanidhi</div>
+                    <div class="search-content-home">
+                        <div class="app-count">
+                           <!--<h4>299154</h4>-->
+						   <h4 id="yuvaCount"></h4>
+						   
+                        </div>
+                    </div>
+                   
+                </div>
+               
+				
+				 <div class="col-sm-4 col-md-4 zoom">
+                    <div class="complaint"><h4>Seva Sindhu Services link</h4></div>
+                    <a style="width:100%" href="https://sevaone.karnataka.gov.in/services/"><div class="first-div"><img src="/assets/images/register.png" alt="Go to Seva Sindhu Services page" ></div></a>
+                </div>
+				
+				<div class="col-sm-4 col-md-4 zoom">
+                    <div class="registered"><h4>Student bus pass</h4></div>
+                    <div class="first-div"><p><a style="width:100%; color:#fff;" href="https://sevasindhuservices.karnataka.gov.in/buspassservices/directApply.do?serviceId=1958">Student bus pass (KKRTC)</a></p>
+					<p><a style="width:100%; color:#fff;" href="https://sevasindhuservices.karnataka.gov.in/buspassservices/directApply.do?serviceId=1961">Student bus pass (KSRTC)</a></p>
+					<p><a style="width:100%; color:#fff;" href="https://sevasindhuservices.karnataka.gov.in/buspassservices/directApply.do?serviceId=1959">Student bus pass (NWKRTC)</a></p>
+					<p><a class="blink_me" style="width:100%; color:red; font-weight:bold;" href="https://sevasindhuservices.karnataka.gov.in/buspassservices/directApply.do?serviceId=2049">Application for Refund of KSRTC,NWKRTC,KKRTC & BMTC Student Bus Pass Fee</a></p>
+					
+					</div>
+                </div>
+				
+                <div class="col-sm-4 col-md-4 zoom">
+                    <div class="new_user"><h4>Raise Your Complaint</h4></div>
+                    <a style="width:100%"  href="https://sevasindhu.karnataka.gov.in/com-port.html"><div class="second-div"><img src="/assets/images/complaint.png" alt="Go to complaint registration page" ></div></a>
+                </div>
+                <div class="col-sm-4 col-md-4 zoom">
+                    <div class="complaint"><h4>Track your application status</h4></div>
+                    <a style="width:100%" href="https://sevasindhu.karnataka.gov.in/Track_your_application.html"><div class="first-div"><img src="/assets/images/search.png" alt=" Go to Track your application status page"></div></a>
+                </div>
+                <div class="col-sm-4 col-md-4 zoom">
+                    <div class="complaint"><h4>New users register here</h4></div>
+                    <a style="width:100%" href="https://sevaone.karnataka.gov.in/services/citizenRegistration.html"><div class="first-div"><img src="/assets/images/register.png" alt=" Go to New users register page"></div></a>
+                </div>
+                <div class="col-sm-4 col-md-4 zoom">
+                    <div class="new_user"><h4>Category wise Services</h4></div>
+                    <a style="width:100%" href="https://sevasindhu.karnataka.gov.in/Category/index.html"><div class="second-div"> <img src="/assets/images/category.png" alt="Go to Category wise Services page "></div></a>
+                </div>
+                <!--<div class="col-sm-4 col-md-4 zoom">
+                    <div class="complaint"><h4>Covid Related Services</h4></div>
+                    <a style="width:100%" href="https://sevasindhu.karnataka.gov.in/Category.html"><div class="third-div"><img src="~/assets/images/no-virus.png"></div></a>
+                </div>-->
+				
+				<div class="col-sm-3 col-md-3 zoom">
+                    <div class="complaint"><h4>SAKALA</h4></div>
+                    <a style="width:100%" href=" http://www.sakala.kar.nic.in"><div class="first-div"><img src="/assets/images/sakala_icon.png" alt=" Go to Sakala Website"></div></a>
+                </div>
+                <div class="col-sm-3 col-md-3 zoom">
+                    <div class="new_user"><h4>iPGRS</h4></div>
+                    <a style="width:100%" href="https://ipgrs.karnataka.gov.in/home/index"><div class="second-div"> <img src="/assets/images/ipgrs_icon.png" alt="Go to IPGRS Website"></div></a>
+                </div>
+				 <div class="col-sm-3 col-md-3 zoom">
+                    <div class="new_user"><h4>RTI Online</h4></div>
+                    <a style="width:100%" href="https://rtionline.karnataka.gov.in/"><div class="second-div"> <img src="/assets/images/ipgrs_icon.png" alt="Go to RTI Online Website"></div></a>
+                </div>
+                <div class="col-sm-3 col-md-3 zoom">
+                    <div class="complaint"><h4>SUVIDHA</h4></div>
+                    <a style="width:100%" href="https://sevasindhu.karnataka.gov.in/Sevasindhu/DepartmentServices"><div class="third-div"><img src="/assets/images/suvidha_icon.png" alt="Go to Suvidha services page"></div></a>
+                </div>
+				
+            </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="search-app-status-head"><i class="fa fa-check" aria-hidden="true"></i>Number of Application received today </div>
+                    <div class="search-content-home">
+                        <div class="app-count">
+                           <!--<h4 style="font-weight:600;">1621</h4>-->
+						    <h4 id="todayCount" style="font-weight:600;"></h4>
+						
+                        </div>
+                    </div>
+                    <div class="search-app-status-head"><i class="fa fa-check" aria-hidden="true"></i>Number of Transactions</div>
+                    <div class="transactions">
+						 <!--<h4 style="font-weight:600;">43983279</h4>-->
+						    <h4 id="totalCount" style="font-weight:600;"></h4>
+                         
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="search-app-status-head">What's New <i class="fa fa-question-circle" aria-hidden="true"></i></div>
+                    <div class="search-app-status-content" style="border:1px solid #ccc; margin-bottom:10px; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                        <ul class="list-img" style="height:224px; overflow-y:scroll;">
+						     <!--<li><a href="https://sevasindhu.karnataka.gov.in/PDF/Kannada_Culture_GO.pdf">Last date for submission of application for Dattansha (artist database collection) is extended until 15/07/2022.</a></li>
+                            <li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1714">Hiring of District Consultant-FRUITS on contract basis</a></li>-->
+                            <!--<li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1581">Application for the post of President/Member/Woman Member of State/District Consumer Disputes Redressal Commissions</a></li>-->
+                            
+							<!--<li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1652">Nominate the Achievers for Rajyothsava Award-2021</a></li>-->
+							
+                            <!--<li><a href="http://www.urbantransport.kar.gov.in/Final%20PBS%20SMMS%20notification%20-%20Sept%202021.pdf">Notification regarding PBS and SMMS Permit</a></li>-->
+
+                            <li><a href="https://sevasindhu.karnataka.gov.in/SinduthvaPramanaPatra/CV_login.aspx">Apply for Sindhutva Pramana Patra (ONLY FOR APPLICANTS WHO HAVE RECEIVED SMS)</a></li>
+                            <!--<li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1554">Additional details request for Disbursement of cash relief to Barber and Washerman for Covid-19</a></li>
+                            <li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1581">Application for the post of President/Member/Woman Member of State/District Consumer Disputes Redressal Commissions</a></li>-->
+                            <li><a href="https://sevasindhuservices.karnataka.gov.in/directApply.do?serviceId=1097">Application for Family ID/New NPHH (APL) Ration Card</a></li>
+                            <li><a href="https://sevasindhu.karnataka.gov.in/PDF/esign.pdf">Procedure to fix” Invalid Transaction for e-sign process” in Firefox browser</a></li>
+                            <li><a href="https://sevasindhu.karnataka.gov.in/Promotional_Eng.html">Promotional Campaigns</a></li>
+                            <li><a href="https://karnatakaone.gov.in/Public/GramOneFranchiseeTerms">Click here for GramOne Franchises</a></li>
+                            <li><a href="https://sevasindhu.karnataka.gov.in/E-sign-process.html">E-sign process</a></li>
+							<!--<li><a href="https://sevasindhu.karnataka.gov.in/youtub_channel_final.html" target="_blank">Sevasindhu Video Manual </a></li>-->
+							
+                           <!-- <li><a href="https://sevasindhu.karnataka.gov.in/ComplaintStatus/ComplaintStatus">Check your complaint status here</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!--<section>
+        <div class="btn-show">
+
+       <a class="btn-slide service_whatsapp" href="#">
+         <span class="circle"><i aria-hidden="true" class="fab fa-question-circle"></i></span> <span class="title">
+           Raise Your Complaint here</span>
+         <span class="title-hover">Raise Your Complaint here</span> </a>
+
+       <a class="btn-slide service_call" href="tel:+201276426171"> <span class="circle"><i aria-hidden="true"
+             class="fas fa-phone1"></i></span> <span class="title">Call Center Number - 8088304855/ 6361799796 /9380204364 / 9380206704</span> <span class="title-hover">
+           Call Center Number - 8088304855/ 6361799796 /9380204364 / 9380206704</span>
+       </a>
+
+     </div>
+
+      </div>
+     </section>-->
+    <!--menu end-->
+    <section>
+        <div class="container" id="acc_menu" style="display:none;">
+            <div class="row" id="top-menu">
+                <div class="col-sm-4 col-md-4"></div>
+                <div class="col-sm-5 col-md-4"></div>
+                <div class="col-sm-3 col-md-3">
+                    <table>
+                        <tr>
+                            <td><input id="Searchtext" class="form-control" type="text" placeholder="Search Service"></td>
+                            <td><button class="button" onclick="searchdata()"> <i class="fa fa-search"></i></button></td>
+                            <td><button class="button" onclick="cleardata()"><i class="fa fa-remove"></i></button></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-sm-1 col-md-1" style="text-align: right;">
+                    <div style="margin-right:16px; margin-top:5px;"><button type="button" class="btn-close">Close</button></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <div class="row" id="search-cont">
+                <div id="spldata"></div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="Colur" class="modal-header">
+                        <div id="servicepopup1"></div>
+                        <div></div>
+                    </div>
+                </div>
+                <div id="servicepopup" style="background-color: white;"></div>
+    </section>
+    <!-- The Modal -->
+    <div id="modalAppStatusInfo" class="modal appstatus">
+        <div class="modal-dialog">
+            <!-- Modal content -->
+            <div class="modalAppStatusInfo-content">
+                <span class="modalAppStatusInfo-close" onclick="dismissModal()">&times;</span>
+                <div class="modalAppStatusInfo-header">
+                    
+                    <h2>Application Status</h2>
+                </div>
+                <div class="modalAppStatusInfo-body">
+                    <p style="font-size:20px">Application Ref No: <strong><span class="stsResult" id="applrefno"></span></strong></p>
+                    <p style="font-size:20px">Application Status: <strong><span class="stsResult" id="applStatus"></span></strong></p>
+                    <p id="lbldeptname" style="font-size:20px">Department Name: <strong><span class="stsResult" id="deptname"></span></strong></p>
+                    <p id="lblSubmission" style="font-size:20px">Submitted On: <strong><span class="stsResult" id="submissionDate"></span></strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="TopusedServices" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;">Change of Khata (Undisputed cases)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <section class="container">
+                            <div class="row">
+                                <div class="container service-detals">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a>More details</a>
+                                                </h4>
+                                            </div>
+                                            <div>
+                                                <div class="panel-body">
+                                                    <ul>
+                                                        <li><span style="font-weight:bold;">Eligibility:</span> None</li>
+                                                        <li>
+                                                            <span style="font-weight:bold;">Supporting Document:</span>
+                                                            <ul>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader will be distracted by the readable content of a page</li>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li><span style="font-weight:bold;">Service Charge (Free for Online Service) : </span> Rs.100 </li>
+                                                        <li><span style="font-weight:bold;">Delivery Time :</span> 20 Days </li>
+                                                        <li>
+                                                            <span style="font-weight:bold;">Procedure for applying:</span>
+                                                            <ul>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader will be distracted by the readable content of a page</li>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader will be distracted by the readable content of a page </li>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader will be distracted by the readable content of a page</li>
+                                                                <li style="list-style-type: square; margin-left:30px;">It is a long established fact that a reader will be distracted by the readable content of a page </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="http://sevasindhu.karnataka.gov.in/login_org.aspx" target="_blank"><button type="button" class="btn btn-default">Apply Online</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="faq" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;">Frequently Asked Questions</h4>
+                    </div>
+                    <div class="modal-body">
+                        <section class="container">
+                            <div class="row">
+                                <div class="container-faq">
+                                    <div class="faq-cont">
+                                        <h5>What is Seva Sindhu ?</h5>
+                                        <p>Seva Sindhu is the common citizen service portal/facility of Government of Karnataka to provide government related services and other information in one place. Seva Sindhu is implemented under the e-District Mission Mode Project (MMP) of Department of Electronics and Information Technology (DeitY), Ministry of Communications & IT, Government of India.</p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>How to access Seva Sindhu ?</h5>
+                                        <p>Seva Sindhu can be accessed online by public using Internet from anywhere Or through identified service delivery centers at District/Taluk/Sub-division/Village level.</p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>How does it help the Citizens?</h5>
+                                        <p>Seva Sindhu helps Citizens to avail all the Government Services of any department in one place thereby saving a lot of time and money. It also provides other useful information like local events, employment opportunities etc.</p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>What services are delivered in Seva Sindhu ?</h5>
+                                        <p>
+                                            The broad list of services to be delivered through Seva Sindhu are: Certificates: Creation and distribution of certificates for income, domicile, caste, Birth, Death etc.
+                                            Licences: Arms Licenses etc. Public Distribution System (PDS): Issue of Ration Card, etc. Social Welfare Schemes: Disbursement of old-age pensions, family pensions, widow pensions, etc. Complaints: Related to unfair prices, absentee teachers, non-availability of doctor, etc.
+                                            RTI: Online filing and receipt of information relating to the Right to Information Act Linking with other e government projects: Registration, Land Records, and Driving Licences, etc. Information Dissemination: About government schemes, entitlements, etc. Assessment of taxes: Property tax, and other government taxes.
+                                            Utility Payment: Payments relating to electricity, water bills property taxes etc.
+                                            Local News : About events, employment opportunities etc.
+                                        </p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>What is the methodology followed in Seva Sindhu to deliver services?</h5>
+                                        <p>
+                                            Citizens can register on the Seva Sindhu portal and apply for services Or they can go to the nearest identified service delivery center and ask for the service through the service center login.
+                                            Unique acknowledgement/token number is generated for each requested service which will serve as reference for future follow up action.
+                                        </p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>What to do when I get "Invalid transaction for e-sign Process. Please try again"?</h5>
+                                        <p>
+                                            <a href="https://sevasindhu.karnataka.gov.in/PDF/INVALID TRANSACTION ERROR.pdf"> Please view the document and follow the instructions</a>
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>How to track applications?</h5>
+                                        <p>
+                                            After submitting the application you will get an Application Reference Number which you can enter on the homepage to check the status of your application. SMS will be sent to you at each step of the application after submitting.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>How do I know which form to fill for which service/scheme?</h5>
+                                        <p>
+                                            You will see the list of all services available online. Clicking on the service name will open the application form which you need to fill and submit.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>I do not remember my password , what should I do?</h5>
+                                        <p>
+                                            You can click on Forgot Password option on login screen to reset your password. Alternatively, you can use the OTP option to login.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>Will I receive any SMS, Email on completing the application?</h5>
+                                        <p>
+                                            After each step, an SMS and an e-mail notifying you of the status and next steps that require any appointment or verification will be sent on registered phone number and email ID.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5> Can I save my application and submit again after that?</h5>
+                                        <p>
+                                            Yes you can save an application. You can retrieve this application from View Incomplete Applications option and proceed from there.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>How to apply offline ? Are there any centers at District/Taluk/Village level?</h5>
+                                        <p>
+                                            All the schemes/service will be available at District, Taluk and Village level at Bangalore One/Karnataka One/Grama One centers. These schemes/service will also be available at CSCs.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5>Can i pay online through the portal itself?</h5>
+                                        <p>
+                                            Yes, you can pay online through debit card/credit card/net banking/ Paytm.
+                                        </p>
+                                    </div>
+
+                                    <div class="faq-cont">
+                                        <h5> Is there any online support available?</h5>
+                                        <p>
+                                            You can reach out to our helpdesk at 8088304855 / 6361799796 / 9380204364 / 9380206704 from 9AM to 6PM on all government working days. We will soon launch the online help section as well on the website.
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="register" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;">Steps for user Registration</h4>
+                    </div>
+                    <div class="modal-body">
+                        <section class="container">
+                            <div class="row">
+                                <div class="container-faq">
+                                    <div class="faq-cont">
+                                        <h5 style="margin-bottom:20px;">
+                                            Steps for user Registration<h5>
+                                                <ul>
+                                                    <li>On clicking New User Registration you will be redirected to Digilocker page</li>
+                                                    <li>Enter 16 digit Aadhaar number in Digilocker page</li>
+                                                    <li>Click on next button (OTP will be sent to the mobile number which is linked to Aadhaar number)</li>
+                                                    <li>Enter 6 digits OTP</li>
+                                                    <li>Click on continue button</li>
+                                                    <li>Click on allow button to get Redirect to Seva Sindhu page</li>
+                                                    <li>Enter email Id (Optional)</li>
+                                                    <li>Enter your mobile number</li>
+
+                                                    <li>Set your password</li>
+                                                    <li>Enter captcha</li>
+                                                    <li>Click on submit button</li>
+                                                    <li>Click OK on verification popup</li>
+
+                                                    <li>Enter OTP which is shared on your mobile number</li>
+                                                    <li>Click on validate button to validate OTP</li>
+                                                    <li>Registration successful message will be displayed</li>
+                                                    <li>You will be able to login to Seva Sindhu using mobile number or email in future</li>
+
+                                                </ul>
+
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>What is Digilocker?</h5>
+                                        <p>DigiLocker is a flagship initiative of Ministry of Electronics & IT (MeitY) under Digital India Corporation (DIC). Digilocker aims at ‘Digital Empowerment’ of citizen by providing access to authentic digital documents to citizen’s digital document wallet. The issued documents in DigiLocker system are deemed to be at par with original physical documents as per Rule 9A of the Information Technology (Preservation and Retention of Information by Intermediaries providing Digital Locker facilities) Rules, 2016 notified on February 8, 2017 vide G.S.R. 711(E).</p>
+                                    </div>
+                                    <div class="faq-cont">
+                                        <h5>Why we need Digilocker account?</h5>
+                                        <ul>
+                                            <li>	Important Documents Anytime, Anywhere!</li>
+                                            <li>Authentic Documents, Legally at Par with Originals.</il>
+                                            <li>Digital Document Exchange with the consent of the citizen.</li>
+                                            <li>Faster service Delivery- Government Benefits, Employment, Financial Inclusion, Education, Health.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div style="background-image: linear-gradient(to right, #fbb904 , #18e230); padding:10px; text-align:center;"><a style="color:#000;" href="https://sevasindhuservices.karnataka.gov.in/citizenRegistration.html" target="_blank">New users register here</a></div>
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="website-policy" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;">Website Policy</h4>
+                    </div>
+                    <div class="modal-body">
+                        <section class="container">
+                            <div class="row">
+                                <div class="container-webpolicy">
+                                    <div class="webpolicy-cont">
+                                        <h5>WEBSITE POLICIES</h5>
+                                        <p>We do We do not sell or share any personally identifiable information volunteered on this site to any third party (public/private). Any information provided to this website will be protected from loss, misuse, unauthorized access or disclosure, alteration, or destruction.</p>
+                                        <p>We gather certain information about the User, such as Internet protocol (IP) address, and date/time visited. We make no attempt to link these addresses with the identity of individuals visiting our site unless an attempt to damage the site has been detected.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>COOKIES POLICY</h5>
+                                        <p>A cookie is a piece of software code that an internet web site sends to your browser when you access information at that site. A cookie is stored as a simple text file on your computer or mobile device by a website’s server and only that server will be able to retrieve or read the contents of that cookie. Cookies let you navigate between pages efficiently as they store your preferences, and generally improve your experience of a website.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>HYPERLINKING POLICY</h5>
+                                        <h5 class="margin-top-10">Links to external websites/portals</h5>
+                                        <p>At many places in this website, you shall find links to other websites/portals. These links have been placed for your convenience. The department is not responsible for the contents of the linked websites and does not necessarily endorse the views expressed in them. Mere presence of the link or its listing on this website should not be assumed as endorsement of any kind. We cannot guarantee that these links will work all the time and we have no control over availability of linked destinations.</p>
+                                        <p>We do not object to you linking directly to the information that is hosted on this web site and no prior permission is required for the same. Also, we do not permit our pages to be loaded into frames on your site. The pages belonging to this website must load into a newly opened browser window of the User.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>TERMS & CONDITIONS</h5>
+                                        <p>This website is owned , maintained and hosted by Department of e-Governance , Government of Karnataka at State Data Centre. The website is designed and developed by National Informatics Centre, Bangalore. The contents are provided by various departments of Karnataka .</p>
+                                        <p>Though all efforts have been made by the Government of Karnataka to ensure the accuracy and currency of the content on this website, the same should not be construed as a statement of law or used for any legal purposes. In case of any ambiguity or doubts, users are advised to verify/check with the respective departments and/or other source(s), and to obtain appropriate professional advice.</p>
+                                        <p>Under no circumstances will the Department s of Karnataka be liable for any expense, loss or damage including, without limitation, indirect or consequential loss or damage, or any expense, loss or damage whatsoever arising from use, or loss of use, of data, arising out of or in connection with the use of this website.</p>
+                                        <p>These terms and conditions shall be governed by and construed in accordance with the Indian Laws. Any dispute arising under these terms and conditions shall be subject to the jurisdiction of the courts of India.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>REGIONAL LANGUAGE POLICY</h5>
+                                        <p>Though all efforts have been made to ensure the accuracy of the content in regional languages on this Portal, the same should not be construed as a statement of law or used for any legal purposes. For any discrepancy in the regional language content you may refer to the original English content. For any error in language, you may report the same through the online feedback form.</p>
+                                        <p>The department accepts no responsibility in relation to the accuracy, completeness, usefulness or otherwise, of the contents. In no event will the Government or NIC be liable for any expense, loss or damage including, without limitation, indirect or consequential loss or damage, or any expense, loss or damage whatsoever arising from use, or loss of use, of data, arising out of or in connection with the use of this Portal.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>CANCELLATION / REFUND POLICY</h5>
+                                        <p>The fees once paid will not be refunded for applications which are successfully submitted.</p>
+                                        <p>Cancellation of applications shall not be entertained.</p>
+                                        <p>In case of a failed transaction, user shall have no right to claim the amount, the loss on this account shall not be borne either by Government or by the Banks / Payment Gateways. However automatic refund will be made for transactions which are not successful.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>PRIVACY POLICY:</h5>
+                                        <p>This portal aims to provide various Government to Citizen services of multiple departments in a single portal. In the backend, the portal connects to the respective department application for submission of the application. The portal enable citizens to avail services of various departments and track their application anytime from anywhere. We would like to assure you that we follow appropriate standards when it comes to protecting your privacy on our website.</p>
+                                    </div>
+                                    <div class="webpolicy-cont">
+                                        <h5>DISCLAIMER</h5>
+                                        <p>This website of e-Governance Department is being maintained for information purposes only. Even though every effort is taken to provide accurate and up to date information, the citizens and the officers making use of the circulars/information posted on the website are advised to get in touch with the respective Departments whenever there is any doubt regarding the correctness of the information contained therein. In the event of any conflict between the contents of the circulars on the website and the hard copy of the circulars/information issued by departments, the information in the hard copy should be relied upon and the matter shall be brought to the notice of the e-Governance department.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="powerloom" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <!--<h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;">MIS REPORT</h4>-->
+                    </div>
+                    <div class="modal-body">
+                        <section class="container">
+                            <div class="row">
+                                <div>
+                                    <p>For online department assisted entry, please contact concerned District offices of the Department of Handlooms & Textiles.</p>
+                                    Department website address:<a href="https://karnatakadht.org/">https://karnatakadht.org/</a>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <!-- Modal -->
+        <div class="mainbanner-page">
+            <div class="modal fade" id="mainbanner" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header-banner">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" style="font-size: 16px;  color: #000; text-align: center; font-weight:bold;"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <section class="container" id="mainbanner-img">
+                                <div class="row">
+                                    <div class="container-main">
+                                        <img src="/assets/images/PM_Award.png?bn=48" width="" height="" alt=" ">
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div>
+        <!-- Modal -->
+        <div class="modal fade" id="importantwebsite" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Important Websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <a href="https://karnataka.gov.in/department/kn" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/webdirectory.png">-->
+                                        <p>Web-Directory</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="http://rajbhavan.kar.nic.in/" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/karnataka_rajbhavan.png">-->
+                                        <p>Raj-Bhavan</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://cm.karnataka.gov.in/" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/vidan_souda.png">-->
+                                        <p>Chief Minister</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="http://www.kla.kar.nic.in/assembly/assembly.htm" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/vidan_sabhe.png">-->
+                                        <p>Legislative Assembly</p>
+                                    </a>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="http://www.kla.kar.nic.in/council/" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/vidan_parishat.png">-->
+                                        <p>Legislative Council</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://www.csogok.gov.in/" target="_blank">
+                                        <!--<img src="https://ceg.karnataka.gov.in/frontend/opt1/images/modal_icons/important_websites/vidan_souda.png">-->
+                                        <p>Chief Secretary</p>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div>
+
+        <div class="modal fade" id="eservices" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">e-Service Websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="http://www.sakala.kar.nic.in/" target="_blank">
+
+                                        <p>Sakala</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://sevasindhu.karnataka.gov.in/Sevasindhu/Kannada?ReturnUrl=%2F"
+                                        target="_blank">
+
+                                        <p>Seva Sindhu</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://erajyapatra.karnataka.gov.in/(S(trrt4chio0tzmuy54rnz01x3))/default.aspx?AcceptsCookies=yes"
+                                        target="_blank">
+
+                                        <p>e-Gazette</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3 ">
+                                    <a href="https://rtionline.karnataka.gov.in/" target="_blank">
+
+                                        <p>Online RTI</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="http://www.espandana.karnataka.gov.in/cms/portal/login.jsf"
+                                        target="_blank">
+
+                                        <p>e-Spandana</p>
+                                    </a>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <a href="http://mahitikanaja.karnataka.gov.in/Department" target="_blank">
+
+                                        <p>Mahiti Kanaja</p>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+    <div>
+
+        <div class="modal fade" id="e-GovernanceWebsites" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">e-Governance Websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://webportal.karnataka.gov.in/" target="_blank">
+                                        <p>Web Portal</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://ceg.karnataka.gov.in/aadhaar/public/" target="_blank">
+                                        <p>Aadhaar</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://eoffice.karnataka.gov.in/cas/login?service=http%3A%2F%2Feoffice.karnataka.gov.in%2Flogin.php"
+                                        target="_blank">
+                                        <p>e-Office</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://eproc.karnataka.gov.in/eprocportal/pages/index.jsp?language=kn"
+                                        target="_blank">
+                                        <p>e-Procurement</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="https://hrms.karnataka.gov.in/" target="_blank">
+                                        <p>HRMS</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://ceg.karnataka.gov.in/krdh/public/" target="_blank">
+                                        <p>KRDH</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karunadu.karnataka.gov.in/KSWAN/pages/home.aspx" target="_blank">
+                                        <p>KSWAN</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://dpar.karnataka.gov.in" target="_blank">
+
+                                        <p>DPAR</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://ceg.karnataka.gov.in/ksdc/public/" target="_blank">
+
+                                        <p>KSDC</p>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="StatisticsWebsites" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Statistics Websites</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://esamiksha.gov.in/Karnataka/" target="_blank">
+                                        <p>e-Pragathi</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://etaal.gov.in/etaal2/auth/default.aspx" target="_blank">
+                                        <p>e-Taal</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://data.gov.in/statedepartment/karnataka" target="_blank">
+                                        <p>DATA</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://gazetteer.karnataka.gov.in/" target="_blank">
+                                        <p>Karnataka Gazette</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <a href="http://stgpratibimba.karnataka.gov.in/cmdbstg1/public/" target="_blank">
+                                        <p>CM Dashboard</p>
+                                    </a>
+                                </div>
+
+
+
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="GovernmentApps" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Government Apps</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.mybmtc" target="_blank">
+                                        <p>BMTC</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=beco.bhkar.jn"
+                                        target="_blank">
+                                        <p>BHOOMI</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.india.eservices.ka"
+                                        target="_blank">
+                                        <p>e-Sevai Karnataka</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.ksrsac.sslr"
+                                        target="_blank">
+                                        <p>Dishank</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.ksrtc.awatar.new"
+                                        target="_blank">
+                                        <p>KSRTC</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=app.kgp.hyperbound"
+                                        target="_blank">
+                                        <p>Gram Panchayat</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.capulustech.ksppqrs"
+                                        target="_blank">
+                                        <p>Karnataka State Police</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://apps.karnataka.gov.in/en" target="_blank">
+                                        <img src="">
+                                        <p>View All...</p>
+                                    </a>
+                                </div>
+
+
+
+
+
+
+                                <div class="col-md-3 col-sm-6 col-xs-12 sbox"
+                                    style="background-color:lavender;text-align: center;">
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="CentralGovtWebsites" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Central Govt Websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://loksabha.nic.in/" target="_blank">
+                                        <p>Parliament</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://presidentofindia.nic.in/" target="_blank">
+                                        <p>Presidents Office</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://www.pmindia.gov.in/en/" target="_blank">
+                                        <p>Prime Ministers Office</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://portal2.passportindia.gov.in/AppOnlineProject/welcomeLink"
+                                        target="_blank">
+                                        <p>Passport Seva</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <a href="https://uidai.gov.in/" target="_blank">
+                                        <p>Aadhaar</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karunadu.karnataka.gov.in/karnatakabhavan/pages/home.aspx"
+                                        target="_blank">
+                                        <p>Karnataka Bhavan</p>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="TechnicalWebsites" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Technical Websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="https://www.cdac.in/" target="_blank">
+                                        <p>CDAC</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://www.nic.in/" target="_blank">
+                                        <p>NIC</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="http://www.stqc.gov.in/" target="_blank">
+                                        <p>STQC</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="Kannadawebsites" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Kannada websites</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://kannadasiri.karnataka.gov.in/" target="_blank">
+                                        <p>Kannada &amp; Culture</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://kannadasahithyaparishattu.in/" target="_blank">
+                                        <p>Sahitya Parishat</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://kanaja.karnataka.gov.in/" target="_blank">
+                                        <p>kanaja</p>
+                                    </a>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <a href="https://kannadapraadhikaara.karnataka.gov.in/" target="_blank">
+                                        <p>Development Authority</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://ekannada.karnataka.gov.in/" target="_blank">
+                                        <p>EKannada</p>
+                                    </a>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="row">
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="Commission" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Commission</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="https://kshrc.karnataka.gov.in/english" target="_blank">
+                                        <p>Karnataka State Human Right Commission</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karunadu.karnataka.gov.in/kerc/Pages/home.aspx" target="_blank">
+                                        <p>Karnataka State Electricity commission</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karnataka.gov.in/jnanaayoga/Pages/home.aspx" target="_blank">
+                                        <p>Karnataka Knowledge Commission</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karsec.gov.in/" target="_blank">
+                                        <p>Karnataka State Election Commission</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="https://kslsa.kar.nic.in/" target="_blank">
+                                        <p>Karnataka Legal Authority</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://kscpcr.karnataka.gov.in/english" target="_blank">
+                                        <p>Karnataka State Child Rights Commission</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="http://www.kscw.kar.nic.in/" target="_blank">
+                                        <p>Karnataka Women's Commission</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://kscdrc.karnataka.gov.in/english" target="_blank">
+                                        <p>Karnataka State Consumer Disputes Redressal Commission</p>
+                                    </a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="LawCourt" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Law/Court</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container-fluid">
+                            <div class="row">
+
+
+                                <div class="col-md-3">
+                                    <a href="https://main.sci.gov.in/" target="_blank">
+                                        <p>Supreme Court</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://karnatakajudiciary.kar.nic.in/" target="_blank">
+                                        <p>High Court</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://districts.ecourts.gov.in/karnataka" target="_blank">
+                                        <p>District Courts</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="http://cgatnew.gov.in/catweb/Delhi/Delhi.php" target="_blank">
+                                        <p>Central Administrative Tribunal</p>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <a href="https://ksat.karnataka.gov.in/" target="_blank">
+                                        <p>Karnataka State Administrative Tribunal</p>
+                                    </a>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+    <!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="Downloads" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Downloads</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="https://ceg.karnataka.gov.in/frontend/opt1/application_download/nudi_6.0_setup.exe"
+                                        target="_blank">
+                                        <p>NUDI</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://www.cdac.in/index.aspx?id=ev_corp_gist_go_translate"
+                                        target="_blank">
+                                        <p>GO Translate CDAC</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://ceg.karnataka.gov.in/frontend/opt1/application_download/setup_espeak.exe"
+                                        target="_blank">
+                                        <p>e-Speak</p>
+                                    </a>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="https://play.google.com/store/apps/details?id=com.voicenotes.kannada&amp;hl=en"
+                                        target="_blank">
+                                        <p>kannada Voice Notes</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+	
+	
+	<!-- Modal Starts -->
+    <div>
+        <div class="modal fade" id="call-centre" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content frq-head">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"Raise your complaint </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12" style="text-align:center">
+                                    <p> Raise your complaint using below call center Number </p>
+									 <p> 8088304855 / 9380204364 / 9380206704 </p>
+									 <!--<p> 08022279954 / 8088304855 / 9380206704 </p>-->
+                                </div>
+
+                               
+                            </div>
+
+                            
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal ends-->
+
+
+
+    <section>
+        <div id="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="slider-container">
+                        <span onclick="slideRight()" class="btn"></span>
+                        <div id="slider">
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#importantwebsite">
+                                    <div><img src="/assets/images/Department/Important_web.png" alt="important web">
+                                    </div>
+                                    <h4>Important Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#eservices">
+                                    <div><img src="/assets/images/Department/Eservice_website.png" alt="eservice"></div>
+                                    <h4>e-Service Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#e-GovernanceWebsites">
+                                    <div><img src="/assets/images/Department/Egovernance_website.png"
+                                            alt="egovernence website"></div>
+                                    <h4>e-Governance Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#StatisticsWebsites">
+                                    <div><img src="/assets/images/Department/Statics.png" alt="statics"></div>
+                                    <h4>Statistics Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="https://karnataka.data.gov.in/" target="_blank">
+                                    <div><img src="/assets/images/Department/Open_Data.png" style="width: 128px;"
+                                            alt="opendata"></div>
+                                    <p>Open Data</p>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#GovernmentApps">
+                                    <div><img src="/assets/images/Department/Government_app.png" alt="government app">
+                                    </div>
+                                    <h4>Government Apps</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#CentralGovtWebsites">
+                                    <div><img src="/assets/images/Department/Central_government_website.png"
+                                            alt="central government website"></div>
+                                    <h4>Central Govt Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#TechnicalWebsites">
+                                    <div><img src="/assets/images/Department/Technical_web.png" alt="technicalweb"></div>
+                                    <h4>Technical Websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#Kannadawebsites">
+                                    <div><img src="/assets/images/Department/Kannada_web.png" alt="kannadaweb"></div>
+                                    <h4>Kannada websites</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#Commission">
+                                    <div><img src="/assets/images/Department/Commission.png" alt="commission"></div>
+                                    <h4>Commission</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#LawCourt">
+                                    <div><img src="/assets/images/Department/Law_Court.png" style="width: 128px;"
+                                            alt="lawcourt"></div>
+                                    <h4>Law/Court</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="#" data-toggle="modal" data-target="#Downloads">
+                                    <div><img src="/assets/images/Department/Download.png" style="width: 128px;"
+                                            alt="download"></div>
+                                    <h4>Downloads</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="https://www.kstdc.co/" target="_blank">
+                                    <div><img src="/assets/images/Department/Tourist.png" style="width: 128px;"
+                                            alt="tourist"></div>
+                                    <h4>Tourist Websites</h4>
+                                </a>
+                            </div>
+							<div class="slide">
+                                <a href="https://cybercrime.gov.in/" target="_blank">
+                                    <div><img src="/assets/images/Department/hacker.png" style="width: 128px;"
+                                            alt="tourist"></div>
+                                    <h4>Cyber Crime Website</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="https://ceg.karnataka.gov.in/frontend/opt1/pdfs/Holidays-list-for-2021.pdf"
+                                    target="_blank">
+                                    <div><img src="/assets/images/Department/Holiday.png" alt="Holiday"></div>
+                                    <h4>Government Holidays</h4>
+                                </a>
+                            </div>
+                            <div class="slide">
+                                <a href="https://ceg.karnataka.gov.in/gokdirectory/en" target="_blank">
+                                    <div><img src="/assets/images/Department/Contact.png" alt="contact_img"></div>
+                                    <h4>Govt Contact Manual</h4>
+                                </a>
+                            </div>
+
+                        </div>
+                        <span onclick="slideLeft()" class="btn"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<section>
+
+<script>
+window.onload = function() {
+  setTimeout(() => {
+    document.getElementById("popup").classList.add("active");
+  }, 1000);
+};
+
+function closePopup() {
+  document.getElementById("popup").classList.remove("active");
+}
+</script>
+
+
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <canvas id="confetti-canvas"></canvas>
+    <button class="close-btn" onclick="closePopup()">×</button>
+
+    <div class="popup-content">
+<!--<h2>️⚠️Important Notice</h2>
+
+ <h4>️Dear Seva Sindhu Users,</h4>
+
+<p>Due to the planned shutdown of the Karnataka State Data Centre (KSDC) for critical electrical infrastructure maintenance activities, Seva Sindhu services will be temporarily unavailable during the following period:</p>
+
+<h4>Scheduled Downtime</h4>
+<h4>From: 25 June 2026, 08:00 PM IST</h4>
+<h4>To: 26 June 2026, 10:00 PM IST</h4>
+
+<p>During this period, users may not be able to access Seva Sindhu services.</p>
+
+<p>We regret any inconvenience caused and appreciate your understanding and cooperation.</p>
+
+<p>– Seva Sindhu Team</p>-->
+      <!-- Left Visual -->
+      <div class="popup-left">
+        <div class="icon">📍</div>
+        <h3>Our office is  Relocated!</h3>
+      </div>
+
+     
+      <div class="popup-right">
+        <h2>New Office Address</h2>
+
+        <div class="address-card new">
+	        <p style="font-weight:bold;">DIRECTORATE OF ELECTRONIC DELIVERY OF CITIZEN SERVICES</p>
+          <p>Suvarna Bhavana, BWSSB Building, 3rd Floor, 18th Cross, Malleshwaram, Bangalore-560055</p>
+        </div>
+
+        <a href="https://maps.app.goo.gl/nVAbusekpnwP6MEX7" class="cta-btn">📍 Get Directions</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+ </section>
+ 
+ 
+    <!--<section>
+        <div class="footer-cont">This is the Seva Sindhu Portal, developed with an objective to enable a single window access to information and services being provided by the various Government Departments. The content in this Portal is the result of a collaborative effort of Department of e-Governance and various other Government Departments of Karnataka. This Portal is a Mission Mode Project under the E-Governance Plan, designed and maintained by National Informatics Centre (NIC), Bengaluru</div>
+    </section>-->
+    <!-- footer-copyright start -->
+    <footer class="footer-copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table style="width:100%;">
+                        <tr>
+                            <!--<td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/user_manual.html" target="_blank">Services User Manual <span>|</span></a></td>-->
+                            <td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/Help_Eng.html" target="_blank">Help <span>|</span></a></td>
+                            <td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/Sevasindhu_Feedback/FeedbackForm" target="_blank">Feedback form <span>|</span></a></td>
+                            <!--<td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/youtub_channel_final.html" target="_blank">Sevasindhu Video Manual <span>|</span></a></td>-->
+							<td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/user_manual.html" target="_blank">Sevasindhu User Manual <span>|</span></a></td>
+                            <td>
+							
+							
+							
+							<table>
+							   <tr>
+							         
+									 <td><h5 style="color:#000; font-size:14px; padding-right:5px;"> Page last updated on:  25-September-2026 11.00AM <span>|</span></h5></td>
+									 <td><span><a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fsevasindhu.karnataka.gov.in%2F"><img src="/assets/images/w3c.png" alt="w3c"></a></span></td>
+							   </tr>
+							</table>
+							
+							</td>
+                            <td>
+                                <table style="border-collapse: separate;">
+                                    <tr>
+                                        <td class="visitor-count">Website visitor count is</td>
+                                        <td class="counter-outline">1</td>
+                                        <td class="counter-outline"> 0</td>
+                                        <td class="counter-outline"> 7</td>
+                                        <td class="counter-outline"> 7</td>
+                                        <td class="counter-outline"> 4</td>
+                                        <td class="counter-outline"> 4</td>
+                                        <td class="counter-outline"> 4</td>
+                                        <td class="counter-outline"> 4</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td><a style="color:#000; font-size:14px; padding-right:5px;" href="https://sevasindhu.karnataka.gov.in/Site_Map_Eng.html">Site Map</a><span style="padding-left:5px;">|</span></td>
+                            <td><a style="color:#000; font-size:14px; padding-right:5px;" href="#" data-toggle="modal" data-target="#website-policy">Website policy</a></td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <div id="scroll-Top">
+                <i class="fa fa-angle-double-up return-to-top" id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+            </div>
+        </div>
+    </footer>
+    <!-- footer-copyright end -->
+    <!-- jaquery link -->
+    <script src="/assets/js/jquery.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <!--modernizr.min.js-->
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <!--bootstrap.min.js-->
+    <script  src="/assets/js/bootstrap.min.js"></script>
+    <!-- bootsnav js -->
+    <script src="/assets/js/bootsnav.js"></script>
+    <!-- for manu -->
+    <script src="/assets/js/jquery.hc-sticky.min.js" ></script>
+    <!-- vedio player js -->
+    <script src="/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <!-- isotope js -->
+    <!-- <script src="assets/js/masonry.min.js"></script>
+    <script src="assets/js/isotop-custom.js"></script>-->
+    <!--owl.carousel.js-->
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!-- counter js -->
+    <script src="/assets/js/jquery.counterup.min.js"></script>
+    <script src="/assets/js/waypoints.min.js"></script>
+    <script src="/assets/js/jquery.bootstrap.newsbox.js" type="text/javascript"></script>
+    <!--Custom JS-->
+    <script  src="/assets/js/jak-menusearch.js"></script>
+    <script  src="/assets/js/custom.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/jqueryui/dataTables.jqueryui.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/9dcbecd42ad/integration/jqueryui/dataTables.jqueryui.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://hub-chat.telebu.com/StaticFiles/custom/chat-widget.js?type=v1"></script>
+    <script> TelebuPOP.load(["26bpPaKf6mg9k2EgH3hiyq5YhbrHMDKZ",0,0]); </script>
+
+    <script>
+    $(document).ready(function () {
+            $("button").click(function () {
+                $("#popup-content").toggle(1000);
+            });
+			
+			$(function () {
+                $("#mainbanner").on('click', function () {
+                    $('#mainbanner-img').modal('hide');
+                });
+            });
+             
+			 $(window).load(function () {
+             $('#mainbanner').modal('show');
+             });
+
+        });
+	</script>
+    <!--<script>
+    $(function () {
+            $(".news").bootstrapNews({
+                newsPerPage: 3,
+                autoplay: true,
+                pauseOnHover: true,
+                direction: 'up',
+                newsTickerInterval: 4000,
+                onToDo: function () {
+                    //console.log(this);
+                }
+            });
+        });</script>-->
+    <!--<script>
+    $(document).ready(function () {
+            $(".owl-prev").html('<i class="fa fa-chevron-left"></i>');
+            $(".owl-next").html('<i class="fa fa-chevron-right"></i>');
+        });</script>
+    <script>
+    $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+
+                $("#search-cont *").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+			
+        });
+	</script>-->
+    <script>
+    function toggleIcon(e) {
+            $(e.target)
+                .prev('.panel-heading')
+                .find(".more-less")
+                .toggleClass('glyphicon-plus glyphicon-minus');
+        }
+        $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        $('.panel-group').on('shown.bs.collapse', toggleIcon);</script>
+    <script>
+    $(document).ready(function () {
+            $("#acc_menu").hide();
+            //$(".acc_menu").click(function () {
+            //    $("#acc_menu").toggle();
+            //});
+            $(".about").click(function () {
+                $("#acc_menu").hide();
+            });
+            $(".freq").click(function () {
+                $("#acc_menu").hide();
+            });
+            $(".contat").click(function () {
+                $("#acc_menu").hide();
+            });
+
+            $(".about").click(function () {
+                $(".about-us").addClass("about-us-space");
+            });
+            //$(".depart-service-show").click(function () {
+
+            //    // $("#acc_menu").toggle();
+            //    $("#myGrid").click();
+            //});
+            //   11-09-18 start
+
+
+            $(".btn-close").click(function () {
+                $("#acc_menu").hide();
+            });
+
+            $(".btn-close").click(function () {
+                $("#acc_menu").hide();
+				
+            });
+
+           // $("#mainbanner-img").click(function () {
+            //   $("#myGrid").click();
+             //  $(".mainbanner-page").css("display", "none");
+            // });
+
+            $(function () {
+                var navMain = $("#bs-example-navbar-collapse-1");
+                navMain.on("click", "a", null, function () {
+                    navMain.collapse('hide');
+                });
+            });
+
+            
+             
+
+            $("#on-click-reven").click(function () {
+                $(".frevisited-depart").toggle();
+                $(".food-depart").hide();
+                $(".planng-depart").hide();
+                $(".trans-depart").hide();
+            });
+
+            $("#on-click-food").click(function () {
+                $(".food-depart").toggle();
+                $(".frevisited-depart").hide();
+                $(".planng-depart").hide();
+                $(".trans-depart").hide();
+            });
+            $("#on-click-planng").click(function () {
+                $(".planng-depart").toggle();
+                $(".frevisited-depart").hide();
+                $(".food-depart").hide();
+                $(".trans-depart").hide();
+            });
+
+            $("#on-click-trans").click(function () {
+                $(".trans-depart").toggle();
+                $(".frevisited-depart").hide();
+                $(".food-depart").hide();
+                $(".planng-depart").hide();
+            });
+
+            $(".green-color").click(function () {
+                $(".topmenu-bg").removeClass("blue-code navbar-blue navbar-nav li a").addClass("green-code navbar-green navbar-nav li a");
+                $(".depart-service-show-total").removeClass("depart-service-show-blue").addClass("depart-service-show-green");
+                $(".cm-content-bg").removeClass("cm-content-bg-blue").addClass("cm-content-bg-green");
+                $(".name_text").removeClass("name_text-blue").addClass("name_text-green");
+                $(".name_text_span").removeClass("name_text_span-blue").addClass("name_text_span-green");
+                $(".update-aadhar-head").removeClass("update-aadhar-head-blue").addClass("update-aadhar-head-green");
+                $(".clients").removeClass("clients-blue").addClass("clients-green");
+                $(".service").removeClass("service-blue").addClass("service-green");
+                $(".single-about-us .panel-heading").removeClass("single-about-us panel-heading-blue").addClass("single-about-us panel-heading-green");
+                $(".single-about-us .latest-service").removeClass("single-about-us latest-service-blue").addClass("single-about-us latest-service-green");
+                $(".single-about-us .panel-footer").removeClass("single-about-us panel-footer-blue").addClass("single-about-us panel-footer-green");
+                $(".depart-service-show").removeClass("depart-service-show-blue").addClass("depart-service-show-green");
+                $("#acc_menu").removeClass("acc_menu-blue").addClass("acc_menu-green");
+                $(".panel-heading").removeClass("panel-heading-blue").addClass("panel-heading-green");
+                $("#Colur").removeClass("modal-header-blue").addClass("modal-header-green");
+                $(".updates").removeClass("updates-blue").addClass("updates-green");
+                $(".triangle-right").removeClass("triangle-right-blue").addClass("triangle-right-green");
+                $(".date-img").removeClass("date-img-blue").addClass("date-img-green");
+
+                clour = 2;
+
+            });
+
+            $(".blue-color").click(function () {
+                $(".topmenu-bg").removeClass("green-code navbar-green navbar-nav li a").addClass("blue-code navbar-blue navbar-nav li a");
+                $(".depart-service-show-total").addClass("depart-service-show-blue");
+                $(".cm-content-bg").addClass("cm-content-bg-blue");
+                $(".name_text").addClass("name_text-blue");
+                $(".name_text_span").addClass("name_text_span-blue");
+                $(".update-aadhar-head").addClass("update-aadhar-head-blue");
+                $(".clients").addClass("clients-blue");
+                $(".service").addClass("service-blue");
+                $(".single-about-us .panel-heading").addClass("single-about-us panel-heading-blue");
+                $(".single-about-us .latest-service").addClass("single-about-us latest-service-blue");
+                $(".single-about-us .panel-footer").addClass("single-about-us panel-footer-blue");
+                $(".depart-service-show").addClass("depart-service-show-blue");
+                $("#acc_menu").addClass("acc_menu-blue");
+                $(".panel-heading").addClass("panel-heading-blue");
+                $("#Colur").addClass("modal-header-blue");
+                $(".updates").addClass("updates-blue");
+                $(".triangle-right").addClass("triangle-right-blue");
+                $(".date-img").addClass("date-img-blue");
+                clour = 3;
+
+            });
+
+            $('#yellow').click(function () {
+
+                $(".topmenu-bg").removeClass("blue-code navbar-blue navbar-nav li a").removeClass("green-code navbar-green navbar-nav li a").addClass("topmenu-bg");
+                $(".depart-service-show-total").removeClass("depart-service-show-blue").removeClass("depart-service-show-green").addClass("depart-service-show-total");
+                $(".cm-content-bg").removeClass("cm-content-bg-blue").removeClass("cm-content-bg-green").addClass("cm-content-bg");
+                $(".name_text").removeClass("name_text-blue").removeClass("name_text-green").addClass("name_text");
+                $(".name_text_span").removeClass("name_text_span-blue").removeClass("name_text_span-green").addClass("name_text_span");
+                $(".update-aadhar-head").removeClass("update-aadhar-head-blue").removeClass("update-aadhar-head-green").addClass("update-aadhar-head");
+                $(".clients").removeClass("clients-blue").removeClass("clients-green").addClass("clients");
+                $(".service").removeClass("service-blue").removeClass("service-green").addClass("service");
+                $(".single-about-us .panel-heading").removeClass("single-about-us panel-heading-blue").removeClass("single-about-us panel-heading-green").addClass("single-about-us panel-heading");
+                $(".single-about-us .latest-service").removeClass("single-about-us latest-service-blue").removeClass("single-about-us latest-service-green").addClass("single-about-us latest-service");
+                $(".single-about-us .panel-footer").removeClass("single-about-us panel-footer-blue").removeClass("single-about-us panel-footer-green").addClass("single-about-us panel-footer");
+                $(".depart-service-show").removeClass("depart-service-show-blue").removeClass("depart-service-show-green").addClass("depart-service-show");
+                $("#acc_menu").removeClass("acc_menu-blue").removeClass("acc_menu-green").addClass("acc_menu");
+                $(".panel-heading").removeClass("panel-heading-blue").removeClass("panel-heading-green").addClass("panel-heading");
+                $("#Colur").removeClass("modal-header-blue").removeClass("modal-header-green").addClass("modal-header");
+                $(".updates").removeClass("updates-blue").removeClass("updates-green").addClass("updates");
+                $(".triangle-right").removeClass("triangle-right-blue").removeClass("triangle-right-green").addClass("triangle-right");
+                $(".date-img").removeClass("date-img-blue").removeClass("date-img-green").addClass("date-img");
+                clour = 1;
+            });
+
+            $(function () {
+                $("#increase").click(function () {
+                    $(".smooth-menu a, .about-us-txt h2, .about-us-txt p, .news a,.latest-service, .signle-service a, .team-details a, .team-details h2, .service-txt h2, .service-txt p").each(function () {
+                        var size = parseInt($(this).css("font-size"));
+                        size = size + 1 + "px";
+                        $(this).css({
+                            'font-size': size
+                        });
+                    });
+                });
+                $('#reloadfont').click(function () {
+                    location.reload();
+                });
+            });
+            $(function () {
+                $("#decrease").click(function () {
+                    $(".smooth-menu a, .about-us-txt h2, .about-us-txt p, .news a,.latest-service, .signle-service a, .team-details a, .team-details h2, .service-txt h2, .service-txt p").each(function () {
+                        var size = parseInt($(this).css("font-size"));
+                        size = size - 1 + "px";
+                        $(this).css({
+                            'font-size': size
+                        });
+                    });
+                });
+            });
+        });</script>
+		
+		<!--<script>
+function load()
+{
+setTimeout("window.open(self.location, '_self');", 5000);
+}
+</script>-->
+
+
+
+
+    <script>
+    $(document).ready(function () {
+            $('.modal').on('show.bs.modal', function () {
+                if ($(document).height() > $(window).height()) {
+                    // no-scroll
+                    $('body').addClass("modal-open-noscroll");
+                }
+                else {
+                    $('body').removeClass("modal-open-noscroll");
+                }
+            });
+            $('.modal').on('hide.bs.modal', function () {
+                $('body').removeClass("modal-open-noscroll");
+            });
+        })</script>
+		
+		<script>
+            var container = document.getElementById('container')
+            var slider = document.getElementById('slider');
+            var slides = document.getElementsByClassName('slide').length;
+            var buttons = document.getElementsByClassName('btn');
+            var currentPosition = 0;
+            var currentMargin = 0;
+            var slidesPerPage = 0;
+            var slidesCount = slides - slidesPerPage;
+            var containerWidth = container.offsetWidth;
+            var prevKeyActive = false;
+            var nextKeyActive = true;
+
+            window.addEventListener("resize", checkWidth);
+
+            function checkWidth() {
+                containerWidth = container.offsetWidth;
+                setParams(containerWidth);
+            }
+
+            function setParams(w) {
+                if (w < 551) {
+                    slidesPerPage = 1;
+                } else {
+                    if (w < 901) {
+                        slidesPerPage = 2;
+                    } else {
+                        if (w < 1101) {
+                            slidesPerPage = 3;
+                        } else {
+                            slidesPerPage = 4;
+                        }
+                    }
+                }
+                slidesCount = slides - slidesPerPage;
+                if (currentPosition > slidesCount) {
+                    currentPosition -= slidesPerPage;
+                };
+                currentMargin = - currentPosition * (100 / slidesPerPage);
+                slider.style.marginLeft = currentMargin + '%';
+                if (currentPosition > 0) {
+                    buttons[0].classList.remove('inactive');
+                }
+                if (currentPosition < slidesCount) {
+                    buttons[1].classList.remove('inactive');
+                }
+                if (currentPosition >= slidesCount) {
+                    buttons[1].classList.add('inactive');
+                }
+            }
+
+            setParams();
+
+            function slideRight() {
+                if (currentPosition != 0) {
+                    slider.style.marginLeft = currentMargin + (100 / slidesPerPage) + '%';
+                    currentMargin += (100 / slidesPerPage);
+                    currentPosition--;
+                };
+                if (currentPosition === 0) {
+                    buttons[0].classList.add('inactive');
+                }
+                if (currentPosition < slidesCount) {
+                    buttons[1].classList.remove('inactive');
+                }
+            };
+
+            function slideLeft() {
+                if (currentPosition != slidesCount) {
+                    slider.style.marginLeft = currentMargin - (100 / slidesPerPage) + '%';
+                    currentMargin -= (100 / slidesPerPage);
+                    currentPosition++;
+                };
+                if (currentPosition == slidesCount) {
+                    buttons[1].classList.add('inactive');
+                }
+                if (currentPosition > 0) {
+                    buttons[0].classList.remove('inactive');
+                }
+            };
+        </script>
+
+    <script>
+        (function ($) {
+            "use strict";
+            $.fn.sliderResponsive = function (settings) {
+
+                var set = $.extend(
+                    {
+                        slidePause: 5000,
+                        fadeSpeed: 800,
+                        autoPlay: "on",
+                        showArrows: "off",
+                        hideDots: "off",
+                        hoverZoom: "on",
+                        titleBarTop: "off"
+                    },
+                    settings
+                );
+
+                var $slider = $(this);
+                var size = $slider.find("> div").length; //number of slides
+                var position = 0; // current position of carousal
+                var sliderIntervalID; // used to clear autoplay
+
+                // Add a Dot for each slide
+                $slider.append("<ul></ul>");
+                $slider.find("> div").each(function () {
+                    $slider.find("> ul").append('<li></li>');
+                });
+
+                // Put .show on the first Slide
+                $slider.find("div:first-of-type").addClass("show");
+
+                // Put .showLi on the first dot
+                $slider.find("li:first-of-type").addClass("showli")
+
+                //fadeout all items except .show
+                $slider.find("> div").not(".show").fadeOut();
+
+                // If Autoplay is set to 'on' than start it
+                if (set.autoPlay === "on") {
+                    startSlider();
+                }
+
+                // If showarrows is set to 'on' then don't hide them
+                if (set.showArrows === "on") {
+                    $slider.addClass('showArrows');
+                }
+
+                // If hideDots is set to 'on' then hide them
+                if (set.hideDots === "on") {
+                    $slider.addClass('hideDots');
+                }
+
+                // If hoverZoom is set to 'off' then stop it
+                if (set.hoverZoom === "off") {
+                    $slider.addClass('hoverZoomOff');
+                }
+
+                // If titleBarTop is set to 'on' then move it up
+                if (set.titleBarTop === "on") {
+                    $slider.addClass('titleBarTop');
+                }
+
+                // function to start auto play
+                function startSlider() {
+                    sliderIntervalID = setInterval(function () {
+                        nextSlide();
+                    }, set.slidePause);
+                }
+
+                // on mouseover stop the autoplay
+                $slider.mouseover(function () {
+                    if (set.autoPlay === "on") {
+                        clearInterval(sliderIntervalID);
+                    }
+                });
+
+                // on mouseout starts the autoplay
+                $slider.mouseout(function () {
+                    if (set.autoPlay === "on") {
+                        startSlider();
+                    }
+                });
+
+                //on right arrow click
+                $slider.find("> .right").click(nextSlide)
+
+                //on left arrow click
+                $slider.find("> .left").click(prevSlide);
+
+                // Go to next slide
+                function nextSlide() {
+                    position = $slider.find(".show").index() + 1;
+                    if (position > size - 1) position = 0;
+                    changeCarousel(position);
+                }
+
+                // Go to previous slide
+                function prevSlide() {
+                    position = $slider.find(".show").index() - 1;
+                    if (position < 0) position = size - 1;
+                    changeCarousel(position);
+                }
+
+                //when user clicks slider button
+                $slider.find(" > ul > li").click(function () {
+                    position = $(this).index();
+                    changeCarousel($(this).index());
+                });
+
+                //this changes the image and button selection
+                function changeCarousel() {
+                    $slider.find(".show").removeClass("show").fadeOut();
+                    $slider
+                        .find("> div")
+                        .eq(position)
+                        .fadeIn(set.fadeSpeed)
+                        .addClass("show");
+                    // The Dots
+                    $slider.find("> ul").find(".showli").removeClass("showli");
+                    $slider.find("> ul > li").eq(position).addClass("showli");
+                }
+
+                return $slider;
+            };
+        })(jQuery);
+
+
+
+    //////////////////////////////////////////////
+    // Activate each slider - change options
+    //////////////////////////////////////////////
+    $(document).ready(function () {
+
+        $("#slider1").sliderResponsive({
+            // Using default everything
+            // slidePause: 5000,
+            // fadeSpeed: 800,
+            // autoPlay: "on",
+            // showArrows: "off",
+            // hideDots: "off",
+            // hoverZoom: "on",
+            // titleBarTop: "off"
+        });
+
+        $("#slider2").sliderResponsive({
+            fadeSpeed: 300,
+            autoPlay: "off",
+            showArrows: "on",
+            hideDots: "on"
+        });
+
+        $("#slider3").sliderResponsive({
+            hoverZoom: "off",
+            hideDots: "on"
+        });
+
+    });</script>
+	
+	
+	<script>
+	
+    // Replace with your API URL
+    const apiUrl2 = "https://sevaone.karnataka.gov.in/testing1/api/count";
+    
+
+    fetch(apiUrl2)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('totalCount').textContent = data.totalCount;
+        document.getElementById('todayCount').textContent = data.todayCount;
+       
+      })
+      .catch(error => console.error('Error fetching API:', error));
+  </script>
+  
+	
+	<script>
+	
+    // Replace with your API URL
+    const apiUrl = "https://sevasindhu.karnataka.gov.in/GS_Counts/api/GetCounts";
+   // const apiUrl2 = "https://sevasindhuservices.karnataka.gov.in/testing/api/count";
+    
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('glCount').textContent = data.Gl_Counts;
+        document.getElementById('gjCount').textContent = data.GJ_Counts;
+        document.getElementById('yuvaCount').textContent = data.Yuva_Counts;
+      })
+      .catch(error => console.error('Error fetching API:', error));
+  </script>
+  
+  
+     <!-- Chatbot Widget with Toggle Button -->
+<!-- Chat Container -->
+<div id="chat-container" style="position:fixed;bottom:80px;right:20px;width:400px;z-index:10000;display:none;">
+  <div id="chat-widget" style="width:100%;height:645px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;">
+    <iframe 
+      src="https://sevasakhi.karnataka.gov.in/chatbot.html" 
+      width="100%" 
+      height="100%" 
+      scrolling="no"
+      style="border: none; border-radius: 12px; overflow: hidden;" 
+      title="Chatbot">
+    </iframe>
+  </div>
+</div>
+<button  style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding1:12px 20px;
+  background-color:#fff;
+  color:#fff;
+  border:none;
+  border-radius:42px;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  z-index:10001;
+"  onclick="toggleChat()" id="chat-toggle-btn" ><img  src="/assets/images/sevasakhiicon-DBQR_cDk.png" alt="Seva Sindhu"  class="sevasakhiiconfloat" ></button>
+ <!--<button onclick="toggleChat()" id="chat-toggle-btn" style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding:12px 20px;
+  background-color:#000;
+  color:#fff;
+  border:none;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  z-index:10001;
+">
+  Chat with us 💬
+</button>-->
+  
+  <!-- Toggle Script -->
+  <script>
+    function toggleChat() {
+      var chat = document.getElementById("chat-container");
+      if (chat.style.display === "none") {
+        chat.style.display = "block";
+      } else {
+        chat.style.display = "none";
+      }
+    }
+
+    // ✅ Listen for "close" event from inside iframe
+    window.addEventListener("message", function(event) {
+      if (event.data === "closeChatbot") {
+        document.getElementById("chat-container").style.display = "none";
+      }
+    });
+  </script>
+  
+  
+ 
+
+
+</body>
+
+</html>
+
+
+        
+     
+    
+
+  
+    
+

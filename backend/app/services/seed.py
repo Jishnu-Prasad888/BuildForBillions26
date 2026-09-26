@@ -8,11 +8,11 @@ from datetime import timedelta
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app import vectorstore
 from app.auth.security import hash_password
 from app.config import settings
 from app.graph import get_graph
-from app.ingestion.extract import parse_front_matter
-from app.ingestion.pipeline import create_document_record, reembed_all, run_job
+from app.ingestion.pipeline import reembed_all, remove_document
 from app.models import Application, KnowledgeChunk, KnowledgeDocument, KnowledgeSource, Note, User, UserDocument
 from app.models.common import utcnow
 from app.services.ai import get_ai
@@ -48,22 +48,27 @@ def seed_graph() -> None:
         g.seed(data)
 
 
-def seed_documents(db: Session) -> None:
-    folder = settings.seed_path / "documents"
-    for path in sorted(folder.glob("*.md")):
-        raw = path.read_bytes()
-        meta, _ = parse_front_matter(raw.decode("utf-8"))
-        slug = meta.get("slug") or path.stem
-        if db.get(KnowledgeDocument, slug):
-            continue
-        log.info("Indexing seed document %s", slug)
-        doc, job = create_document_record(
-            db, doc_id=slug, title=meta.get("title", path.stem), kind="seed", publisher=meta.get("publisher", ""),
-            source_name=meta.get("source_name"), source_url=meta.get("source_url"), filename=path.name, mime_type="text/markdown",
-            language=meta.get("language", "en"), published_date=meta.get("published_date"), is_demo=bool(meta.get("is_demo", True)),
-            scheme_codes=meta.get("schemes") or [],
-        )
-        run_job(job.id, raw=raw, ext=".md")
+def purge_demo_documents(db: Session) -> None:
+    """The knowledge base used to ship hand-written demo summaries (kind="seed"). It is now built from
+    the real scheme library (see app.ingestion.scheme_folder), so remove any demo documents still indexed."""
+    for doc in db.scalars(select(KnowledgeDocument).where(KnowledgeDocument.kind == "seed")).all():
+        log.info("Removing demo seed document %s", doc.id)
+        remove_document(db, doc)
+    orphans = db.scalars(select(KnowledgeSource).where(KnowledgeSource.is_demo.is_(True))
+                         .where(~KnowledgeSource.id.in_(select(KnowledgeDocument.source_id).where(KnowledgeDocument.source_id.is_not(None))))).all()
+    for src in orphans:
+        db.delete(src)
+    db.commit()
+
+
+def ensure_vector_index(db: Session) -> None:
+    """After switching VECTOR_BACKEND to chroma, chunks indexed earlier have no vectors in Chroma yet."""
+    if not vectorstore.enabled():
+        return
+    chunks = db.scalar(select(func.count()).select_from(KnowledgeChunk)) or 0
+    if chunks and vectorstore.count() < chunks:
+        log.info("Chroma has %s vectors for %s chunks – rebuilding the index", vectorstore.count(), chunks)
+        reembed_all(db)
 
 
 def resync_graph_documents(db: Session) -> None:
@@ -124,7 +129,8 @@ def seed_citizen_data(db: Session) -> None:
 def run_all(db: Session) -> None:
     seed_users(db)
     seed_graph()
-    seed_documents(db)
+    purge_demo_documents(db)
+    ensure_vector_index(db)
     resync_graph_documents(db)
     maybe_reembed(db)
     seed_citizen_data(db)

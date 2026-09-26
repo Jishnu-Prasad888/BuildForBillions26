@@ -21,11 +21,18 @@ export default function UserLayout() {
     { to: "/assistant", icon: MessageCircle, label: t("assistant") },
     { to: "/schemes", icon: Search, label: t("schemes") },
     { to: "/applications", icon: FileText, label: t("applications") },
-    { to: "/forms", icon: FileUp, label: "AI Form Assistant" },
+    { to: "/forms", icon: FileUp, label: t("form_assistant") },
     { to: "/documents", icon: FolderOpen, label: t("documents") },
     { to: "/notes", icon: NotebookPen, label: t("notes") },
     { to: "/profile", icon: UserRound, label: t("profile") },
   ];
+  // Sidebar groups: getting help, the work in flight, and the user's own records.
+  const groups = [
+    { label: null, items: items.slice(0, 2) },
+    { label: t("nav_apply"), items: items.slice(2, 5) },
+    { label: t("nav_records"), items: items.slice(5, 8) },
+  ];
+  const initials = (user?.full_name ?? "?").split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   // The phone tab bar holds the four most-used places; the rest live under "More".
   const tabs = items.slice(0, 4);
   const extra = items.slice(4);
@@ -38,20 +45,31 @@ export default function UserLayout() {
         <aside className="sticky top-0 flex h-screen flex-col px-4 pb-5">
           <div className="tricolor-rule -mx-4 mb-5 h-1" />
           <Link to="/" aria-label="Sahayak home"><Logo /></Link>
-          <nav className="mt-8 flex flex-col gap-1" aria-label="Main">
-            {items.map(({ to, icon: Icon, label, end }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                className={({ isActive }) =>
-                  `flex min-h-[44px] items-center gap-3 rounded-md px-3 text-[0.97rem] font-semibold transition-colors ${
-                    isActive ? "bg-forest-800 text-white" : "text-ink-700 hover:bg-forest-50"
-                  }`
-                }
-              >
-                <Icon size={19} /> {label}
-              </NavLink>
+          <nav className="mt-7 flex flex-col gap-5" aria-label="Main">
+            {groups.map((g, gi) => (
+              <div key={gi}>
+                {g.label && <div className="eyebrow mb-1.5 px-3 text-[0.68rem]">{g.label}</div>}
+                <div className="flex flex-col gap-0.5">
+                  {g.items.map(({ to, icon: Icon, label, end }) => (
+                    <NavLink
+                      key={to}
+                      to={to}
+                      end={end}
+                      className={({ isActive }) =>
+                        `group flex min-h-[42px] items-center gap-3 rounded-md px-3 text-[0.95rem] font-semibold transition-all duration-200 ${
+                          isActive ? "bg-forest-800 text-white shadow-sm" : "text-ink-700 hover:translate-x-0.5 hover:bg-forest-50"
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <Icon size={19} className={`transition-transform duration-200 ${isActive ? "text-forest-200" : "text-ink-500 group-hover:scale-110 group-hover:text-forest-700"}`} /> {label}
+                        </>
+                      )}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
             ))}
           </nav>
           <div className="mt-auto space-y-3">
@@ -60,6 +78,13 @@ export default function UserLayout() {
                 <ShieldCheck size={16} /> {t("admin_console")}
               </button>
             )}
+            <Link to="/profile" className="flex items-center gap-3 rounded-lg border border-paper-300 bg-paper-100 p-2.5 transition-colors hover:border-forest-200 hover:bg-forest-50">
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-sm font-bold text-white">{initials}</span>
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold text-ink-900">{user?.full_name}</span>
+                <span className="block truncate text-xs text-ink-500">{user?.email}</span>
+              </span>
+            </Link>
           </div>
         </aside>
       </div>
@@ -77,7 +102,10 @@ export default function UserLayout() {
           </div>
         </header>
         <main className="pb-safe mx-auto w-full max-w-6xl flex-1 px-4 pt-6 sm:px-6 sm:pt-8">
-          <Outlet />
+          {/* Keyed on the path so each tab eases in when you switch to it. */}
+          <div key={loc.pathname} className="animate-pageIn">
+            <Outlet />
+          </div>
         </main>
       </div>
 
@@ -95,7 +123,7 @@ export default function UserLayout() {
             >
               {({ isActive }) => (
                 <>
-                  <span className={`flex h-8 w-12 items-center justify-center rounded-full ${isActive ? "bg-forest-100" : ""}`}><Icon size={21} /></span>
+                  <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-all duration-300 ${isActive ? "scale-100 bg-forest-100" : "scale-90"}`}><Icon size={21} /></span>
                   <span className="max-w-full break-words">{label}</span>
                 </>
               )}
@@ -106,20 +134,24 @@ export default function UserLayout() {
             onClick={() => setMoreOpen((o) => !o)}
             aria-expanded={moreOpen}
           >
-            <span className="flex h-8 w-12 items-center justify-center rounded-full">{moreOpen ? <X size={21} /> : <Menu size={21} />}</span>
+            <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-all duration-300 ${moreOpen ? "rotate-90 bg-forest-100" : ""}`}>{moreOpen ? <X size={21} /> : <Menu size={21} />}</span>
             {t("more")}
           </button>
         </div>
       </nav>
 
       {moreOpen && (
-        <div className="fixed inset-0 z-30 bg-ink-900/30 lg:hidden" onClick={() => setMoreOpen(false)}>
-          <div className="absolute inset-x-0 bottom-[calc(60px+env(safe-area-inset-bottom))] rounded-t-3xl bg-white p-4 shadow-lift" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-3 px-2">
-              <div className="truncate font-semibold text-ink-900">{user?.full_name}</div>
-              <div className="truncate text-xs text-ink-500">{user?.email}</div>
+        <div className="fixed inset-0 z-30 animate-fadeIn bg-ink-900/30 lg:hidden" onClick={() => setMoreOpen(false)}>
+          <div className="absolute inset-x-0 bottom-[calc(60px+env(safe-area-inset-bottom))] animate-sheetUp rounded-t-3xl bg-white p-4 shadow-lift" onClick={(e) => e.stopPropagation()}>
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-paper-300" />
+            <div className="mb-3 flex items-center gap-3 px-2">
+              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-forest-800 text-sm font-bold text-white">{initials}</span>
+              <span className="min-w-0">
+                <span className="block truncate font-semibold text-ink-900">{user?.full_name}</span>
+                <span className="block truncate text-xs text-ink-500">{user?.email}</span>
+              </span>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="stagger grid grid-cols-2 gap-2">
               {extra.map(({ to, icon: Icon, label }) => (
                 <Link key={to} to={to} className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
                   <Icon size={20} className="text-forest-600" /> {label}

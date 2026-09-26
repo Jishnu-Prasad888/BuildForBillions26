@@ -1,0 +1,21 @@
+{
+  "slug": "zero-defect-zero-effect-zed",
+  "source_url": "https://zed.msme.gov.in/",
+  "final_url": "https://zed.msme.gov.in/",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Zero Defect Zero Effect (ZED) Scheme",
+  "origin": "data-folder",
+  "source_files": [
+    "ZERO Defect ZERO Effect ( ZED ).txt"
+  ],
+  "links": [
+    {
+      "name": "Zero Defect Zero Effect (ZED) Scheme",
+      "url": "https://zed.msme.gov.in/"
+    }
+  ],
+  "char_count": 21825
+}

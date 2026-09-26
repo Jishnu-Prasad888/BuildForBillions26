@@ -1,0 +1,27 @@
+{
+  "slug": "public-provident-fund",
+  "source_url": "https://www.nsiindia.gov.in/(S(scheme))/InternalPage.aspx?Id_Pk=54",
+  "final_url": "https://www.nsiindia.gov.in/(S(scheme))/InternalPage.aspx?Id_Pk=54",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Public Provident Fund (PPF)",
+  "origin": "data-folder",
+  "source_files": [
+    "Public Provident Fund.txt",
+    "THE PUBLIC PROVIDENT FUND SCHEME, 1968.txt",
+    "SSA versus PPF.txt"
+  ],
+  "links": [
+    {
+      "name": "Public Provident Fund (PPF)",
+      "url": "https://www.nsiindia.gov.in/(S(scheme))/InternalPage.aspx?Id_Pk=54"
+    },
+    {
+      "name": "www.onlinesbi.com",
+      "url": "https://www.onlinesbi.com"
+    }
+  ],
+  "char_count": 115200
+}

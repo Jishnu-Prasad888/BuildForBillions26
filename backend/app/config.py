@@ -18,7 +18,19 @@ class Settings(BaseSettings):
     DEMO_MODE: bool = True
 
     DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/public_service_ai"
-    VECTOR_BACKEND: str = "pgvector"  # pgvector | json
+    VECTOR_BACKEND: str = "chroma"  # chroma | pgvector | json
+
+    # ChromaDB: embedded (persisted under CHROMA_DIR) unless CHROMA_HOST points at a Chroma server.
+    # Use a server when running several API replicas so they share one index.
+    CHROMA_DIR: str = "./data/chroma"
+    CHROMA_HOST: str = ""
+    CHROMA_PORT: int = 8000
+    CHROMA_COLLECTION: str = "knowledge_chunks"
+
+    # Scraped scheme library (one sub-folder per page: meta.json + content.txt), synced into the
+    # knowledge base in the background at startup and on demand from the admin Knowledge Base tab.
+    SCHEME_DIR: str = "../scheme"
+    SCHEME_AUTO_SYNC: bool = True
 
     NEO4J_URI: str = "bolt://localhost:7687"
     NEO4J_USERNAME: str = "neo4j"
@@ -104,6 +116,18 @@ class Settings(BaseSettings):
     @property
     def seed_path(self) -> Path:
         p = Path(self.SEED_DIR)
+        return p if p.is_absolute() else (BACKEND_DIR / p).resolve()
+
+    @property
+    def chroma_path(self) -> Path:
+        p = Path(self.CHROMA_DIR)
+        p = p if p.is_absolute() else (BACKEND_DIR / p).resolve()
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    @property
+    def scheme_path(self) -> Path:
+        p = Path(self.SCHEME_DIR)
         return p if p.is_absolute() else (BACKEND_DIR / p).resolve()
 
     @property

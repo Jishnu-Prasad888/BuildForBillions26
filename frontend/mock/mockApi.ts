@@ -118,11 +118,42 @@ function route(method: string, path: string, query: URLSearchParams, body: any, 
   if (p.startsWith("/notes/")) return notes[0];
   // assistant
   if (p === "/assistant/chat") return { conversation_id: "c1", message: { id: "m-" + Date.now(), role: "assistant", content: "Based on what you told me, you may be eligible for the **Crop Loss Input Subsidy**. It pays money per hectare of damaged crop [1]. You will need your land record and bank passbook.", evidence, meta: { schemes: [schemes[0]], kag: null } } };
-  if (p === "/kag/query") return { answer: "Mock answer", evidence, trace: [] };
+  if (p === "/kag/query") {
+    const ch = (id: string, doc: string, title: string, publisher: string, score: number, codes: string[], retrieval = ["vector", "keyword"]) =>
+      ({ id, type: "chunk", text: `${title} — excerpt…`, score, retrieval, vector_similarity: score * 4, document_id: doc, source_title: title, publisher, scheme_codes: codes, relevant: true });
+    const retrieved = [
+      { id: "fact_pm_kisan", type: "graph_fact", text: "Scheme: PM-KISAN…", score: 0, retrieval: ["graph"], scheme_code: "PM_KISAN", scheme_name: "PM-KISAN Samman Nidhi" },
+      { id: "fact_kcc", type: "graph_fact", text: "Scheme: KCC relief…", score: 0, retrieval: ["graph"], scheme_code: "KCC_CALAMITY_RELIEF", scheme_name: "KCC Calamity Relief" },
+      ch("chunk_a1", "d1", "PM-KISAN Operational Guidelines", "pmkisan.gov.in", 0.21, ["PM_KISAN"]),
+      ch("chunk_a2", "d1", "PM-KISAN Operational Guidelines", "pmkisan.gov.in", 0.17, ["PM_KISAN"]),
+      ch("chunk_a3", "d2", "PM-KISAN FAQ", "pmkisan.gov.in", 0.15, ["PM_KISAN"]),
+      ch("chunk_b1", "d3", "Kisan Credit Card (KCC)", "Scheme library", 0.19, ["KCC_CALAMITY_RELIEF", "PM_KISAN"]),
+      ch("chunk_b2", "d4", "PM-KISAN KCC saturation circular", "pmkisan.gov.in", 0.12, ["KCC_CALAMITY_RELIEF"], ["keyword"]),
+      ch("chunk_c1", "d5", "Interest Subvention Scheme", "nabard.org", 0.11, []),
+      ch("chunk_c2", "d6", "Agri-Clinics and Agri-Business Centres", "nabard.org", 0.09, [], ["vector"]),
+      ch("chunk_d1", "d7", "SBI Agriculture Loan", "sbi.co.in", 0.08, []),
+    ];
+    return { answer: "Landholding farmers get ₹6,000 a year [chunk_a1]. A KCC is linked to PM-KISAN [chunk_b1].", citations: ["chunk_a1", "chunk_b1"],
+      evidence: retrieved.filter((e) => ["chunk_a1", "chunk_b1"].includes(e.id)), retrieved, mode: "llm",
+      understanding: { intent: "eligibility", language: "en", scheme_codes: ["PM_KISAN"] }, retrieval: { vector_hits: 20, keyword_hits: 14, graph_schemes: ["PM_KISAN", "KCC_CALAMITY_RELIEF"] } };
+  }
   // user forms (AI form assistant)
   if (p === "/forms") return [];
   // ---- admin
   if (p === "/admin/overview") return { documents: 24, sources: 6, chunks: 812, users: 128, applications: 341, graph: { backend: "Neo4j", schemes: 4, rules: 9, documents: 8 }, last_indexed: ago(1), recent_ingestion: [job], ai: { llm_provider: "ollama", llm_model: "llama3", llm_status: "connected", vision_model: "llava", vision_status: "connected", embedding_provider: "local", embedding_model: "bge-small", embedding_dim: 384, embedding_status: "connected", fallback_enabled: true, fallback_active: { llm: false, embeddings: false }, status: "ok" }, embeddings_by_model: [{ model: "bge-small", chunks: 812 }], vector_backend: "pgvector" };
+  if (p === "/admin/knowledge") return {
+    folder: { path: "/scheme", exists: true, documents: 4, indexed: 3, chunks: 96 },
+    sync: { running: false, total: 4, done: 4, current: null, indexed: 0, unchanged: 3, skipped: 1, failed: 0, removed: 0, started_at: ago(0), finished_at: ago(0), error: null },
+    vector_store: { backend: "chroma", collection: "knowledge_chunks", location: "./data/chroma", vectors: 96, status: "connected" },
+    embedding_model: "ollama/nomic-embed-text",
+    documents: [
+      { slug: "pmkisan-guidelines-en", title: "PM-KISAN Operational Guidelines", category: "pdf", publisher: "pmkisan.gov.in", source_url: "https://pmkisan.gov.in/", size: 61000, document_id: "d1", status: "COMPLETE", chunk_count: 58, language: "en" },
+      { slug: "kisan-credit-card-kcc", title: "Kisan Credit Card (KCC)", category: "scheme", publisher: "Scheme library", source_url: null, size: 18000, document_id: "d2", status: "COMPLETE", chunk_count: 21, language: "en" },
+      { slug: "ka-raitamitra", title: "Department of Agriculture (KSDA)", category: "dept", publisher: "raitamitra.karnataka.gov.in", source_url: "https://raitamitra.karnataka.gov.in/", size: 15000, document_id: "d3", status: "COMPLETE", chunk_count: 17, language: "kn" },
+      { slug: "portal-pmfby", title: "Pradhan Mantri Fasal Bima Yojana", category: "portal", publisher: "pmfby.gov.in", source_url: "https://pmfby.gov.in/", size: 74, document_id: null, status: "NO_TEXT", chunk_count: 0, language: null },
+    ],
+  };
+  if (p === "/admin/knowledge/sync") return { started: true, sync: { running: false } };
   if (p === "/admin/documents") return kdocs;
   m = p.match(/^\/admin\/documents\/([^/]+)$/);
   if (m) return { ...kdocs[0], chunks: [{ chunk_id: "c-1", section: "Eligibility", page: 1, text: "Farmers who have lost 33% or more of their crop ..." }, { chunk_id: "c-2", section: "Benefit", page: 2, text: "Input subsidy is paid per hectare ..." }], jobs: [job] };

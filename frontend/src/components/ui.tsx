@@ -35,6 +35,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   CHUNKING: { label: "Chunking", cls: "bg-saffron-50 text-saffron-700" },
   EMBEDDING: { label: "Embedding", cls: "bg-saffron-50 text-saffron-700" },
   INDEXING: { label: "Indexing", cls: "bg-saffron-50 text-saffron-700" },
+  NO_TEXT: { label: "Too little text", cls: "bg-ink-100 text-ink-500" },
 };
 
 export function StatusPill({ status }: { status: string }) {
@@ -52,8 +53,8 @@ export function ProgressBar({ value, className = "" }: { value: number; classNam
 
 export function EmptyState({ icon, title, children }: { icon?: ReactNode; title: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
-      {icon && <div className="mb-3 text-ink-400">{icon}</div>}
+    <div className="flex animate-fadeIn flex-col items-center justify-center rounded-lg border border-dashed border-paper-300 bg-paper-100 px-6 py-10 text-center">
+      {icon && <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-forest-600 shadow-card">{icon}</div>}
       <div className="font-semibold text-ink-800">{title}</div>
       {children && <div className="mt-1 text-sm text-ink-600">{children}</div>}
     </div>
@@ -68,8 +69,8 @@ export function Modal({ open, onClose, title, children, wide = false }: { open: 
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/40 p-4" onMouseDown={onClose}>
-      <div role="dialog" aria-modal className={`card max-h-[90vh] w-full overflow-auto p-6 shadow-lift ${wide ? "max-w-3xl" : "max-w-lg"}`} onMouseDown={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-ink-900/40 p-4" onMouseDown={onClose}>
+      <div role="dialog" aria-modal className={`card animate-popIn max-h-[90vh] w-full overflow-auto p-6 shadow-lift ${wide ? "max-w-3xl" : "max-w-lg"}`} onMouseDown={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-start justify-between gap-4">
           <h2 className="font-display text-xl font-bold">{title}</h2>
           <button className="btn-ghost btn-sm -mr-2 -mt-1" onClick={onClose} aria-label="Close"><X size={18} /></button>
@@ -88,8 +89,8 @@ export function Drawer({ open, onClose, title, children, width = "max-w-xl" }: {
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-ink-900/30" onMouseDown={onClose}>
-      <aside className={`flex h-full w-full ${width} flex-col bg-paper-100 shadow-lift`} onMouseDown={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex animate-fadeIn justify-end bg-ink-900/30" onMouseDown={onClose}>
+      <aside className={`flex h-full animate-slideInRight w-full ${width} flex-col bg-paper-100 shadow-lift`} onMouseDown={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-paper-300 bg-white px-5 py-4">
           <h2 className="font-display text-lg font-bold">{title}</h2>
           <button className="btn-ghost btn-sm" onClick={onClose} aria-label="Close"><X size={18} /></button>
@@ -100,7 +101,7 @@ export function Drawer({ open, onClose, title, children, width = "max-w-xl" }: {
   );
 }
 
-export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: ReactNode }[]; value: T; onChange: (v: T) => void }) {
+export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: T; label: ReactNode; count?: number }[]; value: T; onChange: (v: T) => void }) {
   return (
     <div className="flex gap-1 overflow-x-auto border-b border-paper-300" role="tablist">
       {tabs.map((t) => (
@@ -109,13 +110,25 @@ export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: { id: 
           role="tab"
           aria-selected={value === t.id}
           onClick={() => onChange(t.id)}
-          className={`-mb-px whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-semibold transition-colors ${
+          className={`-mb-px inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-2.5 text-sm font-semibold transition-colors ${
             value === t.id ? "border-saffron text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"
           }`}
         >
           {t.label}
+          {t.count !== undefined && (
+            <span className={`rounded-full px-1.5 py-px text-[0.7rem] transition-colors ${value === t.id ? "bg-forest-800 text-white" : "bg-ink-100 text-ink-600"}`}>{t.count}</span>
+          )}
         </button>
       ))}
+    </div>
+  );
+}
+
+/** Pale shimmering placeholder rows shown while a list loads. */
+export function SkeletonList({ rows = 3, className = "h-20" }: { rows?: number; className?: string }) {
+  return (
+    <div className="space-y-3" aria-busy aria-label="Loading">
+      {Array.from({ length: rows }, (_, i) => <div key={i} className={`skeleton ${className}`} />)}
     </div>
   );
 }

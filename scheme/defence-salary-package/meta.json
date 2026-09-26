@@ -1,0 +1,21 @@
+{
+  "slug": "defence-salary-package",
+  "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Defence Salary Package (DSP)",
+  "origin": "data-folder",
+  "source_files": [
+    "Defence Salary Package (DSP).txt"
+  ],
+  "links": [
+    {
+      "name": "Defence Salary Package (DSP)",
+      "url": "https://sbi.co.in/web/personal-banking/accounts/salary-account"
+    }
+  ],
+  "char_count": 7701
+}

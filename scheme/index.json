@@ -1,0 +1,900 @@
+[
+  {
+    "slug": "portal-samrakshane",
+    "source_url": "https://samrakshane.karnataka.gov.in/",
+    "final_url": "https://samrakshane.karnataka.gov.in/",
+    "kind": "portal",
+    "title": "::SAMRAKSHANE-KARNATAKA :: Crop Insurance Application - NIC-Bangalore",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-fruits",
+    "source_url": "https://fruits.karnataka.gov.in/",
+    "final_url": "https://fruits.karnataka.gov.in/",
+    "kind": "portal",
+    "title": "FRUITS",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-pmkisan",
+    "source_url": "https://pmkisan.gov.in/",
+    "final_url": "https://pmkisan.gov.in/",
+    "kind": "portal",
+    "title": "PM-Kisan Samman Nidhi",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-pmfby",
+    "source_url": "https://pmfby.gov.in/",
+    "final_url": "https://pmfby.gov.in/",
+    "kind": "portal",
+    "title": "Pradhan Mantri Fasal Bima Yojana - Crop Insurance | PMFBY - Crop Insurance",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-pmmsy",
+    "source_url": "https://pmmsy.dof.gov.in/",
+    "final_url": "https://pmmsy.dof.gov.in/",
+    "kind": "portal",
+    "title": "Pradhan Mantri Matsya Sampada Yojana | Department of Fisheries, MoCIT, GoI",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-raitamitra-en",
+    "source_url": "https://raitamitra.karnataka.gov.in/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/en",
+    "kind": "portal",
+    "title": "Department of Agriculture(KSDA) - Index",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-raitamitra-related-sites",
+    "source_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/en",
+    "kind": "index",
+    "title": "Department of Agriculture(KSDA) - Department-related-website",
+    "status": "ok"
+  },
+  {
+    "slug": "portal-sevasindhu-en",
+    "source_url": "https://sevasindhu.karnataka.gov.in/Sevasindhu/English",
+    "final_url": "https://sevasindhu.karnataka.gov.in/Sevasindhu/English",
+    "kind": "portal",
+    "title": "Seva Sindhu Home Page",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-govt-sponsored-index",
+    "source_url": "https://www.nabard.org/content.aspx?id=23",
+    "final_url": "https://www.nabard.org/content.aspx?id=23",
+    "kind": "index",
+    "title": "GOVT. Sponsored Schemes - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-marketing-federations-credit",
+    "source_url": "https://www.nabard.org/content1.aspx?id=572&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=572&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "Credit Facilities to Marketing Federations - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-deds",
+    "source_url": "https://www.nabard.org/content1.aspx?id=591&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=591&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Dairy Entrepreneurship Development Scheme - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-nlm",
+    "source_url": "https://www.nabard.org/content1.aspx?id=599&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=599&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "National Livestock Mission - EDEG - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-acabc",
+    "source_url": "https://www.nabard.org/content1.aspx?id=595&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=595&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Agri Clinic and Agribusiness Centres Scheme (ACABC Scheme) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-interest-subvention",
+    "source_url": "https://www.nabard.org/content1.aspx?id=602&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=602&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Interest Subvention Scheme - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-ami",
+    "source_url": "https://www.nabard.org/content1.aspx?id=702&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=702&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "New Agricultural Marketing Infrastructure(AMI) sub- scheme of Integrated Scheme for Agricultural Marketing (ISAM) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-npof",
+    "source_url": "https://www.nabard.org/content1.aspx?id=2791&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=2791&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Commercial production units of organic inputs - National Project on Organic Farming (NPOF) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-sclcss",
+    "source_url": "https://www.nabard.org/content1.aspx?id=2802&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=2802&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Special Credit Linked Capital Subsidy Scheme (SCLCSS) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-standup-india",
+    "source_url": "https://www.nabard.org/content1.aspx?id=2801&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=2801&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Stand up India - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-ethanol-sugar",
+    "source_url": "https://www.nabard.org/content1.aspx?id=2790&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=2790&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Scheme for Extending Financial Assistance to Sugar Mills for Enhancement and Augmentation of Ethanol Production Capacity - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-adrws-2008",
+    "source_url": "https://www.nabard.org/content1.aspx?id=2803&catid=23&mid=23",
+    "final_url": "https://www.nabard.org/content1.aspx?id=2803&catid=23&mid=23",
+    "kind": "scheme",
+    "title": "Agricultural Debt Waiver And Debt Relief Scheme, 2008 - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-agriculture",
+    "source_url": "https://agriculture.karnataka.gov.in",
+    "final_url": "https://agriculture.karnataka.gov.in/",
+    "kind": "dept",
+    "title": "ಕೃಷಿ ಸಚಿವಾಲಯ - Index",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-horticulture",
+    "source_url": "https://horticulturesec.karnataka.gov.in",
+    "final_url": "https://horticulturesec.karnataka.gov.in/",
+    "kind": "dept",
+    "title": "ತೋಟಗಾರಿಕೆ ಇಲಾಖೆ - Index",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-sericulture",
+    "source_url": "https://sericulturesecy.karnataka.gov.in",
+    "final_url": "https://sericulturesecy.karnataka.gov.in/",
+    "kind": "dept",
+    "title": "ರೇಷ್ಮೆ ಸಚಿವಾಲಯ - Index",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-watershed",
+    "source_url": "https://watershed.karnataka.gov.in",
+    "final_url": "https://watershed.karnataka.gov.in/",
+    "kind": "dept",
+    "title": "ಜಲಾನಯನ ಅಭಿವೃದ್ಧಿ ಇಲಾಖೆ - Index",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-landrecords",
+    "source_url": "https://landrecords.karnataka.gov.in/indexkn.aspx",
+    "status": "failed"
+  },
+  {
+    "slug": "pmkisan-guidelines-en",
+    "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf",
+    "final_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf",
+    "kind": "pdf",
+    "title": "pmkisan-guidelines-en",
+    "status": "ok"
+  },
+  {
+    "slug": "pmkisan-faq",
+    "source_url": "https://pmkisan.gov.in/Documents/FAQPMKISAN.PDF",
+    "final_url": "https://pmkisan.gov.in/Documents/FAQPMKISAN.PDF",
+    "kind": "pdf",
+    "title": "pmkisan-faq",
+    "status": "ok"
+  },
+  {
+    "slug": "pmkisan-kcc-form",
+    "source_url": "https://pmkisan.gov.in/Documents/Kcc.pdf",
+    "final_url": "https://pmkisan.gov.in/Documents/Kcc.pdf",
+    "kind": "pdf",
+    "title": "pmkisan-kcc-form",
+    "status": "ok"
+  },
+  {
+    "slug": "pmkisan-kcc-circular",
+    "source_url": "https://pmkisan.gov.in/Documents/finalKCCCircular.pdf",
+    "final_url": "https://pmkisan.gov.in/Documents/finalKCCCircular.pdf",
+    "kind": "pdf",
+    "title": "pmkisan-kcc-circular",
+    "status": "ok"
+  },
+  {
+    "slug": "pmkisan-scheme-note",
+    "source_url": "https://pmkisan.gov.in/Documents/PMKisanSamanNidhi.PDF",
+    "final_url": "https://pmkisan.gov.in/Documents/PMKisanSamanNidhi.PDF",
+    "kind": "pdf",
+    "title": "pmkisan-scheme-note",
+    "status": "ok"
+  },
+  {
+    "slug": "pmkmy-guidelines",
+    "source_url": "https://pmkisan.gov.in/Documents/PM-KMY - Operational Guidelines.pdf",
+    "final_url": "https://pmkisan.gov.in/Documents/PM-KMY%20-%20Operational%20Guidelines.pdf",
+    "kind": "pdf",
+    "title": "pmkmy-guidelines",
+    "status": "ok"
+  },
+  {
+    "slug": "aif-guidelines",
+    "source_url": "https://pmkisan.gov.in/Documents/Operational Guidelines of Financing Facility under Agriculture Infrastructure Fund.pdf",
+    "final_url": "https://pmkisan.gov.in/Documents/Operational%20Guidelines%20of%20Financing%20Facility%20under%20Agriculture%20Infrastructure%20Fund.pdf",
+    "kind": "pdf",
+    "title": "aif-guidelines",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra",
+    "source_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/kn",
+    "final_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/kn",
+    "kind": "dept",
+    "title": "ಕೃಷಿ ಇಲಾಖೆ - Department-related-website",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-contacts",
+    "source_url": "https://raitamitra.karnataka.gov.in/2/contacts/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/2/contacts/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Contacts",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-head-office",
+    "source_url": "https://raitamitra.karnataka.gov.in/3/head-office/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/3/head-office/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Head-office",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-district-office",
+    "source_url": "https://raitamitra.karnataka.gov.in/uploads/CUGENG_1785132276.pdf",
+    "final_url": "https://raitamitra.karnataka.gov.in/uploads/CUGENG_1785132276.pdf",
+    "kind": "dept",
+    "title": "ka-raitamitra-district-office",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-photo-and-video",
+    "source_url": "https://raitamitra.karnataka.gov.in/7/photo-and-video/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/7/photo-and-video/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Photo-and-video",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chitradurga",
+    "source_url": "https://raitamitra.karnataka.gov.in/162/chitradurga./en",
+    "final_url": "https://raitamitra.karnataka.gov.in/162/chitradurga./en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chitradurga.",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-raichur",
+    "source_url": "https://raitamitra.karnataka.gov.in/161/raichur./en",
+    "final_url": "https://raitamitra.karnataka.gov.in/161/raichur./en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Raichur.",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chamrajnagar",
+    "source_url": "https://raitamitra.karnataka.gov.in/160/chamrajnagar/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/160/chamrajnagar/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chamrajnagar",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-vijayapura",
+    "source_url": "https://raitamitra.karnataka.gov.in/159/vijayapura/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/159/vijayapura/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Vijayapura",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-haveri",
+    "source_url": "https://raitamitra.karnataka.gov.in/8/haveri/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/8/haveri/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Haveri",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-gadag",
+    "source_url": "https://raitamitra.karnataka.gov.in/9/gadag/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/9/gadag/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Gadag",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chikkamagaluru",
+    "source_url": "https://raitamitra.karnataka.gov.in/13/chikkamagaluru/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/13/chikkamagaluru/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chikkamagaluru",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-hassan",
+    "source_url": "https://raitamitra.karnataka.gov.in/14/hassan/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/14/hassan/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Hassan",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-tumkur",
+    "source_url": "https://raitamitra.karnataka.gov.in/17/tumkur/en",
+    "status": "failed"
+  },
+  {
+    "slug": "ka-raitamitra-kalburgi",
+    "source_url": "https://raitamitra.karnataka.gov.in/18/kalburgi/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/18/kalburgi/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Kalburgi",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-dharwad",
+    "source_url": "https://raitamitra.karnataka.gov.in/19/dharwad/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/19/dharwad/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Dharwad",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-hassan",
+    "source_url": "https://raitamitra.karnataka.gov.in/21/hassan/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/21/hassan/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Hassan",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-bidar",
+    "source_url": "https://raitamitra.karnataka.gov.in/22/bidar/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/22/bidar/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Bidar",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-mysore",
+    "source_url": "https://raitamitra.karnataka.gov.in/23/mysore/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/23/mysore/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Mysore",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-mysore",
+    "source_url": "https://raitamitra.karnataka.gov.in/31/mysore/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/31/mysore/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Mysore",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-bangalore-rural",
+    "source_url": "https://raitamitra.karnataka.gov.in/32/bangalore-rural/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/32/bangalore-rural/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Bangalore-rural",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-bagalkote",
+    "source_url": "https://raitamitra.karnataka.gov.in/36/bagalkote/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/36/bagalkote/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Bagalkote",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-ramangara",
+    "source_url": "https://raitamitra.karnataka.gov.in/39/ramangara/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/39/ramangara/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Ramangara",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-ramangara",
+    "source_url": "https://raitamitra.karnataka.gov.in/40/ramangara/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/40/ramangara/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Ramangara",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-belgavi",
+    "source_url": "https://raitamitra.karnataka.gov.in/41/belgavi/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/41/belgavi/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Belgavi",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-mandya",
+    "source_url": "https://raitamitra.karnataka.gov.in/42/mandya/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/42/mandya/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Mandya",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-kolar",
+    "source_url": "https://raitamitra.karnataka.gov.in/43/kolar/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/43/kolar/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Kolar",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-farmer-advisories",
+    "source_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/Davangere",
+    "final_url": "https://raitamitra.karnataka.gov.in/5/department-related-website/Davangere",
+    "kind": "dept",
+    "title": "ಕೃಷಿ ಇಲಾಖೆ - Department-related-website",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-vijayapura",
+    "source_url": "https://raitamitra.karnataka.gov.in/10/vijayapura/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/10/vijayapura/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Vijayapura",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chikkaballapura",
+    "source_url": "https://raitamitra.karnataka.gov.in/12/chikkaballapura/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/12/chikkaballapura/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chikkaballapura",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-yadgiri",
+    "source_url": "https://raitamitra.karnataka.gov.in/15/yadgiri/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/15/yadgiri/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Yadgiri",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-shimoga",
+    "source_url": "https://raitamitra.karnataka.gov.in/16/shimoga/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/16/shimoga/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Shimoga",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-koppala",
+    "source_url": "https://raitamitra.karnataka.gov.in/20/koppala/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/20/koppala/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Koppala",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chitradurga",
+    "source_url": "https://raitamitra.karnataka.gov.in/24/chitradurga/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/24/chitradurga/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chitradurga",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-ramanagara",
+    "source_url": "https://raitamitra.karnataka.gov.in/25/ramanagara/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/25/ramanagara/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Ramanagara",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chikkaballapura",
+    "source_url": "https://raitamitra.karnataka.gov.in/26/chikkaballapura/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/26/chikkaballapura/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chikkaballapura",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-chikkamangalore",
+    "source_url": "https://raitamitra.karnataka.gov.in/27/chikkamangalore/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/27/chikkamangalore/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Chikkamangalore",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-raichur",
+    "source_url": "https://raitamitra.karnataka.gov.in/28/raichur/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/28/raichur/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Raichur",
+    "status": "ok"
+  },
+  {
+    "slug": "ka-raitamitra-bagalkot",
+    "source_url": "https://raitamitra.karnataka.gov.in/29/bagalkot/en",
+    "final_url": "https://raitamitra.karnataka.gov.in/29/bagalkot/en",
+    "kind": "dept",
+    "title": "Department of Agriculture(KSDA) - Bagalkot",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-who-we-are",
+    "source_url": "https://www.nabard.org/content.aspx?id=2",
+    "final_url": "https://www.nabard.org/content.aspx?id=2",
+    "kind": "scheme",
+    "title": "Who We Are - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-what-we-do",
+    "source_url": "https://www.nabard.org/content1.aspx?id=8&catid=8&mid=488",
+    "final_url": "https://www.nabard.org/content1.aspx?id=8&catid=8&mid=488",
+    "kind": "scheme",
+    "title": "WHAT WE DO - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-govt-sponsored-schemes",
+    "source_url": "https://www.nabard.org/content1.aspx?id=23&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=23&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "Government Sponsored Schemes - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-career-notices",
+    "source_url": "https://www.nabard.org/ftrcontent.aspx?id=660",
+    "final_url": "https://www.nabard.org/ftrcontent.aspx?id=660",
+    "kind": "scheme",
+    "title": "FAKE RECRUITMENT NOTICES AND APPOINTMENT LETTERS - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-new-agricultural-marketing-infrastructure-ami-sub-scheme-of-isam",
+    "source_url": "https://www.nabard.org/content1.aspx?id=702&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=702&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "New Agricultural Marketing Infrastructure(AMI) sub- scheme of Integrated Scheme for Agricultural Marketing (ISAM) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-agri-clinics-and-agri-business-centres-scheme-acabc",
+    "source_url": "https://www.nabard.org/content1.aspx?id=595&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=595&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "Agri Clinic and Agribusiness Centres Scheme (ACABC Scheme) - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-interest-subvention-scheme",
+    "source_url": "https://www.nabard.org/content1.aspx?id=602&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=602&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "Interest Subvention Scheme - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-national-livestock-mission-entrepreneurship-development-employment-generation-nl",
+    "source_url": "https://www.nabard.org/content1.aspx?id=599&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=599&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "National Livestock Mission - EDEG - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "nabard-dairy-entrepreneurship-development-scheme-deds-closed-temporarily-closed",
+    "source_url": "https://www.nabard.org/content1.aspx?id=591&catid=23&mid=530",
+    "final_url": "https://www.nabard.org/content1.aspx?id=591&catid=23&mid=530",
+    "kind": "scheme",
+    "title": "Dairy Entrepreneurship Development Scheme - NABARD - National Bank For Agriculture And Rural Development",
+    "status": "ok"
+  },
+  {
+    "slug": "pm-mudra-yojana-pmmy",
+    "source_url": "https://www.mudra.org.in/",
+    "final_url": "https://www.mudra.org.in/",
+    "kind": "scheme",
+    "title": "Pradhan Mantri Mudra Yojana (PMMY)",
+    "status": "ok"
+  },
+  {
+    "slug": "pm-svanidhi",
+    "source_url": "https://pmsvanidhi.mohua.gov.in/",
+    "final_url": "https://pmsvanidhi.mohua.gov.in/",
+    "kind": "scheme",
+    "title": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+    "status": "ok"
+  },
+  {
+    "slug": "kisan-credit-card-kcc",
+    "source_url": "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card",
+    "final_url": "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-loan/kisan-credit-card",
+    "kind": "scheme",
+    "title": "Kisan Credit Card (KCC)",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-agriculture-loan",
+    "source_url": "https://sbi.co.in/web/agri-rural/agriculture-banking",
+    "final_url": "https://sbi.co.in/web/agri-rural/agriculture-banking",
+    "kind": "scheme",
+    "title": "SBI Agriculture Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "public-provident-fund",
+    "source_url": "https://www.nsiindia.gov.in/(S(scheme))/InternalPage.aspx?Id_Pk=54",
+    "final_url": "https://www.nsiindia.gov.in/(S(scheme))/InternalPage.aspx?Id_Pk=54",
+    "kind": "scheme",
+    "title": "Public Provident Fund (PPF)",
+    "status": "ok"
+  },
+  {
+    "slug": "senior-citizens-savings-scheme",
+    "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Senior-Citizen-Savings-Scheme.aspx",
+    "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Senior-Citizen-Savings-Scheme.aspx",
+    "kind": "scheme",
+    "title": "Senior Citizens' Savings Scheme (SCSS)",
+    "status": "ok"
+  },
+  {
+    "slug": "sukanya-samriddhi-account",
+    "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account.aspx",
+    "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account.aspx",
+    "kind": "scheme",
+    "title": "Sukanya Samriddhi Account (SSA)",
+    "status": "ok"
+  },
+  {
+    "slug": "zero-defect-zero-effect-zed",
+    "source_url": "https://zed.msme.gov.in/",
+    "final_url": "https://zed.msme.gov.in/",
+    "kind": "scheme",
+    "title": "Zero Defect Zero Effect (ZED) Scheme",
+    "status": "ok"
+  },
+  {
+    "slug": "basic-savings-bank-deposit-account-bsbda",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/saving-account/basic-savings-bank-deposit-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/saving-account/basic-savings-bank-deposit-account",
+    "kind": "scheme",
+    "title": "Basic Savings Bank Deposit Account (BSBDA)",
+    "status": "ok"
+  },
+  {
+    "slug": "multi-option-deposit-scheme-mods",
+    "source_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/multi-option-deposit-scheme",
+    "final_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/multi-option-deposit-scheme",
+    "kind": "scheme",
+    "title": "Multi Option Deposit Scheme (MODS) / e-TDR e-STDR",
+    "status": "ok"
+  },
+  {
+    "slug": "recurring-deposit",
+    "source_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/recurring-deposit",
+    "final_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/recurring-deposit",
+    "kind": "scheme",
+    "title": "Recurring Deposit (RD)",
+    "status": "ok"
+  },
+  {
+    "slug": "post-office-savings-account",
+    "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx",
+    "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Post-Office-Saving-Schemes.aspx",
+    "kind": "scheme",
+    "title": "Post Office Savings Account",
+    "status": "ok"
+  },
+  {
+    "slug": "annuity-deposit",
+    "source_url": "local:data/Annuity Deposit.txt",
+    "final_url": "local:data/Annuity Deposit.txt",
+    "kind": "scheme",
+    "title": "Annuity Deposit Scheme",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-personal-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/personal-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/personal-loans",
+    "kind": "scheme",
+    "title": "SBI Personal Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-education-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/education-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/education-loans",
+    "kind": "scheme",
+    "title": "SBI Education Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-home-loan",
+    "source_url": "https://homeloans.sbi/",
+    "final_url": "https://homeloans.sbi/",
+    "kind": "scheme",
+    "title": "SBI Home Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-gold-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/gold-loan",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/gold-loan",
+    "kind": "scheme",
+    "title": "SBI Gold Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-new-car-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "kind": "scheme",
+    "title": "SBI New Car / Vehicle Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-green-car-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "kind": "scheme",
+    "title": "SBI Green Car Loan (Electric Vehicle)",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-loyalty-car-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "kind": "scheme",
+    "title": "SBI Loyalty Car Loan (Vehicle Loan) Scheme",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-certified-pre-owned-car-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "kind": "scheme",
+    "title": "SBI Certified Pre-Owned Car Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-superbike-loan",
+    "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+    "kind": "scheme",
+    "title": "SBI High-end / Super Bike Loan",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-overdraft",
+    "source_url": "local:data/Overdraft (OD).txt",
+    "final_url": "local:data/Overdraft (OD).txt",
+    "kind": "scheme",
+    "title": "SBI Overdraft (OD)",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-rtxc-express-credit",
+    "source_url": "local:data/RTXC(Real Time Express Credit).txt",
+    "final_url": "local:data/RTXC(Real Time Express Credit).txt",
+    "kind": "scheme",
+    "title": "SBI Real Time Express Credit (RTXC)",
+    "status": "ok"
+  },
+  {
+    "slug": "loan-against-time-deposit",
+    "source_url": "local:data/Loan Against Time Deposit.md",
+    "final_url": "local:data/Loan Against Time Deposit.md",
+    "kind": "scheme",
+    "title": "Loan Against Time Deposit",
+    "status": "ok"
+  },
+  {
+    "slug": "term-loan-demand-loan-business",
+    "source_url": "local:data/Term Loan (TL) Demand Loan(DL) loans to buisness.txt",
+    "final_url": "local:data/Term Loan (TL) Demand Loan(DL) loans to buisness.txt",
+    "kind": "scheme",
+    "title": "Term Loan (TL) / Demand Loan (DL) for Business",
+    "status": "ok"
+  },
+  {
+    "slug": "tax-free-bonds",
+    "source_url": "local:data/Tax free bonds.txt",
+    "final_url": "local:data/Tax free bonds.txt",
+    "kind": "scheme",
+    "title": "Tax Free Bonds",
+    "status": "ok"
+  },
+  {
+    "slug": "police-salary-package",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "Police Salary Package (PSP)",
+    "status": "ok"
+  },
+  {
+    "slug": "defence-salary-package",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "Defence Salary Package (DSP)",
+    "status": "ok"
+  },
+  {
+    "slug": "para-military-salary-package",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "Para Military Salary Package (PMSP)",
+    "status": "ok"
+  },
+  {
+    "slug": "indian-coast-guard-salary-package",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "Indian Coast Guard Salary Package (ICGSP)",
+    "status": "ok"
+  },
+  {
+    "slug": "central-armed-police-salary-package",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "Central Armed Police Salary Package (CAPSP)",
+    "status": "ok"
+  },
+  {
+    "slug": "sbi-salary-packages",
+    "source_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "final_url": "https://sbi.co.in/web/personal-banking/accounts/salary-account",
+    "kind": "scheme",
+    "title": "SBI Salary Packages",
+    "status": "ok"
+  }
+]

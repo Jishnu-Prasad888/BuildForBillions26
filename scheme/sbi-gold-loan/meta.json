@@ -1,0 +1,21 @@
+{
+  "slug": "sbi-gold-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/gold-loan",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/gold-loan",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI Gold Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "gold loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI Gold Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/gold-loan"
+    }
+  ],
+  "char_count": 18375
+}

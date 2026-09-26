@@ -142,7 +142,9 @@ Copy `backend/.env.example`. Important variables:
 | `LLM_PROVIDER` | `ollama` \| `openai` \| `kimi` |
 | `LLM_MODEL` / `EMBEDDING_MODEL` / `VISION_MODEL` | Generation, vectors, optional screen vision |
 | `OCR_ENABLED` / `TESSERACT_CMD` | Tesseract fallback for screen reading when no vision model (Docker image includes it) |
-| `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; `pgvector` or `json` cosine fallback |
+| `DATABASE_URL`, `VECTOR_BACKEND` | Postgres; vectors in `chroma` (default), `pgvector`, or `json` cosine fallback |
+| `CHROMA_DIR` / `CHROMA_HOST` | Embedded Chroma path, or a shared Chroma server for multi-replica deploys |
+| `SCHEME_DIR` / `SCHEME_AUTO_SYNC` | Scheme library folder ingested into the knowledge base |
 | `NEO4J_*` | Graph; unreachable Neo4j → in-memory store |
 | `JWT_SECRET_KEY` | Change outside local demo (the backend refuses the default when `APP_ENV=production`) |
 | `FORMS_DIR`, `MAX_FORM_SIZE_MB`, `MAX_FORM_PAGES` | Private storage and limits for the AI Form Assistant |

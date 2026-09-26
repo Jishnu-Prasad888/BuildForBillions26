@@ -1,0 +1,21 @@
+{
+  "slug": "sbi-superbike-loan",
+  "source_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "final_url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "SBI High-end / Super Bike Loan",
+  "origin": "data-folder",
+  "source_files": [
+    "high end bike or super bike loan.txt"
+  ],
+  "links": [
+    {
+      "name": "SBI High-end / Super Bike Loan",
+      "url": "https://sbi.co.in/web/personal-banking/loans/auto-loans"
+    }
+  ],
+  "char_count": 1503
+}

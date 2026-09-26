@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
 import type { UserForm } from "@/types";
 import CameraCapture from "@/components/formassist/CameraCapture";
-import { EmptyState, ErrorNote, Modal, PageHeader, Spinner, StatusPill, formatDate } from "@/components/ui";
+import { EmptyState, ErrorNote, Modal, PageHeader, SkeletonList, Spinner, StatusPill, formatDate } from "@/components/ui";
 
 const ACCEPT = ".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp";
 const MAX_MB = 25;
@@ -69,9 +69,9 @@ export default function Forms() {
       <div
         onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
         onDrop={(e) => { e.preventDefault(); setDrag(false); upload(e.dataTransfer.files?.[0]); }}
-        className={`card flex flex-col items-center gap-4 border-2 border-dashed p-8 text-center transition-colors ${drag ? "border-saffron bg-saffron-50" : "border-paper-300"}`}
+        className={`card flex flex-col items-center gap-4 border-2 border-dashed p-8 text-center transition-all duration-200 ${drag ? "scale-[1.01] border-saffron bg-saffron-50 shadow-lift" : "border-paper-300 hover:border-forest-200"}`}
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><UploadCloud size={28} /></div>
+        <div className={`flex h-14 w-14 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700 ${busy ? "" : "animate-float"}`}><UploadCloud size={28} /></div>
         {busy ? (
           <div className="flex items-center gap-2 font-semibold text-ink-800"><Spinner /> {busy}</div>
         ) : (
@@ -93,12 +93,12 @@ export default function Forms() {
       {error && <div className="mt-4"><ErrorNote>{error}</ErrorNote></div>}
 
       <h2 className="mb-3 mt-8 font-display text-xl font-bold">Your forms</h2>
-      {forms === null ? <Spinner className="h-5 w-5" /> : forms.length === 0 ? (
+      {forms === null ? <SkeletonList rows={2} className="h-16" /> : forms.length === 0 ? (
         <EmptyState icon={<FileText size={28} />} title="No forms yet">Upload a form to get started.</EmptyState>
       ) : (
-        <ul className="space-y-2.5">
+        <ul className="stagger space-y-2.5">
           {forms.map((f) => (
-            <li key={f.id} className="card flex flex-wrap items-center gap-3 p-4">
+            <li key={f.id} className="card flex flex-wrap items-center gap-3 p-4 transition-shadow hover:shadow-lift">
               <div className="text-ink-400">{f.kind === "pdf" ? <FileText size={24} /> : <FileImage size={24} />}</div>
               <div className="min-w-0 flex-1">
                 {f.status === "READY" || f.status === "COMPLETED" ? (

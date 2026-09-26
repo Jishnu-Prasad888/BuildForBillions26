@@ -1,0 +1,21 @@
+{
+  "slug": "recurring-deposit",
+  "source_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/recurring-deposit",
+  "final_url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/recurring-deposit",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Recurring Deposit (RD)",
+  "origin": "data-folder",
+  "source_files": [
+    "Recurring Deposit.txt"
+  ],
+  "links": [
+    {
+      "name": "Recurring Deposit (RD)",
+      "url": "https://sbi.co.in/web/personal-banking/investments-deposits/deposits/recurring-deposit"
+    }
+  ],
+  "char_count": 4405
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "annuity-deposit",
+  "source_url": "local:data/Annuity Deposit.txt",
+  "final_url": "local:data/Annuity Deposit.txt",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Annuity Deposit Scheme",
+  "origin": "data-folder",
+  "source_files": [
+    "Annuity Deposit.txt"
+  ],
+  "links": [],
+  "char_count": 16030
+}

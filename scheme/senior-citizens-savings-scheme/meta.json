@@ -1,0 +1,22 @@
+{
+  "slug": "senior-citizens-savings-scheme",
+  "source_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Senior-Citizen-Savings-Scheme.aspx",
+  "final_url": "https://www.indiapost.gov.in/Financial/Pages/Content/Senior-Citizen-Savings-Scheme.aspx",
+  "kind": "scheme",
+  "content_type": "text/plain; charset=utf-8",
+  "fetched_at": "2026-09-26T15:29:20",
+  "status": "ok",
+  "title": "Senior Citizens' Savings Scheme (SCSS)",
+  "origin": "data-folder",
+  "source_files": [
+    "SENIOR CITIZENS' SAVINGS SCHEME.txt",
+    "FAQ SCSS Senior Citizens Savings Scheme.txt"
+  ],
+  "links": [
+    {
+      "name": "Senior Citizens' Savings Scheme (SCSS)",
+      "url": "https://www.indiapost.gov.in/Financial/Pages/Content/Senior-Citizen-Savings-Scheme.aspx"
+    }
+  ],
+  "char_count": 27357
+}

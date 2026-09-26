@@ -1,4 +1,4 @@
-import { Download, FileText, Trash2, Upload } from "lucide-react";
+import { Car, Download, FileText, Fingerprint, Landmark, Map, Plus, ScrollText, Trash2, Upload, type LucideIcon } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 import { api, tokenStore } from "@/services/api";
 import { useI18n } from "@/i18n";
@@ -10,9 +10,14 @@ const TYPES: Record<string, string> = {
   BANK: "Bank passbook / cheque", CERTIFICATE: "Certificate", OTHER: "Other",
 };
 
+const ICONS: Record<string, [LucideIcon, string]> = {
+  AADHAAR: [Fingerprint, "bg-amber-50 text-amber-700"], DRIVING_LICENCE: [Car, "bg-ink-100 text-ink-700"], LAND_RECORD: [Map, "bg-leaf-50 text-leaf-700"],
+  BANK: [Landmark, "bg-forest-50 text-forest-700"], CERTIFICATE: [ScrollText, "bg-saffron-50 text-saffron-700"],
+};
+
 export default function Documents() {
   const { t } = useI18n();
-  const [docs, setDocs] = useState<WalletDoc[]>([]);
+  const [docs, setDocs] = useState<WalletDoc[] | null>(null);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ doc_type: "LAND_RECORD", title: "" });
   const [file, setFile] = useState<File | null>(null);
@@ -59,12 +64,16 @@ export default function Documents() {
     <div>
       <PageHeader eyebrow="Document wallet" title={t("documents")} subtitle="Keep the documents you need for applications in one place. The assistant checks this wallet to tell you what's missing."
         actions={<button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Add document</button>} />
-      {docs.length === 0 ? <EmptyState icon={<FileText />} title="Your wallet is empty">Add your Aadhaar, land record and bank passbook.</EmptyState> : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {docs.map((d) => (
-            <div key={d.id} className="card flex flex-col p-4">
+      {docs === null ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{[0, 1, 2].map((i) => <div key={i} className="skeleton h-40" />)}</div>
+      ) : docs.length === 0 ? <EmptyState icon={<FileText size={22} />} title="Your wallet is empty">Add your Aadhaar, land record and bank passbook.</EmptyState> : (
+        <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {docs.map((d) => {
+            const [Icon, tone] = ICONS[d.doc_type] ?? [FileText, "bg-ink-100 text-ink-700"];
+            return (
+            <div key={d.id} className="card group flex flex-col p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-ink-100 text-ink-700"><FileText size={20} /></div>
+                <div className={`flex h-11 w-11 flex-none items-center justify-center rounded-lg transition-transform group-hover:scale-105 ${tone}`}><Icon size={21} /></div>
                 <div className="min-w-0">
                   <div className="font-semibold">{d.title}</div>
                   <div className="text-sm text-ink-500">{TYPES[d.doc_type] ?? d.doc_type}</div>
@@ -80,7 +89,13 @@ export default function Documents() {
                 </span>
               </div>
             </div>
-          ))}
+            );
+          })}
+          <button onClick={() => setOpen(true)}
+            className="flex min-h-[10rem] flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-paper-300 text-ink-500 transition-colors hover:border-forest-300 hover:bg-forest-50 hover:text-forest-800">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-card"><Plus size={20} /></span>
+            <span className="font-semibold">Add document</span>
+          </button>
         </div>
       )}
       <Modal open={open} onClose={() => setOpen(false)} title="Add a document">
