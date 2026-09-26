@@ -34,17 +34,7 @@ export default function Landing() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-forest-950 text-white">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-0 w-[58%] overflow-hidden">
-          <img
-            src="/government-building.png"
-            alt=""
-            className="absolute bottom-[-30px] left-0 h-[80%] w-[80%] max-w-none object-cover object-left-bottom opacity-[0.7] [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.25)_10%,black_28%,black_72%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.25)_10%,black_28%,black_72%,transparent_100%)]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-forest-950/30 to-forest-950" />
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-forest-950 via-forest-950/70 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-forest-950/80 to-transparent" />
-        </div>
+      <section className="relative isolate overflow-hidden text-white">
         <div className="pointer-events-none absolute left-[30%] top-[35%] h-[320px] w-[320px] rounded-full bg-forest-600/10 blur-3xl" />
 
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
@@ -167,9 +157,9 @@ export default function Landing() {
       <GuideSection />
 
       {/* Trust */}
-      <section className="border-b border-forest-100 bg-forest-50/70">
+      <section className="border-y border-white/10">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
-          <h2 className="mb-6 font-display text-xl font-bold text-forest-900 sm:text-2xl">{tr({ en: "Safe and secure", hi: "सुरक्षित और विश्वसनीय", kn: "ಸುರಕ್ಷಿತ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ" })}</h2>
+          <h2 className="mb-6 font-display text-xl font-bold text-white sm:text-2xl">{tr({ en: "Safe and secure", hi: "सुरक्षित और विश्वसनीय", kn: "ಸುರಕ್ಷಿತ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ" })}</h2>
           <div className="grid gap-4 md:grid-cols-3">
             {trust.map(({ title, text }) => (
               <div key={title} className="rounded-lg border border-forest-100 border-t-4 border-t-forest-600 bg-white p-5 shadow-card">

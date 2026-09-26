@@ -69,11 +69,11 @@ export default function GuideSection() {
   useEffect(() => () => stopSpeaking(), []);
 
   return (
-    <section id="guide" className="scroll-mt-28 border-b border-paper-300 bg-white">
+    <section id="guide" className="scroll-mt-28 border-b border-white/10">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="border-b border-paper-300 pb-5">
-          <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">{tr({ en: "User guide", hi: "उपयोगकर्ता गाइड", kn: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ" })}</div>
-          <h2 className="mt-1.5 font-display text-2xl font-bold text-forest-900 sm:text-3xl">{tr({ en: "How to use Sahayak", hi: "सहायक कैसे इस्तेमाल करें", kn: "ಸಹಾಯಕ ಬಳಸುವುದು ಹೇಗೆ" })}</h2>
+        <div className="border-b border-white/15 pb-5">
+          <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-300">{tr({ en: "User guide", hi: "उपयोगकर्ता गाइड", kn: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ" })}</div>
+          <h2 className="mt-1.5 font-display text-2xl font-bold text-white sm:text-3xl">{tr({ en: "How to use Sahayak", hi: "सहायक कैसे इस्तेमाल करें", kn: "ಸಹಾಯಕ ಬಳಸುವುದು ಹೇಗೆ" })}</h2>
         </div>
 
         <ol className="card mt-6 divide-y divide-paper-300 overflow-hidden">
@@ -95,7 +95,7 @@ export default function GuideSection() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link to="/assistant" className="btn-primary btn-lg">
+          <Link to="/assistant" className="btn btn-lg bg-forest-500 text-white shadow-lg hover:bg-forest-600">
             {tr({ en: "Talk to the assistant", hi: "सहायक से बात करें", kn: "ಸಹಾಯಕರೊಂದಿಗೆ ಮಾತನಾಡಿ" })} <ArrowRight size={18} />
           </Link>
         </div>

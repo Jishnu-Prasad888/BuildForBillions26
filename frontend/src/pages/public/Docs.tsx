@@ -40,7 +40,8 @@ function useActiveSection() {
 export default function Docs() {
   const active = useActiveSection();
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+    <div className="mx-auto max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
+    <div className="rounded-lg bg-white px-4 py-8 shadow-lift sm:px-8 sm:py-10">
       <header className="mb-8 border-b border-paper-300 pb-6">
         <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">Documentation</div>
         <h1 className="mt-2 font-display text-3xl font-bold sm:text-4xl">Sahayak</h1>
@@ -113,6 +114,7 @@ export default function Docs() {
           </section>
         </article>
       </div>
+    </div>
     </div>
   );
 }

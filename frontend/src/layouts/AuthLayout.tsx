@@ -2,20 +2,16 @@ import { Link, Outlet } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Wheel from "@/components/Wheel";
+import PageBackdrop from "@/components/PageBackdrop";
 
 export default function AuthLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col">
+      <PageBackdrop />
       <div className="tricolor-rule h-[3px]" />
       <div className="grid flex-1 grid-rows-[auto_1fr] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:grid-rows-1">
-        {/* Brand panel: full on desktop, compact banner on mobile */}
-        <section className="relative flex flex-col justify-between overflow-hidden bg-forest-950 px-6 py-5 text-white sm:px-10 lg:p-12">
-          <img
-            src="/government-building.png"
-            alt=""
-            className="pointer-events-none absolute bottom-[-30px] left-0 h-[80%] w-full max-w-none object-cover object-left-bottom opacity-[0.55] [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_75%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_75%,transparent_100%)]"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-forest-950/40 to-forest-950/80" />
+        {/* Brand panel: full on desktop, compact banner on mobile; sits directly on the page backdrop */}
+        <section className="relative flex flex-col justify-between overflow-hidden px-6 py-5 text-white sm:px-10 lg:p-12">
           <Wheel className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 text-white opacity-[0.05] lg:-right-14 lg:-top-14 lg:h-56 lg:w-56" />
           <Link to="/" aria-label="Sahayak home" className="relative w-fit"><Logo light /></Link>
           <div className="relative mt-6 max-w-md lg:mt-0">
@@ -32,10 +28,12 @@ export default function AuthLayout() {
           </div>
         </section>
 
-        <section className="flex flex-col bg-white px-6 py-6 sm:px-12">
+        <section className="flex flex-col px-6 py-6 sm:px-12">
           <div className="flex justify-end"><LanguageSwitcher /></div>
-          <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-8 lg:py-10">
-            <Outlet />
+          <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-6 lg:py-10">
+            <div className="rounded-lg bg-white p-6 shadow-lift sm:p-8">
+              <Outlet />
+            </div>
           </div>
         </section>
       </div>

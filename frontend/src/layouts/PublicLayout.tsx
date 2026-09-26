@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import Logo from "@/components/Logo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import PageBackdrop from "@/components/PageBackdrop";
 import { useAuth } from "@/services/auth";
 import { useTr } from "@/i18n";
 
@@ -28,8 +29,9 @@ export default function PublicLayout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <PageBackdrop />
       <div className="tricolor-rule h-[3px]" />
-      
+
       <header className="sticky top-0 z-30 border-b border-paper-300 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-1 px-3 sm:gap-2 sm:px-6">
           <Link to="/" aria-label="Sahayak home" className="mr-auto shrink-0 rounded-md"><Logo sub={false} /></Link>
