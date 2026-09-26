@@ -2,7 +2,7 @@
 
 This playbook fixes the current FormBot bugs and adds the new features **without changing the core RAG/KAG architecture** (vector search, BM25, Elasticsearch, knowledge graph, reranker, generator). All new behaviour goes into a thin layer in front of that pipeline.
 
-> **Mapping to this repository.** Sahayak has no Elasticsearch, BM25 or reranker. The protected "core pipeline" here is `backend/app/kag/` (query understanding, pgvector + Postgres full-text retrieval with rank fusion, the Neo4j scheme graph, prompts and the generator) plus `backend/app/services/ai.py` (LLM and embedding providers). "FormBot" is the uploaded-form assistant in `backend/app/services/formdoc/` and `frontend/src/components/formassist/`. See `CLAUDE.md` for the full map.
+> **Mapping to this repository.** Sahayak has no Elasticsearch, BM25 or reranker. The protected "core pipeline" here is `backend/app/kag/` (query understanding, pgvector + Postgres full-text retrieval with rank fusion, the Neo4j scheme graph, prompts and the generator) plus `backend/app/services/ai/` (LLM and embedding providers). "FormBot" is the uploaded-form assistant in `backend/app/services/formdoc/` and `frontend/src/components/formassist/`. See `CLAUDE.md` for the full map.
 
 **How to use it:** put this file in your repo root. Run the prompts in Part 4 **one at a time, in order**, in Claude Code. Each prompt has a goal, the text to paste, where Claude should look, what "done" means, and what to watch out for. Don't start the next prompt until the current one passes its "Done when" checks and you have committed.
 

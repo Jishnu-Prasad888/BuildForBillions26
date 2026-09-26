@@ -6,7 +6,7 @@ Guidance for Claude Code in this repository. FormBot work follows `FORMBOT_FIX_P
 
 - Do NOT modify the retrieval pipeline, the LLM choice or the embedding model unless explicitly asked. In this repo the
   protected core is `backend/app/kag/` (query understanding, pgvector + Postgres full-text retrieval with rank fusion,
-  the Neo4j scheme graph, prompts, generator) and `backend/app/services/ai.py` (LLM/embedding providers). There is no
+  the Neo4j scheme graph, prompts, generator) and `backend/app/services/ai/` (LLM/embedding providers). There is no
   Elasticsearch, BM25 or reranker. Change what goes *into* the pipeline (query text, `context_schemes`, `extra_context`),
   never its internals.
 - New logic goes in new, small modules; existing files get minimal, targeted edits.
