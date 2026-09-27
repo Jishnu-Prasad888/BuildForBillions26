@@ -2,6 +2,8 @@
 
 **Build for Billions, Track 3: Reinvent Digital Public Infrastructure** (hackathon prototype)
 
+demo video : https://drive.google.com/drive/folders/1A2NG4HCF-IHKF5JuMgzPjPdqgxFkIKnT?usp=sharing
+
 Sahayak is a multilingual AI assistant for public services. A citizen describes a life event (“Heavy rain destroyed my crop”). Sahayak finds relevant government schemes, explains eligibility and required documents, and shows the official evidence behind every claim. It then sits beside the citizen on a mock application form: it reads the screen, answers by voice or text, fills fields, and keeps AI notes plus the citizen’s own notes.
 
 > **Demo mode.** Seed “official” documents are plain-language summaries marked **DEMO**. The government form, submission, and status updates are mocks. Nothing is sent to any government portal.
