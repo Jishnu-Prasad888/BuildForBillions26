@@ -26,7 +26,7 @@ export function CardGridSkeleton({ count = 4 }: { count?: number }) {
 export function LoadError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="card flex flex-col items-center gap-3 p-8 text-center" role="alert">
-      <div className="font-semibold text-ink-900">We couldn't load this</div>
+      <div className="font-medium text-ink-900">We couldn't load this</div>
       <p className="max-w-md text-sm text-ink-600">{message}</p>
       <button className="btn-secondary btn-sm" onClick={onRetry}><RefreshCw size={15} /> Try again</button>
     </div>

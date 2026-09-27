@@ -47,7 +47,7 @@ function ListenButton({ id, text, playing, setPlaying }: { id: string; text: str
   const on = playing === id;
   return (
     <button
-      className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-1 text-xs font-semibold transition-colors ${on ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white text-ink-700 hover:border-forest-300 hover:bg-forest-50"}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${on ? "border-forest-600 bg-forest-600 text-white" : "border-ink-300 bg-white text-ink-700 hover:border-forest-200 hover:bg-forest-50"}`}
       onClick={() => {
         stopSpeaking();
         if (on) return setPlaying(null);
@@ -69,19 +69,19 @@ export default function GuideSection() {
   useEffect(() => () => stopSpeaking(), []);
 
   return (
-    <section id="guide" className="scroll-mt-28 border-b border-white/10">
+    <section id="guide" className="scroll-mt-28 border-b border-paper-300">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-        <div className="border-b border-white/15 pb-5">
-          <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-300">{tr({ en: "User guide", hi: "उपयोगकर्ता गाइड", kn: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ" })}</div>
-          <h2 className="mt-1.5 font-display text-2xl font-bold text-white sm:text-3xl">{tr({ en: "How to use Sahayak", hi: "सहायक कैसे इस्तेमाल करें", kn: "ಸಹಾಯಕ ಬಳಸುವುದು ಹೇಗೆ" })}</h2>
+        <div className="border-b border-paper-300 pb-5">
+          <div className="eyebrow">{tr({ en: "User guide", hi: "उपयोगकर्ता गाइड", kn: "ಬಳಕೆದಾರ ಮಾರ್ಗದರ್ಶಿ" })}</div>
+          <h2 className="mt-1.5 text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">{tr({ en: "How to use Sahayak", hi: "सहायक कैसे इस्तेमाल करें", kn: "ಸಹಾಯಕ ಬಳಸುವುದು ಹೇಗೆ" })}</h2>
         </div>
 
         <ol className="card mt-6 divide-y divide-paper-300 overflow-hidden">
           {STEPS.map(({ title, text }, i) => (
-            <li key={title.en} className="flex items-center gap-4 p-4 transition-colors hover:bg-forest-50/60 sm:p-5">
-              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-forest-200 bg-forest-50 text-sm font-bold text-forest-800" aria-hidden>{i + 1}</span>
+            <li key={title.en} className="flex items-center gap-4 p-4 transition-colors hover:bg-ink-50 sm:p-5">
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-100 text-sm font-medium text-forest-800" aria-hidden>{i + 1}</span>
               <div className="min-w-0 flex-1">
-                <h3 className="font-semibold text-ink-900">{tr(title)}</h3>
+                <h3 className="font-medium text-ink-900">{tr(title)}</h3>
                 <p className="text-sm text-ink-600">{tr(text)}</p>
               </div>
               <ListenButton id={title.en} text={`${tr(title)}. ${tr(text)}`} playing={playing} setPlaying={setPlaying} />
@@ -89,13 +89,13 @@ export default function GuideSection() {
           ))}
         </ol>
 
-        <div className="mt-6 flex items-start gap-3 rounded-md border border-amber-100 border-l-4 border-l-amber bg-amber-50 p-4 text-sm text-ink-800">
-          <ShieldAlert size={20} className="mt-0.5 flex-none text-amber-600" />
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-100 bg-amber-50 p-4 text-sm text-ink-800">
+          <ShieldAlert size={20} className="mt-0.5 flex-none text-amber-700" />
           <p>{tr({ en: "Never share an OTP, PIN or password. Sahayak will never ask for one.", hi: "OTP, PIN या पासवर्ड कभी साझा न करें। सहायक कभी नहीं माँगेगा।", kn: "OTP, PIN ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಎಂದಿಗೂ ಹಂಚಬೇಡಿ. ಸಹಾಯಕ ಎಂದಿಗೂ ಕೇಳುವುದಿಲ್ಲ." })}</p>
         </div>
 
         <div className="mt-8 text-center">
-          <Link to="/assistant" className="btn btn-lg bg-forest-500 text-white shadow-lg hover:bg-forest-600">
+          <Link to="/assistant" className="btn-primary btn-lg">
             {tr({ en: "Talk to the assistant", hi: "सहायक से बात करें", kn: "ಸಹಾಯಕರೊಂದಿಗೆ ಮಾತನಾಡಿ" })} <ArrowRight size={18} />
           </Link>
         </div>

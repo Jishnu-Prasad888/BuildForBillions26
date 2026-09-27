@@ -92,36 +92,36 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-lg border border-ink-200 bg-white shadow-card">
-      <div className="rounded-t-lg bg-forest-800 px-4 py-3 text-white">
+    <div className="card flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="border-b border-paper-300 bg-white px-4 py-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 font-semibold"><Bot size={18} /> AI Form Assistant</div>
+          <div className="flex items-center gap-2 font-medium text-ink-900"><Bot size={18} className="text-forest-600" /> AI Form Assistant</div>
           <LanguageSwitcher compact value={lang} onChange={setLang} />
         </div>
         <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-xs">
           {screen.active ? (
             <>
-              <span role="status" className="flex flex-1 items-center gap-1.5 rounded-md bg-leaf px-2 py-1.5 font-semibold">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-white" /> Screen sharing active
+              <span role="status" className="flex flex-1 items-center gap-1.5 rounded-full bg-leaf-50 px-3 py-1.5 font-medium text-leaf-700 ring-1 ring-leaf-100">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-leaf" /> Screen sharing active
               </span>
-              <button onClick={screen.stop} className="flex items-center gap-1.5 rounded-md bg-brick px-2 py-1.5 font-semibold hover:bg-brick/90">
+              <button onClick={screen.stop} className="btn-danger btn-sm">
                 <MonitorOff size={14} /> Stop Sharing
               </button>
             </>
           ) : (
-            <button onClick={() => screen.start()} className="flex flex-1 items-center gap-1.5 rounded-md bg-forest-700 px-2 py-1.5 font-semibold text-forest-100 hover:bg-forest-600">
+            <button onClick={() => screen.start()} className="btn-secondary btn-sm flex-1">
               <MonitorUp size={14} /> Screen sharing off — share screen
             </button>
           )}
         </div>
-        {!screen.active && screen.error && <p className="mt-2 text-xs text-amber-100">{screen.error}</p>}
+        {!screen.active && screen.error && <p className="mt-2 text-xs text-brick">{screen.error}</p>}
         <div className={screen.active ? "mt-2.5" : "hidden"}>
           <div className={bigPreview ? "" : "flex items-center gap-2.5"}>
             <video ref={screen.videoRef} muted playsInline aria-label="Preview of your shared screen"
-              className={`rounded border border-ink-600 bg-black ${bigPreview ? "aspect-video w-full object-contain" : "h-14 w-24 flex-none object-cover"}`} />
+              className={`rounded-lg border border-paper-300 bg-black ${bigPreview ? "aspect-video w-full object-contain" : "h-14 w-24 flex-none object-cover"}`} />
             <div className={`flex items-start justify-between gap-2 ${bigPreview ? "mt-1.5" : "flex-1"}`}>
-              <p className="text-[0.7rem] leading-snug text-ink-200">What the AI sees. A frame is captured only when you ask a question — nothing is recorded or stored.</p>
-              <button onClick={() => setBigPreview((b) => !b)} className="whitespace-nowrap text-[0.7rem] font-semibold text-ink-200 underline hover:text-white">
+              <p className="text-[0.7rem] leading-snug text-ink-500">What the AI sees. A frame is captured only when you ask a question — nothing is recorded or stored.</p>
+              <button onClick={() => setBigPreview((b) => !b)} className="whitespace-nowrap text-[0.7rem] font-medium text-forest-600 hover:underline">
                 {bigPreview ? "Shrink" : "Enlarge"}
               </button>
             </div>
@@ -131,20 +131,20 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
 
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3.5 py-4" aria-live="polite">
         {messages.map((m) => {
-          if (m.role === "user") return <div key={m.id} className="ml-8 rounded-lg rounded-tr-sm bg-ink-100 px-3.5 py-2 text-[0.97rem] text-ink-900">{m.content}</div>;
-          if (m.role === "system") return <div key={m.id} className="rounded-lg bg-brick-50 px-3 py-2 text-sm text-brick">{m.content}</div>;
+          if (m.role === "user") return <div key={m.id} className="ml-8 rounded-2xl rounded-tr-md bg-forest-100 px-3.5 py-2 text-[0.97rem] text-ink-900">{m.content}</div>;
+          if (m.role === "system") return <div key={m.id} className="rounded-xl bg-brick-50 px-3 py-2 text-sm text-brick">{m.content}</div>;
           const order = citationOrderFrom(m.content, m.evidence.map((e) => e.id));
           const ordered = order.map((id) => m.evidence.find((e) => e.id === id)!).filter(Boolean);
           return (
             <div key={m.id} className="mr-3">
-              <div className="rounded-lg rounded-tl-sm border border-paper-300 bg-paper-100 px-3.5 py-2.5 text-[0.97rem]">
+              <div className="py-0.5 text-[0.97rem] text-ink-800">
                 <Markdown text={m.content} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
               </div>
               <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
               {m.pendingFill && m.id === messages[messages.length - 1]?.id && (
-                <div className="mt-2 rounded-lg border border-ink-200 bg-white px-3 py-2.5 text-sm">
-                  <div className="text-ink-600">Fill <b>{m.pendingFill.label}</b> with:</div>
-                  <div className="my-1 font-semibold text-ink-900">“{m.pendingFill.display}”</div>
+                <div className="mt-2 rounded-xl border border-paper-300 bg-white px-3 py-2.5 text-sm shadow-card">
+                  <div className="text-ink-600">Fill <span className="font-medium text-ink-800">{m.pendingFill.label}</span> with:</div>
+                  <div className="my-1 font-medium text-ink-900">“{m.pendingFill.display}”</div>
                   <div className="mt-2 flex gap-2">
                     <button className="btn-primary btn-sm" disabled={busy} onClick={() => send(YES_WORD[lang])}><Check size={15} /> {t("fill_field")}</button>
                     <button className="btn-secondary btn-sm" disabled={busy} onClick={() => send(NO_WORD[lang])}><X size={15} /> {t("dont_fill")}</button>
@@ -152,8 +152,8 @@ export default function AssistPanel({ sessionId, initial, lang, setLang, screen,
                 </div>
               )}
               {m.suggestions?.map((s) => (
-                <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-dashed border-amber-100 bg-amber-50 px-3 py-2 text-sm">
-                  <span className="text-amber-700">Suggested note: <b>{s.content}</b></span>
+                <div key={s.content} className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-amber-100 bg-amber-50 px-3 py-2 text-sm">
+                  <span className="text-amber-700">Suggested note: <span className="font-medium">{s.content}</span></span>
                   <button disabled={added.includes(s.content)} className="btn-secondary btn-sm whitespace-nowrap py-1"
                     onClick={async () => { await onAddNote(s.content, s.item_type); setAdded((a) => [...a, s.content]); }}>
                     {added.includes(s.content) ? "Added" : <><Plus size={14} /> {t("add_to_notes")}</>}

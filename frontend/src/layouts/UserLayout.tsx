@@ -41,29 +41,24 @@ export default function UserLayout() {
   return (
     <div className="flex min-h-screen">
       {/* Full-height column so the sidebar background never ends before the page does. */}
-      <div className="hidden w-64 flex-none border-r border-paper-300 bg-white lg:block">
-        <aside className="sticky top-0 flex h-screen flex-col px-4 pb-5">
-          <div className="tricolor-rule -mx-4 mb-5 h-1" />
-          <Link to="/" aria-label="Sahayak home"><Logo /></Link>
-          <nav className="mt-7 flex flex-col gap-5" aria-label="Main">
+      <div className="hidden w-64 flex-none bg-paper-100 lg:block">
+        <aside className="sticky top-0 flex h-screen flex-col px-3 pb-5 pt-5">
+          <Link to="/" className="px-2" aria-label="Sahayak home"><Logo /></Link>
+          <nav className="mt-8 flex flex-col gap-5" aria-label="Main">
             {groups.map((g, gi) => (
               <div key={gi}>
-                {g.label && <div className="eyebrow mb-1.5 px-3 text-[0.68rem]">{g.label}</div>}
+                {g.label && <div className="eyebrow mb-1.5 px-4 text-[0.68rem]">{g.label}</div>}
                 <div className="flex flex-col gap-0.5">
                   {g.items.map(({ to, icon: Icon, label, end }) => (
                     <NavLink
                       key={to}
                       to={to}
                       end={end}
-                      className={({ isActive }) =>
-                        `group flex min-h-[42px] items-center gap-3 rounded-md px-3 text-[0.95rem] font-semibold transition-all duration-200 ${
-                          isActive ? "bg-forest-800 text-white shadow-sm" : "text-ink-700 hover:translate-x-0.5 hover:bg-forest-50"
-                        }`
-                      }
+                      className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}
                     >
                       {({ isActive }) => (
                         <>
-                          <Icon size={19} className={`transition-transform duration-200 ${isActive ? "text-forest-200" : "text-ink-500 group-hover:scale-110 group-hover:text-forest-700"}`} /> {label}
+                          <Icon size={20} className={isActive ? "text-forest-700" : "text-ink-500"} /> {label}
                         </>
                       )}
                     </NavLink>
@@ -72,16 +67,16 @@ export default function UserLayout() {
               </div>
             ))}
           </nav>
-          <div className="mt-auto space-y-3">
+          <div className="mt-auto space-y-3 px-1">
             {user?.role === "ADMIN" && (
               <button className="btn-secondary btn-sm w-full" onClick={() => nav("/admin")}>
                 <ShieldCheck size={16} /> {t("admin_console")}
               </button>
             )}
-            <Link to="/profile" className="flex items-center gap-3 rounded-lg border border-paper-300 bg-paper-100 p-2.5 transition-colors hover:border-forest-200 hover:bg-forest-50">
-              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-sm font-bold text-white">{initials}</span>
+            <Link to="/profile" className="flex items-center gap-3 rounded-full border border-paper-300 bg-white p-2 pr-3 transition-colors hover:border-forest-200 hover:bg-forest-50">
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-600 text-sm font-medium text-white">{initials}</span>
               <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold text-ink-900">{user?.full_name}</span>
+                <span className="block truncate text-sm font-medium text-ink-900">{user?.full_name}</span>
                 <span className="block truncate text-xs text-ink-500">{user?.email}</span>
               </span>
             </Link>
@@ -90,7 +85,6 @@ export default function UserLayout() {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="tricolor-rule h-1 lg:hidden" />
         <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/90 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
           <Link to="/" className="lg:hidden" aria-label="Sahayak home"><Logo sub={false} /></Link>
           <div className="flex items-center gap-2">
@@ -118,23 +112,23 @@ export default function UserLayout() {
               to={to}
               end={end}
               className={({ isActive }) =>
-                `flex min-h-[60px] flex-col items-center justify-center gap-1 px-0.5 text-center text-[0.68rem] font-semibold leading-tight ${isActive ? "text-forest-800" : "text-ink-600"}`
+                `flex min-h-[60px] flex-col items-center justify-center gap-1 px-0.5 text-center text-[0.68rem] font-medium leading-tight ${isActive ? "text-forest-700" : "text-ink-600"}`
               }
             >
               {({ isActive }) => (
                 <>
-                  <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-all duration-300 ${isActive ? "scale-100 bg-forest-100" : "scale-90"}`}><Icon size={21} /></span>
+                  <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-all duration-200 ${isActive ? "bg-forest-100" : ""}`}><Icon size={21} /></span>
                   <span className="max-w-full break-words">{label}</span>
                 </>
               )}
             </NavLink>
           ))}
           <button
-            className={`flex min-h-[60px] flex-col items-center justify-center gap-1 text-[0.68rem] font-semibold leading-tight ${moreOpen ? "text-forest-800" : "text-ink-600"}`}
+            className={`flex min-h-[60px] flex-col items-center justify-center gap-1 text-[0.68rem] font-medium leading-tight ${moreOpen ? "text-forest-700" : "text-ink-600"}`}
             onClick={() => setMoreOpen((o) => !o)}
             aria-expanded={moreOpen}
           >
-            <span className={`flex h-8 w-12 items-center justify-center rounded-full transition-all duration-300 ${moreOpen ? "rotate-90 bg-forest-100" : ""}`}>{moreOpen ? <X size={21} /> : <Menu size={21} />}</span>
+            <span className={`flex h-8 w-14 items-center justify-center rounded-full transition-all duration-200 ${moreOpen ? "bg-forest-100" : ""}`}>{moreOpen ? <X size={21} /> : <Menu size={21} />}</span>
             {t("more")}
           </button>
         </div>
@@ -143,29 +137,29 @@ export default function UserLayout() {
       {moreOpen && (
         <div className="fixed inset-0 z-30 animate-fadeIn bg-ink-900/30 lg:hidden" onClick={() => setMoreOpen(false)}>
           <div className="absolute inset-x-0 bottom-[calc(60px+env(safe-area-inset-bottom))] animate-sheetUp rounded-t-3xl bg-white p-4 shadow-lift" onClick={(e) => e.stopPropagation()}>
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-paper-300" />
+            <div className="mx-auto mb-3 h-1 w-8 rounded-full bg-ink-200" />
             <div className="mb-3 flex items-center gap-3 px-2">
-              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-forest-800 text-sm font-bold text-white">{initials}</span>
+              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-forest-600 text-sm font-medium text-white">{initials}</span>
               <span className="min-w-0">
-                <span className="block truncate font-semibold text-ink-900">{user?.full_name}</span>
+                <span className="block truncate font-medium text-ink-900">{user?.full_name}</span>
                 <span className="block truncate text-xs text-ink-500">{user?.email}</span>
               </span>
             </div>
             <div className="stagger grid grid-cols-2 gap-2">
               {extra.map(({ to, icon: Icon, label }) => (
-                <Link key={to} to={to} className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+                <Link key={to} to={to} className="flex min-h-[56px] items-center gap-3 rounded-xl bg-paper-100 px-4 font-medium text-ink-800">
                   <Icon size={20} className="text-forest-600" /> {label}
                 </Link>
               ))}
-              <Link to="/welcome#guide" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+              <Link to="/welcome#guide" className="flex min-h-[56px] items-center gap-3 rounded-xl bg-paper-100 px-4 font-medium text-ink-800">
                 <CircleHelp size={20} className="text-forest-600" /> {t("how_to_use")}
               </Link>
               {user?.role === "ADMIN" && (
-                <Link to="/admin" className="flex min-h-[56px] items-center gap-3 rounded-lg bg-paper-100 px-4 font-semibold text-ink-800">
+                <Link to="/admin" className="flex min-h-[56px] items-center gap-3 rounded-xl bg-paper-100 px-4 font-medium text-ink-800">
                   <ShieldCheck size={20} className="text-forest-600" /> {t("admin_console")}
                 </Link>
               )}
-              <button onClick={logout} className="flex min-h-[56px] items-center gap-3 rounded-lg bg-brick-50 px-4 font-semibold text-brick">
+              <button onClick={logout} className="flex min-h-[56px] items-center gap-3 rounded-xl bg-brick-50 px-4 font-medium text-brick">
                 <LogOut size={20} /> {t("sign_out")}
               </button>
             </div>

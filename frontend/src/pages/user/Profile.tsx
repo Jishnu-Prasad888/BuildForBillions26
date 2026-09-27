@@ -24,10 +24,10 @@ function Section({ icon: Icon, title, hint, children, delay }: { icon: LucideIco
   return (
     <section className="card animate-riseIn p-5 sm:p-6" style={{ animationDelay: `${delay}ms` }}>
       <div className="mb-4 flex items-start gap-3">
-        <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-forest-50 text-forest-700"><Icon size={18} /></span>
+        <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-50 text-forest-600"><Icon size={18} /></span>
         <div>
-          <h2 className="font-bold text-ink-900">{title}</h2>
-          <p className="text-sm text-ink-500">{hint}</p>
+          <h2 className="section-title">{title}</h2>
+          <p className="text-sm text-ink-600">{hint}</p>
         </div>
       </div>
       {children}
@@ -69,16 +69,16 @@ export default function Profile() {
   return (
     <div className="max-w-3xl">
       <PageHeader eyebrow="Your details" title="Profile" subtitle="Details you can put on a form with “Use my profile”. Identity numbers such as PAN and Aadhaar are never stored here." />
-      {params.get("welcome") && <p className="mb-4 animate-popIn rounded-lg bg-leaf-50 px-4 py-3 text-leaf-700">Welcome! Add a few details so the assistant can help you faster.</p>}
+      {params.get("welcome") && <p className="mb-4 animate-popIn rounded-xl bg-leaf-50 px-4 py-3 text-leaf-700">Welcome! Add a few details so the assistant can help you faster.</p>}
 
       <div className="greet-surface mb-5 flex animate-riseIn flex-col gap-4 rounded-xl border border-paper-300 p-5 shadow-card sm:flex-row sm:items-center">
-        <span className="flex h-16 w-16 flex-none items-center justify-center rounded-full bg-forest-800 font-display text-2xl font-bold text-white shadow-lift">{initials}</span>
+        <span className="flex h-16 w-16 flex-none items-center justify-center rounded-full bg-forest-600 text-2xl font-medium text-white shadow-card">{initials}</span>
         <div className="min-w-0 flex-1">
-          <div className="truncate font-display text-xl font-bold text-ink-900">{name || "Your name"}</div>
-          <div className="truncate text-sm text-ink-500">{user?.email}</div>
+          <div className="truncate text-xl font-medium text-ink-900">{name || "Your name"}</div>
+          <div className="truncate text-sm text-ink-600">{user?.email}</div>
           <div className="mt-3 flex max-w-sm items-center gap-3">
             <ProgressBar value={pct} />
-            <span className="whitespace-nowrap text-sm font-semibold text-ink-600">{pct}% complete</span>
+            <span className="whitespace-nowrap text-sm font-medium text-ink-600">{pct}% complete</span>
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function Profile() {
           <div className="grid grid-cols-3 gap-2">
             {LANGUAGES.map((l) => (
               <button type="button" key={l.code} onClick={() => setL(l.code)} aria-pressed={lang === l.code}
-                className={`rounded-lg border px-3 py-2.5 font-semibold transition-all ${lang === l.code ? "border-forest-800 bg-forest-800 text-white shadow-sm" : "border-ink-200 bg-white hover:border-forest-200 hover:bg-forest-50"}`}>{l.native}</button>
+                className={`min-h-[44px] rounded-full border px-3 py-2.5 font-medium transition-colors ${lang === l.code ? "border-forest-100 bg-forest-100 text-forest-800" : "border-ink-300 bg-white text-ink-700 hover:bg-ink-50"}`}>{l.native}</button>
             ))}
           </div>
         </Section>
@@ -112,7 +112,7 @@ export default function Profile() {
 
         <div className="sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-10 flex items-center gap-3 rounded-xl border border-paper-300 bg-white/95 p-3 shadow-lift backdrop-blur lg:bottom-4">
           <button className="btn-primary" disabled={busy}>{busy && <Spinner />} Save profile</button>
-          {msg && <span className="flex animate-popIn items-center gap-1.5 text-sm font-semibold text-leaf-700"><CheckCircle2 size={17} /> {msg}</span>}
+          {msg && <span className="flex animate-popIn items-center gap-1.5 text-sm font-medium text-leaf-700"><CheckCircle2 size={17} /> {msg}</span>}
         </div>
       </form>
     </div>

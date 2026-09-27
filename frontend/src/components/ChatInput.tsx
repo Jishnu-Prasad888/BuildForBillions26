@@ -85,7 +85,7 @@ const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
     <select
       aria-label="Voice input language"
       title="Language you will speak in"
-      className="rounded-md border border-ink-200 bg-white px-1 py-0.5 text-[0.7rem] font-semibold text-ink-700"
+      className="rounded-full border border-ink-300 bg-white px-1.5 py-0.5 text-[0.7rem] font-medium text-ink-700"
       value={sttLang}
       onChange={(e) => { voice.stop(); setSttLang(e.target.value as Lang); }}
     >
@@ -96,7 +96,7 @@ const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
   return (
     <div>
       {voice.listening && (
-        <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-saffron-700" role="status">
+        <div className="mb-1.5 flex items-center gap-2 text-sm font-medium text-saffron-700" role="status">
           <span className="h-2 w-2 animate-pulse rounded-full bg-saffron" /> {t("listening")} <span className="font-normal text-ink-500">— tap the mic again to stop, then press Send</span>
         </div>
       )}
@@ -104,7 +104,7 @@ const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
       <form
         onSubmit={(e) => { e.preventDefault(); submit(); }}
         className={compact
-          ? "rounded-lg border border-ink-200 bg-white transition-colors focus-within:border-forest-600 focus-within:ring-2 focus-within:ring-forest-600/20"
+          ? "rounded-2xl border border-ink-300 bg-white transition-colors focus-within:border-forest-600 focus-within:ring-2 focus-within:ring-forest-600/20"
           : "flex items-end gap-2"}
       >
         {!compact && voice.supported && (
@@ -117,8 +117,8 @@ const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
           ref={box}
           rows={1}
           className={compact
-            ? "block min-h-[44px] w-full resize-none rounded-lg bg-transparent px-3 pb-1 pt-2.5 leading-snug text-ink-900 placeholder:text-ink-400 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            : "input min-h-[44px] resize-none py-2.5 leading-snug"}
+            ? "block min-h-[44px] w-full resize-none rounded-2xl bg-transparent px-3 pb-1 pt-2.5 leading-snug text-ink-900 placeholder:text-ink-400 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            : "input min-h-[44px] resize-none rounded-2xl py-2.5 leading-snug"}
           value={shown}
           onChange={(e) => {
             const v = e.target.value;
@@ -138,13 +138,13 @@ const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                 <LanguageMenu value={sttLang} onChange={(l) => { voice.stop(); setSttLang(l); }} />
               </>
             )}
-            <button className="btn-primary btn-sm ml-auto" disabled={busy || !draft.trim()} aria-label={t("send")}>
-              <Send size={16} /> {t("send")}
+            <button className="btn-primary btn-sm ml-auto !h-9 !min-h-[36px] !w-9 !px-0" disabled={busy || !draft.trim()} aria-label={t("send")}>
+              <Send size={16} />
             </button>
           </div>
         ) : (
-          <button className="btn-primary h-11 flex-none px-3 sm:px-4" disabled={busy || !draft.trim()} aria-label={t("send")}>
-            <Send size={17} /> <span className="hidden sm:inline">{t("send")}</span>
+          <button className="btn-primary h-11 w-11 flex-none !px-0" disabled={busy || !draft.trim()} aria-label={t("send")}>
+            <Send size={17} />
           </button>
         )}
       </form>

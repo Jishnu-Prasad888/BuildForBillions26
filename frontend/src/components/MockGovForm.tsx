@@ -25,14 +25,14 @@ const MockGovForm = forwardRef(function MockGovForm(
 ) {
   const title = form.titles?.[lang] || form.title;
   return (
-    <div ref={ref} className="demo-watermark overflow-hidden rounded-lg border-2 border-ink-300 bg-white shadow-card" data-screen-root>
-      <div className="flex items-center gap-4 border-b-4 border-saffron bg-forest-800 px-6 py-4 text-white">
-        <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full border-2 border-white/70 text-[0.6rem] font-bold leading-tight">DEMO<br />SEAL</div>
+    <div ref={ref} className="demo-watermark overflow-hidden rounded-xl border border-paper-300 bg-white shadow-card" data-screen-root>
+      <div className="flex items-center gap-4 bg-forest-800 px-6 py-4 text-white">
+        <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full border-2 border-white/70 text-[0.6rem] font-medium leading-tight">DEMO<br />SEAL</div>
         <div className="min-w-0">
-          <div className="text-xs font-semibold uppercase tracking-wider text-ink-200">{form.authority}</div>
-          <h2 className="font-display text-xl font-bold text-white">{title}</h2>
+          <div className="text-xs font-medium uppercase tracking-wider text-white/70">{form.authority}</div>
+          <h2 className="text-xl font-medium text-white">{title}</h2>
         </div>
-        <div className="ml-auto hidden text-right text-xs text-ink-200 sm:block">
+        <div className="ml-auto hidden text-right text-xs text-white/70 sm:block">
           <div>Form ID: {form.id.toUpperCase()}</div>
           <div>{referenceLabel ?? "Application no.: (assigned on submission)"}</div>
         </div>
@@ -43,8 +43,8 @@ const MockGovForm = forwardRef(function MockGovForm(
 
       <div className="space-y-8 px-6 py-6">
         {form.sections.map((sec, si) => (
-          <fieldset key={sec.id} className="rounded-lg border border-ink-200">
-            <legend className="ml-3 bg-white px-2 text-[0.95rem] font-bold text-ink-800">
+          <fieldset key={sec.id} className="rounded-xl border border-paper-300">
+            <legend className="ml-3 bg-white px-2 text-[0.95rem] font-medium text-ink-900">
               <span className="mr-2 text-saffron-600">{si + 1}.</span>
               {sec.titles?.[lang] || sec.title}
             </legend>
@@ -77,7 +77,7 @@ const MockGovForm = forwardRef(function MockGovForm(
                       </label>
                     ) : (
                       <>
-                        <label htmlFor={`f-${f.id}`} className="mb-1 block text-sm font-semibold text-ink-700">
+                        <label htmlFor={`f-${f.id}`} className="label">
                           {label} {f.required && <b className="text-brick">*</b>}
                         </label>
                         {f.type === "select" ? (
@@ -112,7 +112,7 @@ const MockGovForm = forwardRef(function MockGovForm(
         ))}
       </div>
       {!readOnly && (
-        <div className="flex flex-wrap justify-end gap-2 border-t border-ink-200 bg-paper-100 px-6 py-4">
+        <div className="flex flex-wrap justify-end gap-2 border-t border-paper-300 bg-paper-100 px-6 py-4">
           <button type="button" className="btn-secondary" onClick={onSave}><Save size={16} /> Save draft</button>
           <button type="button" className="btn-primary" onClick={onReview}>Review &amp; submit</button>
         </div>

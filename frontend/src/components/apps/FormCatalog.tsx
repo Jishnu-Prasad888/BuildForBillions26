@@ -21,7 +21,7 @@ function SchemeFormCard({ scheme, existing, size, busy, onStart }: {
           {guided ? <Sparkles size={20} /> : <Landmark size={20} />}
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-base font-bold leading-snug text-ink-900">{scheme.display_name}</h3>
+          <h3 className="text-base font-medium leading-snug text-ink-900">{scheme.display_name}</h3>
           {scheme.department && <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-500"><Building2 size={13} /> {scheme.department}</div>}
         </div>
       </div>
@@ -38,7 +38,7 @@ function SchemeFormCard({ scheme, existing, size, busy, onStart }: {
       </div>
       {scheme.summary && <p className="line-clamp-3 text-sm text-ink-700">{scheme.summary}</p>}
       {docs.length > 0 && (
-        <p className="text-xs text-ink-500"><span className="font-semibold text-ink-600">Keep ready:</span> {docs.slice(0, 3).join(", ")}{docs.length > 3 ? ` +${docs.length - 3} more` : ""}</p>
+        <p className="text-xs text-ink-500"><span className="font-medium text-ink-600">Keep ready:</span> {docs.slice(0, 3).join(", ")}{docs.length > 3 ? ` +${docs.length - 3} more` : ""}</p>
       )}
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
         <button className={`btn-sm ${guided ? "btn-accent" : "btn-primary"}`} disabled={busy} onClick={() => onStart(true)}>
@@ -90,7 +90,7 @@ export default function FormCatalog({ apps, leading, afterGuided }: { apps: Appl
     <div className="space-y-6">
       {startError && <ErrorNote>{startError}</ErrorNote>}
       <div>
-        <h3 className="mb-1 text-sm font-bold uppercase tracking-wide text-ink-700">Guided forms</h3>
+        <h3 className="panel-title mb-1">Guided forms</h3>
         <p className="mb-3 text-sm text-ink-600">The assistant explains each field, takes your answers by voice or typing, and fills the form with you.</p>
         <div className="stagger grid gap-4 md:grid-cols-2">
           {leading}
@@ -100,7 +100,7 @@ export default function FormCatalog({ apps, leading, afterGuided }: { apps: Appl
       {afterGuided}
       {portal.length > 0 && (
         <div>
-          <h3 className="mb-1 text-sm font-bold uppercase tracking-wide text-ink-700">Apply on the official portal</h3>
+          <h3 className="panel-title mb-1">Apply on the official portal</h3>
           <p className="mb-3 text-sm text-ink-600">These are applied for on the government's own site. Track them here and keep their documents and notes together.</p>
           <div className="stagger grid gap-4 md:grid-cols-2">{portal.map(card)}</div>
         </div>

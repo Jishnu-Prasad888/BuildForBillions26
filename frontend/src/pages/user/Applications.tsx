@@ -15,20 +15,20 @@ type Filter = "all" | Bucket;
 function ResumeBanner({ app }: { app: Application }) {
   const na = nextAction(app);
   return (
-    <section className="mb-6 overflow-hidden rounded-lg bg-forest-800 p-5 text-white shadow-card sm:p-6" aria-label="Pick up where you left off">
-      <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-200">Pick up where you left off</div>
-      <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
+    <section className="card mb-6 p-5 sm:p-6" aria-label="Pick up where you left off">
+      <div className="eyebrow text-forest-700">Pick up where you left off</div>
+      <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0 flex-1 basis-64">
-          <h2 className="text-xl font-bold leading-snug text-white">{app.scheme_name}</h2>
-          <p className="mt-1 text-sm text-forest-100">{na.hint}</p>
+          <h2 className="text-xl font-medium leading-snug text-ink-900">{app.scheme_name}</h2>
+          <p className="mt-1 text-sm text-ink-600">{na.hint}</p>
           <div className="mt-3 flex max-w-md items-center gap-3">
-            <ProgressBar value={app.progress} className="!bg-forest-900" />
-            <span className="text-sm font-bold">{app.progress}%</span>
+            <ProgressBar value={app.progress} />
+            <span className="text-sm font-medium text-ink-600">{app.progress}%</span>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link to={na.to} className="btn bg-white text-forest-900 hover:bg-forest-50">{na.label} <ArrowRight size={16} /></Link>
-          {na.assistTo && <Link to={na.assistTo} className="btn border border-forest-500 text-white hover:bg-forest-700"><Sparkles size={16} /> Help me fill</Link>}
+          <Link to={na.to} className="btn-primary">{na.label} <ArrowRight size={16} /></Link>
+          {na.assistTo && <Link to={na.assistTo} className="btn-secondary"><Sparkles size={16} /> Help me fill</Link>}
         </div>
       </div>
     </section>
@@ -78,7 +78,7 @@ export default function Applications() {
             { id: "submitted", label: "Submitted", count: count("submitted") },
             { id: "approved", label: "Approved", count: count("approved") },
           ]} />
-          {shown.length === 0 ? <div className="mt-4"><EmptyState title="Nothing in this view" /></div> : (
+          {shown.length === 0 ? <div className="mt-4"><EmptyState icon={<FileText size={22} />} title="Nothing in this view" /></div> : (
             <div key={filter} className="stagger mt-4 grid gap-4 md:grid-cols-2">{shown.map((a) => <ApplicationCard key={a.id} app={a} />)}</div>
           )}
         </>

@@ -139,7 +139,7 @@ export default function FormWorkspace() {
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-3 text-ink-700">
         <Spinner className="h-7 w-7" />
-        <div className="font-semibold">Reading your form…</div>
+        <div className="font-medium">Reading your form…</div>
         <p className="max-w-sm text-center text-sm text-ink-500">Extracting text, straightening the page and finding the fields. Scanned pages can take a little longer.</p>
       </div>
     );
@@ -151,14 +151,13 @@ export default function FormWorkspace() {
 
   return (
     <div className="flex h-screen h-dvh flex-col">
-      <div className="tricolor-rule h-1" />
       <header className="flex flex-wrap items-center gap-3 border-b border-paper-300 bg-white px-4 py-2.5">
         <Link to="/forms" className="btn-ghost btn-sm"><ArrowLeft size={16} /> Forms</Link>
         <Logo sub={false} />
         <div className="ml-2 hidden min-w-0 flex-1 items-center gap-3 md:flex">
-          <span className="truncate font-semibold text-ink-800">{meta.original_filename}</span>
+          <span className="truncate font-medium text-ink-800">{meta.original_filename}</span>
           <div className="w-40"><ProgressBar value={pct} /></div>
-          <span className="text-sm font-bold text-ink-700">{pct}%</span>
+          <span className="text-sm font-medium text-ink-700">{pct}%</span>
         </div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <span className="hidden items-center gap-1 text-xs text-ink-500 lg:flex"><ShieldCheck size={14} className="text-leaf" /> Original file is never modified</span>
@@ -172,7 +171,7 @@ export default function FormWorkspace() {
         <div className="grid flex-none grid-cols-3 gap-1 border-b border-paper-300 bg-white p-1.5 lg:hidden" role="tablist" aria-label="Workspace view">
           {([["fields", "Fields", ListChecks], ["form", "Form", FileText], ["assistant", "Assistant", Bot]] as const).map(([id, label, Icon]) => (
             <button key={id} role="tab" aria-selected={pane === id} onClick={() => { setPane(id); if (id === "assistant") setUnread(false); }}
-              className={`relative flex min-h-[40px] items-center justify-center gap-1.5 rounded-md text-sm font-semibold transition-colors ${pane === id ? "bg-forest-800 text-white" : "text-ink-600 hover:bg-ink-100"}`}>
+              className={`relative flex min-h-[40px] items-center justify-center gap-1.5 rounded-full text-sm font-medium transition-colors ${pane === id ? "bg-forest-100 text-forest-800" : "text-ink-600 hover:bg-ink-100"}`}>
               <Icon size={16} /> {label}
               {id === "assistant" && unread && pane !== "assistant" && <span className="absolute right-3 top-2 h-2 w-2 rounded-full bg-amber" role="status" aria-label="New reply" />}
             </button>
@@ -181,7 +180,7 @@ export default function FormWorkspace() {
         <div ref={cols.containerRef} className="flex min-h-0 flex-1 flex-col p-3 lg:flex-row">
           {/* Left: AutoFill, review and notes */}
           <section style={{ "--w": `${cols.leftWidth}px` } as CSSProperties} aria-label="AutoFill, review and notes"
-            className={`${pane === "fields" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-paper-300 bg-paper-100 lg:flex lg:w-[var(--w)] lg:flex-none`}>
+            className={`${pane === "fields" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-paper-300 bg-paper-100 lg:flex lg:w-[var(--w)] lg:flex-none`}>
             <Tabs<Tab> value={tab} onChange={setTab} tabs={[
               { id: "autofill", label: "AutoFill" },
               { id: "review", label: `Review${sm.required_missing ? ` (${sm.required_missing})` : ""}` },
@@ -222,7 +221,7 @@ export default function FormWorkspace() {
           <Splitter split={cols.right} label="Resize the assistant panel" className="hidden lg:flex" />
           {/* Right: the AI assistant */}
           <section aria-label="AI assistant" style={{ "--w": `${cols.rightWidth}px` } as CSSProperties}
-            className={`${pane === "assistant" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-paper-300 bg-white lg:flex lg:w-[var(--w)] lg:flex-none`}>
+            className={`${pane === "assistant" ? "flex" : "hidden"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-paper-300 bg-white lg:flex lg:w-[var(--w)] lg:flex-none`}>
             {dockOpen ? (
               <AssistantDock ref={dock} formId={meta.id} lang={lang} pickedFieldId={picked} screen={screen} onStartScreen={() => setScreenModal(true)}
                 onResponse={onAssistantResponse} onEnd={() => setDockOpen(false)} summaryLine={summaryLine} />

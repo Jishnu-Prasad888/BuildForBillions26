@@ -27,7 +27,7 @@ export function Charkha({ className = "h-4 w-4" }: { className?: string }) {
 /* Full-area loading state: the charkha centred in its container (the whole viewport by default). */
 export function CharkhaLoader({ className = "h-screen" }: { className?: string }) {
   return (
-    <div className={`flex items-center justify-center text-leaf ${className}`} role="status">
+    <div className={`flex items-center justify-center text-forest-600 ${className}`} role="status">
       <Charkha className="h-20 w-20" />
       <span className="sr-only">Loading</span>
     </div>

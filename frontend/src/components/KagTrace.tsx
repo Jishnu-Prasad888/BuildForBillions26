@@ -15,14 +15,14 @@ export default function KagTrace({ meta, cited }: { meta: Record<string, any>; c
   ];
   return (
     <div className="mt-2 text-xs">
-      <button onClick={() => setOpen((o) => !o)} className="inline-flex items-center gap-1 font-semibold text-ink-500 hover:text-ink-800" aria-expanded={open}>
+      <button onClick={() => setOpen((o) => !o)} className="inline-flex items-center gap-1 font-medium text-ink-500 hover:text-forest-700" aria-expanded={open}>
         <ChevronRight size={14} className={`transition-transform ${open ? "rotate-90" : ""}`} /> How this answer was grounded
       </button>
       {open && (
-        <ol className="mt-2 grid gap-1.5 rounded-lg border border-paper-300 bg-paper-100 p-3 sm:grid-cols-5">
+        <ol className="mt-2 grid gap-1.5 rounded-xl border border-paper-300 bg-paper-100 p-3 sm:grid-cols-5">
           {steps.map((s, i) => (
             <li key={s.k} className="relative">
-              <div className="flex items-center gap-1.5 font-bold text-ink-700"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-forest-800 text-[0.6rem] text-white">{i + 1}</span>{s.k}</div>
+              <div className="flex items-center gap-1.5 font-medium text-ink-900"><span className="flex h-4 w-4 items-center justify-center rounded-full bg-forest-100 text-[0.6rem] font-medium text-forest-800">{i + 1}</span>{s.k}</div>
               <div className="mt-0.5 text-ink-600">{s.v}</div>
             </li>
           ))}

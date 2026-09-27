@@ -50,7 +50,7 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
     return { hubs: [...hubs.values()], docs };
   }, [items, cited]);
 
-  if (!hubs.length) return <p className="rounded-lg bg-paper-100 p-4 text-sm text-ink-500">No schemes or documents were retrieved for this question.</p>;
+  if (!hubs.length) return <p className="rounded-xl bg-paper-100 p-4 text-sm text-ink-500">No schemes or documents were retrieved for this question.</p>;
 
   // Each hub owns an angular sector proportional to its document count (min one slot), so fans never overlap.
   const slots = hubs.map((h) => Math.max(1, h.docs.length));
@@ -74,17 +74,17 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
 
   return (
     <div>
-      <div className="overflow-x-auto rounded-xl border border-paper-300 bg-[radial-gradient(circle_at_center,#f1f8f4_0%,#ffffff_70%)]">
+      <div className="overflow-x-auto rounded-xl border border-paper-300 bg-[radial-gradient(circle_at_center,#f1f3f4_0%,#ffffff_70%)]">
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[820px]" role="img" aria-label="Retrieval map: schemes and the documents behind them">
           {/* guide rings */}
-          <ellipse cx={CX} cy={CY} rx={R1 * STRETCH} ry={R1} fill="none" stroke="#e9f1ec" strokeDasharray="4 6" />
-          <ellipse cx={CX} cy={CY} rx={R2 * STRETCH} ry={R2} fill="none" stroke="#e9f1ec" strokeDasharray="4 6" />
+          <ellipse cx={CX} cy={CY} rx={R1 * STRETCH} ry={R1} fill="none" stroke="#e8eaed" strokeDasharray="4 6" />
+          <ellipse cx={CX} cy={CY} rx={R2 * STRETCH} ry={R2} fill="none" stroke="#e8eaed" strokeDasharray="4 6" />
 
           {/* question → hub */}
           {hubs.map((h) => (
             <line key={"q" + h.id} x1={CX} y1={CY} x2={pos[h.id].x} y2={pos[h.id].y} pathLength={1}
               className="kag-edge" style={{ animationDelay: "150ms", opacity: lit(h.id) ? 1 : 0.15 }}
-              stroke={h.kind === "scheme" ? "#7fc4a8" : "#c3cec8"} strokeWidth={h.kind === "scheme" ? 2 : 1.4} />
+              stroke={h.kind === "scheme" ? "#7cacf8" : "#dadce0"} strokeWidth={h.kind === "scheme" ? 2 : 1.4} />
           ))}
           {/* hub → document (extra scheme links drawn lighter) */}
           {[...docs.values()].flatMap((d) => d.hubs.map((hid, k) => {
@@ -93,16 +93,16 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
             return (
               <path key={d.id + hid} d={`M${a.x},${a.y} Q${c.x},${c.y} ${b.x},${b.y}`} fill="none" pathLength={1}
                 className="kag-edge" style={{ animationDelay: "450ms", opacity: lit(d.id) && lit(hid) ? 1 : 0.12 }}
-                stroke={d.cited ? "#2f9e6f" : k > 0 ? "#dbe4df" : "#b5c7bd"} strokeWidth={d.cited ? 2 : 1.3} />
+                stroke={d.cited ? "#1a73e8" : k > 0 ? "#e8eaed" : "#dadce0"} strokeWidth={d.cited ? 2 : 1.3} />
             );
           }))}
 
           {/* the question */}
           <g className="kag-pop" style={{ animationDelay: "0ms" }}>
-            <circle cx={CX} cy={CY} r={40} fill="#0f4a37" />
-            <circle cx={CX} cy={CY} r={48} fill="none" stroke="#7fc4a8" strokeWidth={1.5} className="kag-pulse" />
-            <text x={CX} y={CY - 3} textAnchor="middle" fontSize="11" fontWeight={700} fill="#d9efe5">YOUR</text>
-            <text x={CX} y={CY + 11} textAnchor="middle" fontSize="11" fontWeight={700} fill="#d9efe5">QUESTION</text>
+            <circle cx={CX} cy={CY} r={40} fill="#0b57d0" />
+            <circle cx={CX} cy={CY} r={48} fill="none" stroke="#7cacf8" strokeWidth={1.5} className="kag-pulse" />
+            <text x={CX} y={CY - 3} textAnchor="middle" fontSize="11" fontWeight={500} fill="#d3e3fd">YOUR</text>
+            <text x={CX} y={CY + 11} textAnchor="middle" fontSize="11" fontWeight={500} fill="#d3e3fd">QUESTION</text>
             <title>{question}</title>
           </g>
 
@@ -113,9 +113,9 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
             return (
               <g key={h.id} className="kag-pop cursor-default" style={{ animationDelay: `${120 + n++ * 70}ms`, opacity: lit(h.id) ? 1 : 0.3 }}
                 onMouseEnter={() => setHover(h.id)} onMouseLeave={() => setHover(null)}>
-                <circle cx={p.x} cy={p.y} r={scheme ? 24 : 18} fill={scheme ? "#145c45" : "#fff"} stroke={scheme ? "#0f4a37" : "#93a39b"} strokeWidth={scheme ? 2 : 1.5} strokeDasharray={scheme ? undefined : "3 3"} />
-                <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize="11" fontWeight={700} fill={scheme ? "#fff" : "#4b6157"}>{h.docs.length}</text>
-                <text x={p.x} y={p.y + (below ? 40 : -32)} textAnchor="middle" fontSize="12.5" fontWeight={700} fill={scheme ? "#0f4a37" : "#4b6157"}
+                <circle cx={p.x} cy={p.y} r={scheme ? 24 : 18} fill={scheme ? "#1a73e8" : "#fff"} stroke={scheme ? "#0b57d0" : "#9aa0a6"} strokeWidth={scheme ? 2 : 1.5} strokeDasharray={scheme ? undefined : "3 3"} />
+                <text x={p.x} y={p.y + 4} textAnchor="middle" fontSize="11" fontWeight={500} fill={scheme ? "#fff" : "#5f6368"}>{h.docs.length}</text>
+                <text x={p.x} y={p.y + (below ? 40 : -32)} textAnchor="middle" fontSize="12.5" fontWeight={500} fill={scheme ? "#1f1f1f" : "#5f6368"}
                   paintOrder="stroke" stroke="#fff" strokeWidth={4} strokeLinejoin="round">{clip(h.name, 30)}</text>
                 <title>{`${scheme ? "Scheme (knowledge graph)" : "Publisher group"}: ${h.name}\n${h.docs.length} retrieved document${h.docs.length === 1 ? "" : "s"}`}</title>
               </g>
@@ -129,12 +129,12 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
             return (
               <g key={d.id} className="kag-pop cursor-pointer" style={{ animationDelay: `${520 + n++ * 60}ms`, opacity: lit(d.id) ? 1 : 0.3 }}
                 onMouseEnter={() => setHover(d.id)} onMouseLeave={() => setHover(null)} onClick={() => onOpenDoc(d.id)}>
-                {d.cited && <circle cx={p.x} cy={p.y} r={r + 6} fill="#d3ecdf" />}
-                <circle cx={p.x} cy={p.y} r={r} fill={d.cited ? "#2f9e6f" : "#fff"} stroke={d.cited ? "#1f7a4d" : "#65796f"} strokeWidth={1.5} />
-                <text x={p.x} y={p.y + 3.5} textAnchor="middle" fontSize="9.5" fontWeight={700} fill={d.cited ? "#fff" : "#2f433a"}>{d.chunks}</text>
-                <text x={p.x + (right ? r + 8 : -(r + 8))} y={p.y - 2} textAnchor={right ? "start" : "end"} fontSize="11.5" fontWeight={600} fill="#1b2b24"
+                {d.cited && <circle cx={p.x} cy={p.y} r={r + 6} fill="#d3e3fd" />}
+                <circle cx={p.x} cy={p.y} r={r} fill={d.cited ? "#1a73e8" : "#fff"} stroke={d.cited ? "#0b57d0" : "#9aa0a6"} strokeWidth={1.5} />
+                <text x={p.x} y={p.y + 3.5} textAnchor="middle" fontSize="9.5" fontWeight={500} fill={d.cited ? "#fff" : "#444746"}>{d.chunks}</text>
+                <text x={p.x + (right ? r + 8 : -(r + 8))} y={p.y - 2} textAnchor={right ? "start" : "end"} fontSize="11.5" fontWeight={500} fill="#1f1f1f"
                   paintOrder="stroke" stroke="#fff" strokeWidth={3.5} strokeLinejoin="round">{clip(d.title, 34)}</text>
-                <text x={p.x + (right ? r + 8 : -(r + 8))} y={p.y + 12} textAnchor={right ? "start" : "end"} fontSize="10" fill="#65796f"
+                <text x={p.x + (right ? r + 8 : -(r + 8))} y={p.y + 12} textAnchor={right ? "start" : "end"} fontSize="10" fill="#5f6368"
                   paintOrder="stroke" stroke="#fff" strokeWidth={3} strokeLinejoin="round">{clip(d.publisher, 30)}{d.cited ? " · cited" : ""}</text>
                 <title>{`${d.title}\n${d.publisher}\n${d.chunks} chunk${d.chunks === 1 ? "" : "s"} · best score ${d.best.toFixed(3)} · ${[...d.methods].join(" + ")}\nClick to view chunks`}</title>
               </g>
@@ -144,10 +144,10 @@ export default function EvidenceMap({ question, items, cited, onOpenDoc }: { que
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-600">
         <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-forest-800" /> Question</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-forest-700" /> Scheme (graph)</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-forest-600" /> Scheme (graph)</span>
         <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-dashed border-ink-400 bg-white" /> Publisher group</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-ink-500 bg-white" /> Document (number = chunks, size = score)</span>
-        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-saffron ring-2 ring-saffron-100" /> Cited in the answer</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-ink-400 bg-white" /> Document (number = chunks, size = score)</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full bg-forest-600 ring-2 ring-forest-100" /> Cited in the answer</span>
         <span className="text-ink-400">Hover to trace links · click a document to see its chunks</span>
       </div>
     </div>

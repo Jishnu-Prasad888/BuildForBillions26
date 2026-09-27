@@ -56,10 +56,10 @@ export default function Schemes() {
         actions={<button className="btn-primary" onClick={() => setOpen(true)}><Plus size={16} /> Add scheme</button>} />
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <div className="space-y-2">
-          <button onClick={() => setSel(null)} className={`card w-full p-3 text-left font-semibold ${!sel ? "ring-2 ring-saffron" : ""}`}>Whole graph</button>
+          <button onClick={() => setSel(null)} className={`card w-full p-3 text-left font-medium text-ink-900 transition-colors hover:bg-ink-50 ${!sel ? "border-forest-600 bg-forest-50 hover:bg-forest-50" : ""}`}>Whole graph</button>
           {schemes.map((x) => (
-            <button key={x.code} onClick={() => setSel(x.code)} className={`card w-full p-3 text-left ${sel === x.code ? "ring-2 ring-saffron" : ""}`}>
-              <div className="font-semibold">{x.short_name || x.name}</div>
+            <button key={x.code} onClick={() => setSel(x.code)} className={`card w-full p-3 text-left transition-colors hover:bg-ink-50 ${sel === x.code ? "border-forest-600 bg-forest-50 hover:bg-forest-50" : ""}`}>
+              <div className="font-medium text-ink-900">{x.short_name || x.name}</div>
               <div className="font-mono text-xs text-ink-500">{x.code}</div>
             </button>
           ))}
@@ -67,7 +67,7 @@ export default function Schemes() {
         <div className="space-y-4">
           {s && (
             <section className="card grid gap-4 p-5 sm:grid-cols-2">
-              <div><div className="eyebrow">Scheme</div><div className="font-semibold">{s.name}</div></div>
+              <div><div className="eyebrow">Scheme</div><div className="font-medium text-ink-900">{s.name}</div></div>
               <div><div className="eyebrow">Life event</div><div>{s.life_events.join(", ")}</div></div>
               <div><div className="eyebrow">Department</div><div>{s.department}</div></div>
               <div><div className="eyebrow">Available in</div><div>{s.states.map((x) => x.name).join(", ")}</div></div>
@@ -76,7 +76,7 @@ export default function Schemes() {
               <div className="sm:col-span-2"><div className="eyebrow">Eligibility rules</div><ul className="text-sm">{s.rules.map((r) => <li key={r.code}>- {r.text} <span className="text-xs text-ink-400">(supported by {r.supported_by || "—"})</span></li>)}</ul></div>
             </section>
           )}
-          <section className="card p-5">{graph ? <GraphView graph={graph} /> : <Spinner />}</section>
+          <section className="card p-5">{graph ? <GraphView graph={graph} /> : <div className="skeleton h-[420px] w-full" aria-busy aria-label="Loading" />}</section>
         </div>
       </div>
       <Modal open={open} onClose={() => setOpen(false)} title="Add scheme to the graph" wide>

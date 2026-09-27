@@ -76,7 +76,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
       if (f.options.length <= 4) {
         return <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={f.label}>{f.options.map((o) => (
           <button key={o} type="button" role="radio" aria-checked={v === o} onClick={() => commit(f, v === o ? null : o)}
-            className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${v === o ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white hover:bg-ink-50"}`}>{o}</button>
+            className={`rounded-full border px-3.5 py-1.5 text-sm font-medium ${v === o ? "border-forest-600 bg-forest-100 text-forest-800" : "border-ink-300 bg-white text-ink-700 hover:bg-ink-50"}`}>{o}</button>
         ))}</div>;
       }
       return <select id={id} className="input py-2" value={typeof v === "string" ? v : ""} onChange={(e) => commit(f, e.target.value || null)}><option value="">Select…</option>{f.options.map((o) => <option key={o}>{o}</option>)}</select>;
@@ -115,7 +115,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
                     className={`rounded-lg border p-3 ${current ? "border-saffron bg-saffron-50/50" : "border-paper-300 bg-white"} ${flashIds.includes(f.field_id) ? "animate-flash" : ""}`}>
                     <div className="mb-1.5 flex items-start gap-2">
                       {st === "filled" ? <CheckCircle2 size={16} className="mt-0.5 flex-none text-leaf" /> : st === "skipped" ? <CircleDashed size={16} className="mt-0.5 flex-none text-amber" /> : <Circle size={16} className="mt-0.5 flex-none text-ink-300" />}
-                      <label htmlFor={`af-${f.field_id}`} className="flex-1 text-sm font-semibold text-ink-800">
+                      <label htmlFor={`af-${f.field_id}`} className="flex-1 text-sm font-medium text-ink-800">
                         {f.label}{f.required && st !== "manual" && <span className="text-brick" aria-label="required"> *</span>}
                         {schema.sources[f.field_id] === "assistant" && <span className="ml-1.5 chip bg-saffron-50 text-saffron-700">AI-filled</span>}
                         {schema.sources[f.field_id] === "profile" && <span className="ml-1.5 chip bg-ink-100 text-ink-600">from profile</span>}
@@ -124,7 +124,7 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
                     </div>
                     {f.description && <p className="mb-1.5 text-xs text-ink-500">{f.description}</p>}
                     {input(f)}
-                    {errors[f.field_id] && <p id={`af-${f.field_id}-err`} role="alert" className="mt-1 text-sm text-brick">{errors[f.field_id]}</p>}
+                    {errors[f.field_id] && <p id={`af-${f.field_id}-err`} role="alert" className="mt-1 text-xs text-brick">{errors[f.field_id]}</p>}
                     {saving === f.field_id && <p className="mt-1 text-xs text-ink-400">Saving…</p>}
                     {f.confidence < 0.6 && !f.manual && (
                       <div className="mt-2 rounded-md bg-amber-50 px-2.5 py-1.5 text-xs text-amber-700">
@@ -135,12 +135,12 @@ export default function AutoFillPanel({ schema, currentFieldId, flashIds, onSele
                           </form>
                         ) : (
                           <span>I couldn't confidently identify this field. You can manually specify what it is.{" "}
-                            <button className="inline-flex items-center gap-1 font-semibold underline" onClick={(e) => { e.stopPropagation(); setRenaming(f.field_id); }}><Pencil size={12} /> Name it</button></span>
+                            <button className="inline-flex items-center gap-1 font-medium underline" onClick={(e) => { e.stopPropagation(); setRenaming(f.field_id); }}><Pencil size={12} /> Name it</button></span>
                         )}
                       </div>
                     )}
                     {(st === "missing") && !f.manual && f.type !== "checkbox" && (
-                      <button className="mt-2 text-xs font-semibold text-ink-500 underline" onClick={(e) => { e.stopPropagation(); onSave({}, { skip: [f.field_id] }); }}>Fill this later</button>
+                      <button className="mt-2 text-xs font-medium text-ink-500 underline" onClick={(e) => { e.stopPropagation(); onSave({}, { skip: [f.field_id] }); }}>Fill this later</button>
                     )}
                   </div>
                 );

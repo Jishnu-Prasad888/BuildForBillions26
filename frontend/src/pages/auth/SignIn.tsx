@@ -36,8 +36,8 @@ export default function SignIn() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl font-bold">Sign in</h1>
-      <p className="mt-1 text-ink-600">Continue to your account.</p>
+      <h1 className="text-2xl font-medium tracking-tight text-ink-900">Sign in</h1>
+      <p className="mt-1.5 text-sm text-ink-600">Continue to your account.</p>
       {params.get("expired") && <div className="mt-4"><ErrorNote>Your session expired. Please sign in again.</ErrorNote></div>}
 
       <form onSubmit={submit} className="mt-6 space-y-4">
@@ -50,34 +50,36 @@ export default function SignIn() {
         </div>
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <label htmlFor="password" className="text-sm font-semibold text-ink-700">Password</label>
-            <Link to="/forgot-password" className="rounded text-sm font-semibold text-forest-700 hover:text-forest-900 hover:underline">Forgot?</Link>
+            <label htmlFor="password" className="text-sm font-medium text-ink-700">Password</label>
+            <Link to="/forgot-password" className="link text-sm">Forgot?</Link>
           </div>
           <div className="relative">
             <Lock size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400" />
             <input id="password" type={show ? "text" : "password"} placeholder="Password" className="input pl-10 pr-11" autoComplete="current-password" required aria-invalid={!!err || undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700">
+            <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-700">
               {show ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
         <ErrorNote>{err}</ErrorNote>
-        <button className="btn-primary w-full py-3" disabled={busy}>{busy && <Spinner />} Sign in</button>
+        <button className="btn-primary w-full" disabled={busy}>{busy && <Spinner />} Sign in</button>
       </form>
 
-      <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.08em] text-ink-400">
+      <div className="my-6 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.08em] text-ink-500">
         <span className="h-px flex-1 bg-paper-300" />New here?<span className="h-px flex-1 bg-paper-300" />
       </div>
       <Link to="/signup" className="btn-secondary w-full">Create an account</Link>
 
-      <div className="mt-7 rounded-md border border-forest-100 bg-forest-50/60 p-3.5">
-        <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.08em] text-forest-700">Quick sign-in</div>
+      <div className="mt-7 rounded-xl border border-forest-100 bg-forest-50 p-3.5">
+        <div className="mb-2 text-xs font-medium uppercase tracking-[0.08em] text-forest-700">Quick sign-in (demo accounts)</div>
         <div className="grid grid-cols-2 gap-2">
-          <button type="button" onClick={() => fill("ramesh@demo.in", "Demo@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-forest-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-forest-300 hover:bg-forest-50">
-            <UserRound size={15} className="text-forest-600" /> Citizen
+          <button type="button" onClick={() => fill("ramesh@demo.in", "Demo@123")} className="flex min-h-[40px] flex-col items-center justify-center gap-0.5 rounded-xl border border-forest-100 bg-white px-3 py-2 transition-colors hover:border-forest-300 hover:bg-forest-50">
+            <span className="flex items-center gap-1.5 text-sm font-medium text-ink-800"><UserRound size={15} className="text-forest-600" /> Citizen</span>
+            <span className="text-xs text-ink-500">ramesh@demo.in · Demo@123</span>
           </button>
-          <button type="button" onClick={() => fill("admin@demo.gov.in", "Admin@123")} className="flex items-center justify-center gap-1.5 rounded-md border border-forest-100 bg-white px-3 py-2 text-sm font-semibold text-ink-800 transition-colors hover:border-forest-300 hover:bg-forest-50">
-            <ShieldCheck size={15} className="text-forest-600" /> Admin
+          <button type="button" onClick={() => fill("admin@demo.gov.in", "Admin@123")} className="flex min-h-[40px] flex-col items-center justify-center gap-0.5 rounded-xl border border-forest-100 bg-white px-3 py-2 transition-colors hover:border-forest-300 hover:bg-forest-50">
+            <span className="flex items-center gap-1.5 text-sm font-medium text-ink-800"><ShieldCheck size={15} className="text-forest-600" /> Admin</span>
+            <span className="text-xs text-ink-500">admin@demo.gov.in · Admin@123</span>
           </button>
         </div>
       </div>

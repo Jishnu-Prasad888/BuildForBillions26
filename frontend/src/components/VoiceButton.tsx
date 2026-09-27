@@ -11,7 +11,7 @@ export default function VoiceButton({ listening, onStart, onStop, disabled, size
       aria-label={listening ? "Stop listening" : "Speak"}
       aria-pressed={listening}
       className={`flex ${dim} flex-none items-center justify-center rounded-full transition-colors disabled:opacity-40 ${
-        listening ? "animate-pulseRing bg-saffron text-white" : "bg-forest-800 text-white hover:bg-forest-900"
+        listening ? "animate-pulseRing bg-forest-600 text-white" : "bg-forest-100 text-forest-700 hover:bg-forest-200"
       }`}
     >
       {listening ? <MicOff size={icon} /> : <Mic size={icon} />}

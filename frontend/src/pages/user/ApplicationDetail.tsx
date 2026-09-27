@@ -1,4 +1,4 @@
-import { ArrowLeft, Bot, CheckCircle2, Circle, ExternalLink, FileCheck2, FileX2, Sparkles, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle2, Circle, ExternalLink, FileCheck2, FileText, FileX2, FolderOpen, MessageCircle, Sparkles, User as UserIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "@/services/api";
@@ -70,7 +70,7 @@ export default function ApplicationDetail() {
 
   return (
     <div>
-      <Link to="/applications" className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-600 hover:text-ink-900"><ArrowLeft size={15} /> {t("applications")}</Link>
+      <Link to="/applications" className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink-600 hover:text-ink-900"><ArrowLeft size={15} /> {t("applications")}</Link>
 
       <section className="card mb-6 overflow-hidden">
         <div className="p-5 sm:p-6">
@@ -94,11 +94,11 @@ export default function ApplicationDetail() {
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-paper-300 bg-forest-50 px-5 py-3.5 sm:px-6">
           <div className="min-w-0 flex-1 basis-64">
-            <div className="text-xs font-bold uppercase tracking-[0.08em] text-forest-700">What's next</div>
+            <div className="text-xs font-medium uppercase tracking-[0.08em] text-forest-700">What's next</div>
             <div className="text-[0.95rem] text-ink-800">{na.hint}</div>
           </div>
           {(app.form_id || app.progress > 0) && (
-            <div className="flex w-full max-w-xs items-center gap-3 sm:w-64"><ProgressBar value={app.progress} /><b className="text-sm">{app.progress}%</b></div>
+            <div className="flex w-full max-w-xs items-center gap-3 sm:w-64"><ProgressBar value={app.progress} /><span className="text-sm font-medium text-ink-700">{app.progress}%</span></div>
           )}
           {app.demo && ["SUBMITTED", "UNDER_REVIEW", "FIELD_VERIFICATION"].includes(app.status) && (
             <button className="btn-secondary btn-sm" onClick={async () => { await api.post(`/api/applications/${id}/simulate-status`); load(); }}>Simulate status update (demo)</button>
@@ -115,17 +115,17 @@ export default function ApplicationDetail() {
                 <div className="card p-5 text-[0.95rem] text-ink-700">This scheme is applied for on its official portal. Use this page to keep your documents and notes together.</div>
               )}
               {required.length > 0 && (
-                <section className="card p-5">
+                <section className="card p-5 sm:p-6">
                   <div className="flex items-center justify-between gap-3">
-                    <h2 className="text-lg font-bold">Documents</h2>
-                    <button className="text-sm font-semibold text-forest-700 hover:underline" onClick={() => setTab("documents")}>Manage →</button>
+                    <h2 className="section-title">Documents</h2>
+                    <button className="link text-sm" onClick={() => setTab("documents")}>Manage →</button>
                   </div>
                   <p className="mt-1 text-sm text-ink-600">{readyCount} of {required.length} required documents are ready.</p>
                   <div className="mt-2"><ProgressBar value={Math.round((readyCount / required.length) * 100)} /></div>
                 </section>
               )}
-              <section className="card p-5">
-                <h2 className="mb-4 text-lg font-bold">Timeline</h2>
+              <section className="card p-5 sm:p-6">
+                <h2 className="section-title mb-4">Timeline</h2>
                 <ol className="relative ml-2 border-l-2 border-paper-300">
                   {app.timeline.map((e, i) => (
                     <li key={i} className="relative mb-5 ml-5 last:mb-0">
@@ -148,7 +148,7 @@ export default function ApplicationDetail() {
               return (
                 <section key={s.id} className="card overflow-hidden">
                   <div className="flex items-center justify-between gap-3 border-b border-paper-300 bg-paper-100 px-5 py-3">
-                    <h3 className="font-bold">{s.titles?.[lang] || s.title}</h3>
+                    <h3 className="font-medium text-ink-900">{s.titles?.[lang] || s.title}</h3>
                     <span className={`chip ${done === s.fields.length ? "bg-leaf-50 text-leaf-700 ring-1 ring-leaf-100" : "bg-ink-100 text-ink-600"}`}>{done}/{s.fields.length} answered</span>
                   </div>
                   <dl className="grid gap-x-6 gap-y-3 px-5 py-4 sm:grid-cols-2">
@@ -159,7 +159,7 @@ export default function ApplicationDetail() {
                         <div key={f.id} className="flex items-start gap-2">
                           {ok ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-leaf" /> : <Circle size={17} className="mt-0.5 flex-none text-ink-300" />}
                           <div className="min-w-0">
-                            <dt className="text-xs font-semibold uppercase tracking-wide text-ink-500">{fieldLabel(f, lang, app.form_data)}</dt>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-ink-500">{fieldLabel(f, lang, app.form_data)}</dt>
                             <dd className={`break-words text-[0.95rem] ${ok ? "text-ink-900" : "text-ink-400"}`}>{ok ? displayValue(f, app.form_data[f.id], lang, true) : later ? "Marked for later" : "Not answered yet"}</dd>
                           </div>
                         </div>
@@ -174,18 +174,18 @@ export default function ApplicationDetail() {
         )}
 
         {tab === "documents" && (
-          required.length === 0 ? <EmptyState title="No documents listed for this scheme" /> : (
+          required.length === 0 ? <EmptyState icon={<FolderOpen size={22} />} title="No documents listed for this scheme" /> : (
             <section className="card divide-y divide-paper-300">
               {required.map((d) => {
                 const attached = app.documents.find((x) => x.requirement_code === d.code);
                 const candidates = app.wallet.filter((w) => d.wallet_types.includes(w.doc_type));
                 const have = d.wallet_types.some((w) => walletTypes.has(w));
                 return (
-                  <div key={d.code} className="flex flex-wrap items-center gap-3 px-5 py-4">
+                  <div key={d.code} className="flex flex-wrap items-center gap-3 px-5 py-4 transition-colors hover:bg-ink-50">
                     {attached ? <FileCheck2 className="flex-none text-leaf" /> : have ? <FileCheck2 className="flex-none text-ink-400" /> : <FileX2 className="flex-none text-brick" />}
                     <div className="min-w-[220px] flex-1">
-                      <div className="font-semibold">{d.display_name}</div>
-                      <div className="text-sm text-ink-500">{attached ? `Attached: ${attached.user_document.title}` : have ? "Available in your wallet" : "Not in your document wallet yet"}</div>
+                      <div className="font-medium text-ink-900">{d.display_name}</div>
+                      <div className="text-sm text-ink-600">{attached ? `Attached: ${attached.user_document.title}` : have ? "Available in your wallet" : "Not in your document wallet yet"}</div>
                     </div>
                     {!attached && candidates.length > 0 && (
                       <select className="input w-auto py-1.5 text-sm" defaultValue="" aria-label={`Attach a document for ${d.display_name}`} onChange={(e) => e.target.value && attach(d.code, e.target.value)}>
@@ -205,21 +205,21 @@ export default function ApplicationDetail() {
           <div className="space-y-8">
             <div className="grid gap-6 md:grid-cols-2">
               <UserNotesPanel notes={notes} applicationId={id} onChange={setNotes} />
-              {app.ai_notes ? <AINotesPanel data={app.ai_notes.data as AINotes} /> : <EmptyState title="No AI notes yet" />}
+              {app.ai_notes ? <AINotesPanel data={app.ai_notes.data as AINotes} /> : <EmptyState icon={<Bot size={22} />} title="No AI notes yet" />}
             </div>
             <section>
-              <h2 className="mb-3 text-lg font-bold">Sources ({app.evidence.length})</h2>
-              {app.evidence.length ? <EvidenceList evidence={app.evidence} /> : <EmptyState title="No sources recorded yet">Sources appear here when the assistant answers using official documents.</EmptyState>}
+              <h2 className="section-title mb-3">Sources ({app.evidence.length})</h2>
+              {app.evidence.length ? <EvidenceList evidence={app.evidence} /> : <EmptyState icon={<FileText size={22} />} title="No sources recorded yet">Sources appear here when the assistant answers using official documents.</EmptyState>}
             </section>
             <section>
-              <h2 className="mb-3 text-lg font-bold">Assistant conversation</h2>
-              {app.conversation.length === 0 ? <EmptyState title="No conversation yet" /> : (
+              <h2 className="section-title mb-3">Assistant conversation</h2>
+              {app.conversation.length === 0 ? <EmptyState icon={<MessageCircle size={22} />} title="No conversation yet" /> : (
                 <div className="card max-h-[32rem] space-y-4 overflow-y-auto p-5">
                   {app.conversation.map((m) => (
                     <div key={m.id} className="flex gap-3">
-                      <div className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${m.role === "user" ? "bg-ink-100 text-ink-700" : "bg-forest-800 text-white"}`}>{m.role === "user" ? <UserIcon size={16} /> : <Bot size={16} />}</div>
+                      <div className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${m.role === "user" ? "bg-ink-100 text-ink-700" : "bg-forest-100 text-forest-800"}`}>{m.role === "user" ? <UserIcon size={16} /> : <Bot size={16} />}</div>
                       <div className="min-w-0 flex-1 text-[0.95rem]">
-                        <div className="text-xs text-ink-400">{formatDate(m.created_at, true)}</div>
+                        <div className="text-xs text-ink-500">{formatDate(m.created_at, true)}</div>
                         <Markdown text={m.content.replace(/\[(chunk|fact)_[a-z0-9_]+\]/g, "")} />
                       </div>
                     </div>

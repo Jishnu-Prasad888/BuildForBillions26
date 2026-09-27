@@ -126,7 +126,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
       <div className="flex flex-none items-center gap-3 border-b border-paper-300 px-4 py-3">
         <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-forest-800 text-white"><Bot size={19} aria-hidden /></span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-[0.97rem] font-bold leading-tight text-ink-900">AI Assistant</h2>
+          <h2 className="text-[0.97rem] font-medium leading-tight text-ink-900">AI Assistant</h2>
           <p className="mt-0.5 text-xs leading-snug text-ink-500">{summaryLine}</p>
         </div>
         {!screen.active && (
@@ -138,7 +138,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
         <div className="flex flex-none items-center gap-3 border-b border-forest-100 bg-forest-50 px-4 py-2.5">
           <video ref={screen.videoRef} muted playsInline aria-label="Preview of the screen you are sharing" className="aspect-video w-24 flex-none rounded-md border border-forest-200 bg-black object-contain" />
           <div className="min-w-0 flex-1">
-            <div role="status" className="flex items-center gap-1.5 text-xs font-bold text-forest-800"><span className="h-2 w-2 animate-pulse rounded-full bg-forest-500" /> Screen assistance is on</div>
+            <div role="status" className="flex items-center gap-1.5 text-xs font-medium text-forest-800"><span className="h-2 w-2 animate-pulse rounded-full bg-forest-500" /> Screen assistance is on</div>
             <p className="mt-0.5 text-[0.68rem] leading-snug text-ink-500">A frame is used only when you ask a question. Nothing is recorded or stored.</p>
           </div>
           <button className="btn-danger btn-sm flex-none" title="Stop screen assistance" onClick={screen.stop}><MonitorOff size={14} /> Stop</button>
@@ -177,7 +177,7 @@ const AssistantDock = forwardRef<AssistantHandle, Props>(function AssistantDock(
                     <div className="flex flex-wrap gap-2 pt-1">
                       {m.choices.map((c) => (
                         <button key={c} disabled={busy} onClick={() => send(c)}
-                          className="rounded-full border border-forest-300 bg-white px-3.5 py-1.5 text-sm font-semibold text-forest-800 transition-colors hover:bg-forest-50 disabled:opacity-50">{c}</button>
+                          className="rounded-full border border-forest-300 bg-white px-3.5 py-1.5 text-sm font-medium text-forest-800 transition-colors hover:bg-forest-50 disabled:opacity-50">{c}</button>
                       ))}
                     </div>
                   )}

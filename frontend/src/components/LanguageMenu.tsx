@@ -32,20 +32,20 @@ export default function LanguageMenu({ value, onChange, label = "Speaking langua
         aria-label={`${label}: ${current.label}`}
         title="Language you will speak in"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-9 items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 text-sm font-semibold text-ink-700 transition-colors hover:border-ink-300 hover:bg-ink-50"
+        className="inline-flex h-9 items-center gap-1.5 rounded-full border border-ink-300 bg-white px-3 text-sm font-medium text-ink-700 transition-colors hover:border-ink-400 hover:bg-ink-50"
       >
         <Languages size={15} className="text-forest-700" aria-hidden />
         {current.native}
         <ChevronDown size={14} className={`text-ink-400 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
       </button>
       {open && (
-        <ul role="listbox" aria-label={label} className="absolute bottom-full left-0 z-20 mb-1.5 min-w-[10rem] rounded-lg border border-paper-300 bg-white p-1 shadow-lift">
+        <ul role="listbox" aria-label={label} className="absolute bottom-full left-0 z-20 mb-1.5 min-w-[10rem] rounded-2xl border border-paper-300 bg-white p-1.5 shadow-lift animate-popIn">
           {LANGUAGES.map((l) => (
             <li key={l.code} role="option" aria-selected={l.code === value}>
               <button
                 type="button"
                 onClick={() => { onChange(l.code); setOpen(false); }}
-                className={`flex w-full items-center justify-between gap-3 rounded-md px-2.5 py-2 text-left text-sm font-semibold transition-colors ${
+                className={`flex w-full items-center justify-between gap-3 rounded-full px-3 py-2 text-left text-sm font-medium transition-colors ${
                   l.code === value ? "bg-forest-50 text-forest-800" : "text-ink-700 hover:bg-ink-50"
                 }`}
               >

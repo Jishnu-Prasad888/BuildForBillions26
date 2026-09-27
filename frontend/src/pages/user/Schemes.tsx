@@ -1,10 +1,11 @@
 import { MessageCircle, Search, SearchX, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "@/services/api";
 import { useI18n } from "@/i18n";
 import type { SchemeCard as S } from "@/types";
 import SchemeCard from "@/components/SchemeCard";
+import { LoadError } from "@/components/apps/Skeleton";
 import { EmptyState, PageHeader } from "@/components/ui";
 
 export default function Schemes() {
@@ -12,13 +13,16 @@ export default function Schemes() {
   const nav = useNavigate();
   const [params, setParams] = useSearchParams();
   const [schemes, setSchemes] = useState<S[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const formOnly = params.get("form") === "1";
   const setFormOnly = (v: boolean) => setParams(v ? { form: "1" } : {}, { replace: true });
 
-  useEffect(() => {
-    api.get<S[]>(`/api/schemes?lang=${lang}`).then(setSchemes);
+  const load = useCallback(() => {
+    setError(null);
+    api.get<S[]>(`/api/schemes?lang=${lang}`).then(setSchemes).catch((e) => setError(e.message));
   }, [lang]);
+  useEffect(load, [load]);
 
   const shown = useMemo(() => {
     const s = q.toLowerCase();
@@ -41,21 +45,21 @@ export default function Schemes() {
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <input className="input pl-10 pr-10" placeholder="Search schemes" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search schemes" />
           {q && (
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-ink-400 hover:text-ink-800" onClick={() => setQ("")} aria-label="Clear search"><X size={16} /></button>
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-ink-400 hover:text-ink-800" onClick={() => setQ("")} aria-label="Clear search"><X size={16} /></button>
           )}
         </div>
         <div className="flex gap-2 overflow-x-auto" role="group" aria-label="Filter schemes">
           {filters.map((f) => (
             <button key={f.label} onClick={f.set} aria-pressed={f.on}
-              className={`inline-flex min-h-[40px] items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-semibold transition-all ${f.on ? "border-forest-800 bg-forest-800 text-white shadow-sm" : "border-paper-300 bg-white text-ink-700 hover:border-forest-200 hover:bg-forest-50"}`}>
+              className={`inline-flex min-h-[40px] items-center gap-2 whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-colors ${f.on ? "border-forest-100 bg-forest-100 text-forest-800" : "border-paper-300 bg-white text-ink-700 hover:bg-ink-50"}`}>
               {f.label}
-              <span className={`rounded-full px-1.5 text-[0.7rem] ${f.on ? "bg-white/20" : "bg-ink-100 text-ink-600"}`}>{f.count}</span>
+              <span className={`rounded-full px-1.5 text-[0.7rem] ${f.on ? "bg-white/60 text-forest-800" : "bg-ink-100 text-ink-600"}`}>{f.count}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {schemes === null ? (
+      {error ? <LoadError message={error} onRetry={load} /> : schemes === null ? (
         <div className="grid gap-4 md:grid-cols-2">{[0, 1, 2, 3].map((i) => <div key={i} className="skeleton h-56" />)}</div>
       ) : shown.length === 0 ? (
         <EmptyState icon={<SearchX size={22} />} title="No schemes match">

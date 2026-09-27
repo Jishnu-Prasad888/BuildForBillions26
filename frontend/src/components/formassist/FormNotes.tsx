@@ -18,19 +18,19 @@ export default function FormNotes({ formId, aiNotes }: { formId: string; aiNotes
   };
   return (
     <div className="min-h-0 space-y-5 overflow-y-auto px-3 py-3">
-      <section className="rounded-lg border border-paper-300 bg-white p-3">
-        <h3 className="mb-2 flex items-center gap-2 font-semibold"><Bot size={16} className="text-saffron-600" /> AI Notes <span className="chip bg-ink-100 text-ink-600">automatic</span></h3>
+      <section className="rounded-xl border border-paper-300 bg-white p-3">
+        <h3 className="mb-2 flex items-center gap-2 font-medium text-ink-900"><Bot size={16} className="text-saffron-600" /> AI Notes <span className="chip bg-ink-100 text-ink-600">automatic</span></h3>
         <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-          <dt className="text-ink-500">Form</dt><dd className="truncate font-semibold">{aiNotes.form}</dd>
-          <dt className="text-ink-500">Detected</dt><dd className="font-semibold">{aiNotes.detected} fields</dd>
-          <dt className="text-ink-500">Completed</dt><dd className="font-semibold">{aiNotes.completed}</dd>
-          <dt className="text-ink-500">Pending</dt><dd className="font-semibold">{aiNotes.pending}</dd>
-          <dt className="text-ink-500">Clarification needed</dt><dd className="font-semibold">{aiNotes.clarification_needed}</dd>
+          <dt className="text-ink-500">Form</dt><dd className="truncate font-medium">{aiNotes.form}</dd>
+          <dt className="text-ink-500">Detected</dt><dd className="font-medium">{aiNotes.detected} fields</dd>
+          <dt className="text-ink-500">Completed</dt><dd className="font-medium">{aiNotes.completed}</dd>
+          <dt className="text-ink-500">Pending</dt><dd className="font-medium">{aiNotes.pending}</dd>
+          <dt className="text-ink-500">Clarification needed</dt><dd className="font-medium">{aiNotes.clarification_needed}</dd>
         </dl>
         {aiNotes.notes.length > 0 && <ul className="mt-2.5 list-disc space-y-1 pl-5 text-sm text-ink-700">{aiNotes.notes.map((n, i) => <li key={i}>{n}</li>)}</ul>}
       </section>
-      <section className="rounded-lg border border-paper-300 bg-white p-3">
-        <h3 className="mb-2 flex items-center gap-2 font-semibold"><UserRound size={16} className="text-ink-600" /> My Notes</h3>
+      <section className="rounded-xl border border-paper-300 bg-white p-3">
+        <h3 className="mb-2 flex items-center gap-2 font-medium text-ink-900"><UserRound size={16} className="text-ink-500" /> My Notes</h3>
         <ul className="space-y-1.5">
           {notes.map((n) => (
             <li key={n.id} className="flex items-start gap-2 text-sm">

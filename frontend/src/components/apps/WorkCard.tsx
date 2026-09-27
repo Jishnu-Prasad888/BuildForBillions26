@@ -31,7 +31,7 @@ export function WorkCard({ icon, tag, title, titleTo, meta, status, progress, hi
         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-forest-50 text-forest-700">{icon}</div>
         <div className="min-w-0 flex-1">
           {tag && <div className="eyebrow">{tag}</div>}
-          <h3 className="text-base font-bold leading-snug text-ink-900">
+          <h3 className="text-base font-medium leading-snug text-ink-900">
             {titleTo ? <Link to={titleTo} className="hover:text-forest-700 hover:underline">{heading}</Link> : heading}
           </h3>
           {meta && <div className="mt-0.5 text-sm text-ink-500">{meta}</div>}
@@ -43,7 +43,7 @@ export function WorkCard({ icon, tag, title, titleTo, meta, status, progress, hi
       {progress !== undefined && (
         <div className="flex items-center gap-3">
           <ProgressBar value={progress} />
-          <span className="w-10 text-right text-sm font-semibold text-ink-700">{progress}%</span>
+          <span className="w-10 text-right text-sm font-medium text-ink-700">{progress}%</span>
         </div>
       )}
       {hint && <p className="text-sm text-ink-600">{hint}</p>}

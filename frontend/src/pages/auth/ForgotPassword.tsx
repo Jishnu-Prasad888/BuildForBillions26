@@ -49,38 +49,39 @@ export default function ForgotPassword() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl font-bold">Reset password</h1>
+      <h1 className="text-2xl font-medium tracking-tight text-ink-900">Reset password</h1>
       {!sent ? (
         <form onSubmit={request} className="mt-6 space-y-4">
-          <p className="text-ink-600">Enter your registered email. We will send a reset link.</p>
+          <p className="text-sm text-ink-600">Enter your registered email. We will send a reset link.</p>
           <div>
             <label className="label" htmlFor="email">Email</label>
-            <input id="email" type="email" className="input" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input id="email" type="email" className="input" autoComplete="email" required aria-invalid={!!err || undefined} value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <ErrorNote>{err}</ErrorNote>
-          <button className="btn-primary w-full py-3" disabled={busy}>{busy && <Spinner />} Send reset link</button>
+          <button className="btn-primary w-full" disabled={busy}>{busy && <Spinner />} Send reset link</button>
         </form>
       ) : (
         <form onSubmit={reset} className="mt-6 space-y-4">
-          <p className="rounded-lg border border-forest-100 bg-forest-50 px-3 py-2 text-sm text-forest-800">{msg}</p>
+          <p className="rounded-xl border border-forest-100 bg-forest-50 px-3.5 py-2.5 text-sm text-forest-800">{msg}</p>
           {demoToken && (
-            <p className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+            <p className="rounded-xl border border-amber-100 bg-amber-50 px-3.5 py-2.5 text-sm text-amber-700">
               Demo mode: there is no email service in this prototype, so the reset token has been filled in for you.
             </p>
           )}
           <div>
             <label className="label" htmlFor="token">Reset token</label>
-            <input id="token" className="input font-mono text-sm" required value={token} onChange={(e) => setToken(e.target.value)} />
+            <input id="token" className="input font-mono text-sm" required aria-invalid={!!err || undefined} value={token} onChange={(e) => setToken(e.target.value)} />
           </div>
           <div>
             <label className="label" htmlFor="pw">New password</label>
-            <input id="pw" type="password" className="input" minLength={8} required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input id="pw" type="password" className="input" autoComplete="new-password" minLength={8} required aria-invalid={!!err || undefined} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <p className="mt-1 text-xs text-ink-500">At least 8 characters.</p>
           </div>
           <ErrorNote>{err}</ErrorNote>
-          <button className="btn-primary w-full py-3" disabled={busy}>{busy && <Spinner />} Set new password</button>
+          <button className="btn-primary w-full" disabled={busy}>{busy && <Spinner />} Set new password</button>
         </form>
       )}
-      <p className="mt-5 text-center"><Link to="/signin" className="font-semibold text-forest-700 hover:text-forest-900 hover:underline">Back to sign in</Link></p>
+      <p className="mt-6 text-center text-sm"><Link to="/signin" className="link">Back to sign in</Link></p>
     </div>
   );
 }

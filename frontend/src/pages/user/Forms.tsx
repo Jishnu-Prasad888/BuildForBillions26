@@ -81,16 +81,16 @@ export default function Forms() {
     <div
       onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
       onDrop={(e) => { e.preventDefault(); setDrag(false); upload(e.dataTransfer.files?.[0]); }}
-      className={`flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-5 text-center transition-all duration-200 ${drag ? "scale-[1.01] border-forest-500 bg-forest-50 shadow-lift" : "border-ink-200 bg-white hover:border-forest-200"}`}
+      className={`flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-5 text-center transition-all duration-200 ${drag ? "scale-[1.01] border-forest-500 bg-forest-50 shadow-lift" : "border-ink-300 bg-white hover:border-forest-300"}`}
     >
       <div className={`flex h-12 w-12 items-center justify-center rounded-lg bg-forest-50 text-forest-700 ${busy ? "" : "animate-float"}`}><UploadCloud size={24} /></div>
       <div>
-        <h3 className="text-base font-bold leading-snug text-ink-900">Your own form</h3>
+        <h3 className="text-base font-medium leading-snug text-ink-900">Your own form</h3>
         <p className="mx-auto mt-0.5 max-w-xs text-sm text-ink-600">Drop a PDF or a photo of any form here. I read it, explain each field and prepare a completed PDF.</p>
         <p className="mt-1.5 text-xs text-ink-500">PDF, JPG, PNG or WebP · up to {MAX_MB} MB</p>
       </div>
       {busy ? (
-        <div className="flex items-center gap-2 font-semibold text-ink-800" role="status"><Spinner /> {busy}</div>
+        <div className="flex items-center gap-2 font-medium text-ink-800" role="status"><Spinner /> {busy}</div>
       ) : (
         <div className="flex flex-wrap justify-center gap-2">
           <button className="btn-primary btn-sm" onClick={() => fileRef.current?.click()}><UploadCloud size={15} /> Upload a form</button>
@@ -148,13 +148,13 @@ export default function Forms() {
   const yourForms = (
     <div>
       <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-        <h2 className="text-lg font-bold">Your forms</h2>
+        <h2 className="text-lg font-medium text-ink-900">Your forms</h2>
         {items.length > 0 && (
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter your forms">
             {chips.map(([id, label, n]) => (
               <button key={id} onClick={() => setFilter(id)} aria-pressed={filter === id}
-                className={`chip px-3 py-1 text-sm ${filter === id ? "bg-forest-800 text-white" : "bg-white text-ink-700 ring-1 ring-ink-200 hover:bg-ink-50"}`}>
-                {label} <span className={filter === id ? "text-forest-200" : "text-ink-400"}>{n}</span>
+                className={`chip px-3 py-1 text-sm ${filter === id ? "bg-forest-100 text-forest-800" : "bg-white text-ink-700 ring-1 ring-ink-300 hover:bg-ink-50"}`}>
+                {label} <span className={filter === id ? "text-forest-600" : "text-ink-400"}>{n}</span>
               </button>
             ))}
           </div>
@@ -177,7 +177,7 @@ export default function Forms() {
 
       {error && <div className="mb-4"><ErrorNote>{error}</ErrorNote></div>}
 
-      <h2 className="mb-3 text-lg font-bold">Start a form</h2>
+      <h2 className="mb-3 text-lg font-medium text-ink-900">Start a form</h2>
       <FormCatalog apps={apps} leading={uploadCard} afterGuided={yourForms} />
 
       {camera && (
@@ -188,7 +188,7 @@ export default function Forms() {
         <p className="text-ink-700">“{confirmDelete?.original_filename}” and everything derived from it — page images, extracted text, your answers, notes and any completed PDF — will be permanently deleted.</p>
         <div className="mt-5 flex justify-end gap-2">
           <button className="btn-ghost" onClick={() => setConfirmDelete(null)}>Cancel</button>
-          <button className="btn-primary bg-brick hover:bg-brick" onClick={() => confirmDelete && remove(confirmDelete)}><Trash2 size={16} /> Delete permanently</button>
+          <button className="btn-danger" onClick={() => confirmDelete && remove(confirmDelete)}><Trash2 size={16} /> Delete permanently</button>
         </div>
       </Modal>
     </div>

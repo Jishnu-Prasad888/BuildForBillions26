@@ -78,7 +78,7 @@ export default function Assistant() {
           <h1 className="page-title">{t("assistant")}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button className={`btn-secondary btn-sm ${tts ? "border-saffron" : ""}`} onClick={() => { const v = !tts; setTts(v); localStorage.setItem("sahayak.tts", v ? "1" : "0"); if (!v) stopSpeaking(); }} aria-pressed={tts} title={t("speak_answers")}>
+          <button className={`btn-secondary btn-sm ${tts ? "border-forest-600 bg-forest-50" : ""}`} onClick={() => { const v = !tts; setTts(v); localStorage.setItem("sahayak.tts", v ? "1" : "0"); if (!v) stopSpeaking(); }} aria-pressed={tts} title={t("speak_answers")}>
             {tts ? <Volume2 size={16} /> : <VolumeX size={16} />} {t("speak_answers")}
           </button>
           <button className="btn-secondary btn-sm" onClick={() => { setMessages([]); setConversationId(null); setChatKey((k) => k + 1); stopSpeaking(); }}><Plus size={16} /> New</button>
@@ -86,15 +86,15 @@ export default function Assistant() {
       </div>
 
       <div className="card flex min-h-0 flex-1 flex-col overflow-hidden">
-        <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">
+        <div className="flex-1 space-y-6 overflow-y-auto p-5 sm:p-6">
           <div className="flex gap-3">
-            <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
-            <div className="max-w-2xl rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[0.95rem]">{INTRO[lang]}</div>
+            <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-forest-100 text-forest-700"><Bot size={16} /></div>
+            <div className="max-w-2xl py-1 text-[0.95rem] leading-relaxed text-ink-800">{INTRO[lang]}</div>
           </div>
           {messages.length === 0 && (
-            <div className="stagger flex flex-wrap gap-2 pl-12">
+            <div className="stagger flex flex-wrap gap-2 pl-11">
               {SUGGESTIONS[lang].map((s) => (
-                <button key={s} onClick={() => send(s)} className="rounded-full border border-paper-300 bg-white px-3.5 py-2 text-left text-sm font-medium text-ink-700 transition-all hover:-translate-y-0.5 hover:border-saffron hover:bg-saffron-50 hover:shadow-card">{s}</button>
+                <button key={s} onClick={() => send(s)} className="btn-secondary !min-h-[36px] !whitespace-normal px-4 py-1.5 text-left text-sm font-normal">{s}</button>
               ))}
             </div>
           )}
@@ -102,13 +102,13 @@ export default function Assistant() {
             if (m.role === "user")
               return (
                 <div key={m.id} className="flex animate-popIn justify-end">
-                  <div className="max-w-xl rounded-lg rounded-tr-sm bg-ink-800 px-4 py-3 text-[0.95rem] text-white">{m.content}</div>
+                  <div className="max-w-xl rounded-2xl rounded-tr-md bg-forest-100 px-4 py-2.5 text-[0.95rem] text-ink-900">{m.content}</div>
                 </div>
               );
-            if (m.role === "system") return <div key={m.id} className="animate-popIn rounded-lg bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
+            if (m.role === "system") return <div key={m.id} className="animate-popIn rounded-xl bg-brick-50 px-4 py-2 text-sm text-brick">{m.content}</div>;
             if (m.pending)
               return (
-                <div key={m.id} className="flex animate-fadeIn items-center gap-3 pl-12 text-ink-500">
+                <div key={m.id} className="flex animate-fadeIn items-center gap-3 pl-11 text-ink-500">
                   <span className="flex gap-1" aria-hidden>{[0, 150, 300].map((d) => <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-forest-500" style={{ animationDelay: `${d}ms` }} />)}</span>
                   {t("thinking")}
                 </div>
@@ -118,18 +118,18 @@ export default function Assistant() {
             const cards = m.meta?.scheme_cards ?? [];
             const isRef = reference?.id === m.id;
             return (
-              <div key={m.id} className={`flex gap-3 ${isRef ? "ring-2 ring-forest-300 ring-offset-2 rounded-lg" : ""}`}>
-                <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-forest-800 text-white"><Bot size={18} /></div>
+              <div key={m.id} className={`flex gap-3 ${isRef ? "rounded-2xl ring-2 ring-forest-300 ring-offset-2" : ""}`}>
+                <div className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-forest-100 text-forest-700"><Bot size={16} /></div>
                 <div className="min-w-0 max-w-3xl flex-1">
-                  <div className="rounded-lg rounded-tl-sm bg-paper-100 px-4 py-3 text-[0.95rem]">
+                  <div className="py-1 text-[0.95rem] leading-relaxed text-ink-800">
                     {m.meta?.insufficient_evidence && (
-                      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-amber-700"><AlertTriangle size={16} /> Not verified by available sources</div>
+                      <div className="mb-2 flex items-center gap-2 text-sm font-medium text-amber-700"><AlertTriangle size={16} /> Not verified by available sources</div>
                     )}
                     <Markdown text={m.content} citationOrder={order} onCite={(id) => setDrawer({ evidence: ordered, focus: id })} />
                   </div>
                   <div className="flex flex-wrap items-center gap-3">
                     <SourcesButton evidence={ordered} onOpen={() => setDrawer({ evidence: ordered })} />
-                    <button className="mt-2 text-sm font-semibold text-ink-500 hover:text-ink-800" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />{t("listen")}</button>
+                    <button className="mt-2 text-sm font-medium text-ink-500 hover:text-forest-700" onClick={() => speak(m.content, lang)}><Volume2 size={14} className="mr-1 inline" />{t("listen")}</button>
                     {!m.pending && <QuoteButton messageId={m.id} text={m.content} onSet={setReference} />}
                   </div>
                   <KagTrace meta={{ ...m.meta }} cited={ordered.length} />

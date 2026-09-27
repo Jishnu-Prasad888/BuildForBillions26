@@ -10,7 +10,7 @@ export function SourcesButton({ evidence, onOpen }: { evidence: Evidence[]; onOp
   const docs = evidence.filter((e) => e.type === "chunk").length;
   const facts = evidence.length - docs;
   return (
-    <button onClick={onOpen} className="mt-2 inline-flex items-center gap-2 rounded-lg border border-paper-300 bg-paper-100 px-3 py-1.5 text-sm font-semibold text-ink-700 hover:border-saffron hover:bg-saffron-50">
+    <button onClick={onOpen} className="mt-2 inline-flex min-h-[36px] items-center gap-2 rounded-full border border-ink-300 bg-transparent px-3.5 py-1.5 text-sm font-medium text-ink-700 transition-colors hover:border-ink-400 hover:bg-forest-50">
       <BookOpenCheck size={16} className="text-saffron-600" />
       {t("sources_used")}: {evidence.length}
       <span className="font-normal text-ink-500">
@@ -34,9 +34,9 @@ function EvidenceItem({ e, n, highlight }: { e: Evidence; n: number; highlight: 
   return (
     <div ref={ref} className={`card overflow-hidden ${highlight ? "ring-2 ring-saffron" : ""}`}>
       <button className="flex w-full items-start gap-3 p-4 text-left" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        <span className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-md bg-saffron-50 text-sm font-bold text-saffron-700">{n}</span>
+        <span className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full bg-saffron-50 text-sm font-medium text-saffron-700 ring-1 ring-saffron-100">{n}</span>
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-semibold text-ink-900">{e.publisher || e.source_name || "Source"}</div>
+          <div className="text-sm font-medium text-ink-900">{e.publisher || e.source_name || "Source"}</div>
           <div className="text-[0.95rem] text-ink-700">{isFact ? e.scheme_name : e.source_title}</div>
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-ink-500">
             {isFact ? (
@@ -44,7 +44,7 @@ function EvidenceItem({ e, n, highlight }: { e: Evidence; n: number; highlight: 
             ) : (
               <span className="chip bg-ink-100 text-ink-700"><FileText size={12} /> Document chunk</span>
             )}
-            {e.section && <span>Section: <b className="font-semibold text-ink-700">{e.section}</b></span>}
+            {e.section && <span>Section: <span className="font-medium text-ink-700">{e.section}</span></span>}
             {e.page && <span>· Page {e.page}</span>}
             {e.is_demo && <span className="chip bg-amber-50 text-amber-700">Demo seed summary</span>}
           </div>
@@ -54,22 +54,22 @@ function EvidenceItem({ e, n, highlight }: { e: Evidence; n: number; highlight: 
       {open && (
         <div className="border-t border-paper-300 bg-paper-100 px-4 py-3 text-sm">
           <div className="eyebrow mb-1.5">{isFact ? "Graph fact" : "Evidence chunk"}</div>
-          <blockquote className="whitespace-pre-line rounded-md border-l-4 border-saffron bg-white px-3 py-2 text-ink-800">“{e.text}”</blockquote>
+          <blockquote className="whitespace-pre-line rounded-lg border-l-4 border-saffron bg-white px-3 py-2 text-ink-800">“{e.text}”</blockquote>
           <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs text-ink-600">
-            <dt className="font-semibold">ID</dt><dd className="font-mono">{e.id}</dd>
-            {isFact && e.relation && (<><dt className="font-semibold">Path</dt><dd className="font-mono">{e.relation}</dd></>)}
-            {isFact && e.supporting_document && (<><dt className="font-semibold">Supported by</dt><dd>{e.supporting_document}</dd></>)}
-            {!isFact && (<><dt className="font-semibold">Document</dt><dd>{e.source_title}</dd></>)}
-            {e.published_date && (<><dt className="font-semibold">Published</dt><dd>{e.published_date}</dd></>)}
-            {e.retrieved_at && (<><dt className="font-semibold">Retrieved</dt><dd>{new Date(e.retrieved_at).toLocaleDateString("en-IN")}</dd></>)}
-            {e.retrieval && e.retrieval.length > 0 && (<><dt className="font-semibold">Found by</dt><dd>{e.retrieval.join(" + ")}{e.vector_similarity != null ? ` · similarity ${e.vector_similarity.toFixed(2)}` : ""}</dd></>)}
-            {e.content_hash && (<><dt className="font-semibold">Hash</dt><dd className="font-mono">{e.content_hash.slice(0, 16)}…</dd></>)}
+            <dt className="font-medium text-ink-700">ID</dt><dd className="font-mono">{e.id}</dd>
+            {isFact && e.relation && (<><dt className="font-medium text-ink-700">Path</dt><dd className="font-mono">{e.relation}</dd></>)}
+            {isFact && e.supporting_document && (<><dt className="font-medium text-ink-700">Supported by</dt><dd>{e.supporting_document}</dd></>)}
+            {!isFact && (<><dt className="font-medium text-ink-700">Document</dt><dd>{e.source_title}</dd></>)}
+            {e.published_date && (<><dt className="font-medium text-ink-700">Published</dt><dd>{e.published_date}</dd></>)}
+            {e.retrieved_at && (<><dt className="font-medium text-ink-700">Retrieved</dt><dd>{new Date(e.retrieved_at).toLocaleDateString("en-IN")}</dd></>)}
+            {e.retrieval && e.retrieval.length > 0 && (<><dt className="font-medium text-ink-700">Found by</dt><dd>{e.retrieval.join(" + ")}{e.vector_similarity != null ? ` · similarity ${e.vector_similarity.toFixed(2)}` : ""}</dd></>)}
+            {e.content_hash && (<><dt className="font-medium text-ink-700">Hash</dt><dd className="font-mono">{e.content_hash.slice(0, 16)}…</dd></>)}
             {e.url && (
               <>
-                <dt className="font-semibold">URL</dt>
+                <dt className="font-medium text-ink-700">URL</dt>
                 <dd>
-                  <a href={e.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-ink-800 underline decoration-saffron underline-offset-2">
-                    {e.url} <ExternalLink size={12} />
+                  <a href={e.url} target="_blank" rel="noreferrer" className="link inline-flex items-center gap-1 break-all">
+                    {e.url} <ExternalLink size={12} className="flex-none" />
                   </a>
                 </dd>
               </>
@@ -84,7 +84,7 @@ function EvidenceItem({ e, n, highlight }: { e: Evidence; n: number; highlight: 
 export function EvidenceDrawer({ open, onClose, evidence, focusId }: { open: boolean; onClose: () => void; evidence: Evidence[]; focusId?: string | null }) {
   return (
     <Drawer open={open} onClose={onClose} title="Evidence">
-      <div className="mb-4 flex gap-3 rounded-lg border border-leaf-100 bg-leaf-50 p-3 text-sm text-leaf-700">
+      <div className="mb-4 flex gap-3 rounded-xl border border-leaf-100 bg-leaf-50 p-3 text-sm text-leaf-700">
         <ShieldCheck size={20} className="flex-none" />
         <p>These are the exact sources and evidence chunks the assistant was given and cited to produce this answer. The AI explains; the sources are the authority.</p>
       </div>

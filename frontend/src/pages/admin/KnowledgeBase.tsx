@@ -30,7 +30,7 @@ function RankedEvidence({ items, cited }: { items: KagResult["retrieved"]; cited
   return (
     <div>
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
-        className="flex w-full items-center gap-1.5 rounded-md py-1 text-left hover:bg-paper-100">
+        className="flex w-full items-center gap-1.5 rounded-lg py-1 text-left hover:bg-paper-100">
         <ChevronRight size={16} className={`flex-none text-ink-500 transition-transform ${open ? "rotate-90" : ""}`} />
         <span className="eyebrow">Ranked evidence ({items.length})</span>
         <span className="ml-auto pr-1 text-xs text-ink-400">{citedCount ? `${citedCount} cited · ` : ""}{open ? "Hide" : "Show"}</span>
@@ -40,13 +40,13 @@ function RankedEvidence({ items, cited }: { items: KagResult["retrieved"]; cited
           {items.map((e) => (
             <li key={e.id} className={`rounded-lg border p-2.5 text-sm ${cited.has(e.id) ? "border-saffron bg-saffron-50" : "border-paper-300 bg-white"}`}>
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="font-mono font-bold">{e.id}</span>
+                <span className="font-mono font-medium">{e.id}</span>
                 <span className="chip bg-ink-100 text-ink-700">{e.type === "graph_fact" ? "graph" : e.retrieval?.join("+")}</span>
                 {e.score ? <span className="text-ink-500">score {e.score}</span> : null}
                 {e.vector_similarity != null && <span className="text-ink-500">sim {e.vector_similarity}</span>}
                 {cited.has(e.id) && <span className="chip bg-saffron text-white">cited</span>}
               </div>
-              <div className="mt-1 font-semibold">{e.type === "graph_fact" ? e.scheme_name : e.source_title}{e.section ? ` · ${e.section}` : ""}</div>
+              <div className="mt-1 font-medium text-ink-900">{e.type === "graph_fact" ? e.scheme_name : e.source_title}{e.section ? ` · ${e.section}` : ""}</div>
               <div className="line-clamp-2 text-ink-600">{e.text}</div>
             </li>
           ))}
@@ -89,15 +89,15 @@ export default function KnowledgeBase() {
         actions={<><Link to="/admin/sources" className="btn-secondary">Add website source</Link><button className="btn-primary" onClick={() => setUpload(true)}><Upload size={16} /> Upload document</button></>} />
 
       {started && (
-        <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg bg-leaf-50 px-4 py-3 text-sm text-leaf-700" role="status">
-          <span>Indexing started for <b>{started}</b>. It becomes searchable when the pipeline finishes.</span>
+        <div className="mb-5 flex flex-wrap items-center gap-3 rounded-xl bg-leaf-50 px-4 py-3 text-sm text-leaf-700" role="status">
+          <span>Indexing started for <span className="font-medium">{started}</span>. It becomes searchable when the pipeline finishes.</span>
           <Link to="/admin/ingestion" className="link">View progress</Link>
           <button className="btn-ghost btn-sm ml-auto" onClick={() => setStarted(null)}>Dismiss</button>
         </div>
       )}
 
       <section className="card p-5">
-        <h2 className="text-lg font-bold">KAG retrieval playground</h2>
+        <h2 className="section-title">KAG retrieval playground</h2>
         <p className="mb-3 text-sm text-ink-600">Ask a question to see query understanding, graph facts, ranked evidence and the grounded answer — e.g. to confirm a newly uploaded document now contributes evidence.</p>
         <form onSubmit={ask} className="flex gap-2">
           <div className="relative flex-1">
@@ -119,7 +119,7 @@ export default function KnowledgeBase() {
                   items={[...res.retrieved, ...(res.evidence ?? []).filter((e) => !res.retrieved.some((r) => r.id === e.id))]} />
               </div>
             ) : (
-              <p className="rounded-lg bg-paper-100 p-4 text-sm text-ink-500">Run a question to see its retrieval map: the schemes and documents behind the answer.</p>
+              <p className="rounded-xl bg-paper-100 p-4 text-sm text-ink-500">Run a question to see its retrieval map: the schemes and documents behind the answer.</p>
             )}
           </div>
         </div>

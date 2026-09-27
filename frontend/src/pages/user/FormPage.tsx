@@ -134,14 +134,13 @@ export default function FormPage() {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="tricolor-rule h-1" />
       <header className="flex items-center gap-2 border-b border-paper-300 bg-white px-3 py-2.5 sm:gap-4 sm:px-5">
         <Link to={`/applications/${id}`} className="btn-ghost btn-sm"><ArrowLeft size={16} /> Back</Link>
         <div className="hidden sm:block"><Logo sub={false} /></div>
         <div className="ml-4 hidden min-w-0 flex-1 items-center gap-3 md:flex">
-          <span className="truncate font-semibold text-ink-800">{app.scheme_name}</span>
+          <span className="truncate font-medium text-ink-800">{app.scheme_name}</span>
           <div className="w-48"><ProgressBar value={progress} /></div>
-          <span className="text-sm font-bold text-ink-700">{progress}%</span>
+          <span className="text-sm font-medium text-ink-700">{progress}%</span>
           {saved && <span className="text-xs text-ink-400">Saved {saved}</span>}
         </div>
         <div className="ml-auto flex items-center gap-2">
@@ -151,9 +150,9 @@ export default function FormPage() {
       </header>
       {/* The header's progress bar is hidden on phones, so show a slim one here instead. */}
       <div className="flex items-center gap-3 border-b border-paper-300 bg-white px-4 py-2 md:hidden">
-        <span className="min-w-0 flex-1 truncate text-sm font-semibold text-ink-800">{app.scheme_name}</span>
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-800">{app.scheme_name}</span>
         <div className="w-24"><ProgressBar value={progress} /></div>
-        <span className="text-sm font-bold text-ink-700">{progress}%</span>
+        <span className="text-sm font-medium text-ink-700">{progress}%</span>
       </div>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden p-4 lg:grid-cols-[280px_1fr] xl:grid-cols-[280px_1fr_410px]">
@@ -166,10 +165,10 @@ export default function FormPage() {
                 const st = isFilled(f, values[f.id]) ? "COMPLETE" : status[f.id] ?? "PENDING";
                 return (
                   <li key={f.id}>
-                    <button onClick={() => { setHighlight(f.id); scrollTo(f.id); }} className={`flex w-full items-center gap-2 rounded px-1.5 py-1 text-left hover:bg-paper-100 ${highlight === f.id ? "bg-saffron-50 font-semibold" : ""}`}>
-                      {st === "COMPLETE" ? <CheckCircle2 size={15} className="flex-none text-leaf" /> : st === "SKIPPED" ? <CircleDashed size={15} className="flex-none text-amber" /> : <Circle size={15} className="flex-none text-ink-300" />}
+                    <button onClick={() => { setHighlight(f.id); scrollTo(f.id); }} className={`flex w-full items-center gap-2 rounded-lg px-1.5 py-1 text-left hover:bg-paper-100 ${highlight === f.id ? "bg-saffron-50 font-medium" : ""}`}>
+                      {st === "COMPLETE" ? <CheckCircle2 size={15} className="flex-none text-leaf-600" /> : st === "SKIPPED" ? <CircleDashed size={15} className="flex-none text-amber" /> : <Circle size={15} className="flex-none text-ink-300" />}
                       <span className="flex-1 truncate">{fieldLabel(f, lang, values)}</span>
-                      <span className={`text-[0.65rem] font-bold ${st === "COMPLETE" ? "text-leaf" : st === "SKIPPED" ? "text-amber-600" : "text-ink-400"}`}>{st === "COMPLETE" ? "DONE" : st === "SKIPPED" ? "LATER" : "PENDING"}</span>
+                      <span className={`text-[0.65rem] font-medium ${st === "COMPLETE" ? "text-leaf-600" : st === "SKIPPED" ? "text-amber-600" : "text-ink-400"}`}>{st === "COMPLETE" ? "DONE" : st === "SKIPPED" ? "LATER" : "PENDING"}</span>
                     </button>
                   </li>
                 );
@@ -194,8 +193,8 @@ export default function FormPage() {
               onResponse={onResponse} onAddNote={addNote} onEnd={() => { setSession(null); setHighlight(null); load(); }} />
           ) : (
             <div className="card flex h-full flex-col items-center justify-center p-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-saffron-50 text-saffron-700"><MonitorSmartphone size={32} /></div>
-              <h2 className="text-xl font-bold">Need help with this form?</h2>
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-saffron-50 text-saffron-700"><MonitorSmartphone size={32} /></div>
+              <h2 className="text-xl font-medium text-ink-900">Need help with this form?</h2>
               <p className="mt-2 text-ink-600">The assistant can look at the form on your screen, explain each field in your language and fill in what you tell it.</p>
               <button className="btn-accent mt-6 px-6 py-3 text-base" onClick={() => setStartOpen(true)}><Sparkles size={18} /> {t("help_me_fill_this")}</button>
               {app.progress > 0 && <p className="mt-3 text-sm text-ink-500">You're {app.progress}% done{app.last_completed_section ? ` · last completed: ${app.last_completed_section}` : ""}.</p>}
@@ -215,7 +214,7 @@ export default function FormPage() {
           <span className="label">Assistant language</span>
           <div className="grid grid-cols-3 gap-2">
             {(["en", "hi", "kn"] as Lang[]).map((l) => (
-              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-semibold ${assistLang === l ? "border-forest-800 bg-forest-800 text-white" : "border-ink-200 bg-white"}`}>
+              <button key={l} onClick={() => setAssistLang(l)} className={`rounded-lg border px-3 py-2 font-medium ${assistLang === l ? "border-forest-600 bg-forest-100 text-forest-800" : "border-ink-300 bg-white text-ink-700 hover:bg-ink-50"}`}>
                 {{ en: "English", hi: "हिन्दी", kn: "ಕನ್ನಡ" }[l]}
               </button>
             ))}

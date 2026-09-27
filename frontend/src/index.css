@@ -4,83 +4,65 @@
 
 @layer base {
   html { font-size: 16px; scroll-behavior: smooth; }
-  body { @apply bg-[#f8fbf9] text-ink-800 antialiased; }
-  h1, h2, h3 { @apply text-ink-900; }
+  body { @apply bg-paper text-ink-800 antialiased; }
+  h1, h2, h3 { @apply text-ink-900 tracking-tight; }
   :focus-visible { @apply outline-none ring-2 ring-forest-500 ring-offset-2 ring-offset-white; }
   ::selection { @apply bg-forest-100; }
 }
 
 @layer components {
-  /* Buttons: every size keeps at least a 44px touch target except btn-sm (36px) for dense rows. */
-  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md px-4 py-2.5 text-[0.95rem] font-semibold transition-all duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50; }
-  .btn-primary { @apply btn bg-forest-800 text-white shadow-sm hover:bg-forest-900 hover:shadow-md; }
-  .btn-accent { @apply btn bg-forest-600 text-white shadow-sm hover:bg-forest-700 hover:shadow-md; }
-  .btn-secondary { @apply btn border border-ink-200 bg-white text-ink-800 hover:border-ink-300 hover:bg-ink-50; }
-  .btn-ghost { @apply btn text-ink-700 hover:bg-ink-100; }
-  .btn-danger { @apply btn border border-brick-100 bg-white text-brick hover:bg-brick-50; }
-  .btn-sm { @apply min-h-[36px] rounded-md px-3 py-1.5 text-sm; }
-  .btn-lg { @apply min-h-[52px] rounded-md px-6 py-3 text-base; }
+  /* Buttons: pill radius, 500 weight. Every size keeps at least a 44px touch target
+     except btn-sm (36px) for dense rows. */
+  .btn { @apply inline-flex min-h-[44px] select-none items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-[0.925rem] font-medium transition-all duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50; }
+  .btn-primary { @apply btn bg-forest-600 text-white hover:bg-forest-700 hover:shadow-card; }
+  .btn-accent { @apply btn bg-forest-100 text-forest-800 hover:bg-[#c2d9fa]; }
+  .btn-secondary { @apply btn border border-ink-300 bg-transparent text-forest-600 hover:border-ink-400 hover:bg-forest-50; }
+  .btn-ghost { @apply btn text-forest-600 hover:bg-forest-50; }
+  .btn-danger { @apply btn border border-ink-300 bg-transparent text-brick hover:bg-brick-50; }
+  .btn-sm { @apply min-h-[36px] px-4 py-1.5 text-sm; }
+  .btn-lg { @apply min-h-[52px] px-7 py-3 text-base; }
 
-  .card { @apply rounded-lg border border-paper-300 bg-white shadow-card; }
-  .card-link { @apply card block transition-all hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift; }
-  .input { @apply min-h-[44px] w-full rounded-md border border-ink-200 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink-900 transition-colors placeholder:text-ink-400 hover:border-ink-300 focus:border-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-600/20 aria-[invalid=true]:border-brick aria-[invalid=true]:ring-brick/20; }
-  .label { @apply mb-1.5 block text-sm font-semibold text-ink-700; }
-  .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold; }
-  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.08em] text-ink-500; }
-  .link { @apply font-semibold text-forest-800 underline decoration-forest-300 decoration-2 underline-offset-4 hover:text-forest-600; }
-  .section-title { @apply text-lg font-bold text-ink-900; }
+  .card { @apply rounded-xl border border-paper-300 bg-white shadow-card; }
+  .card-link { @apply card block transition-all hover:border-forest-200 hover:shadow-lift; }
+  .input { @apply min-h-[44px] w-full rounded-lg border border-ink-300 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink-900 transition-colors placeholder:text-ink-400 hover:border-ink-400 focus:border-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-600/20 aria-[invalid=true]:border-brick aria-[invalid=true]:ring-brick/20; }
+  .label { @apply mb-1.5 block text-sm font-medium text-ink-700; }
+  .chip { @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .eyebrow { @apply text-xs font-medium uppercase tracking-[0.1em] text-ink-500; }
+  .link { @apply font-medium text-forest-600 underline-offset-2 hover:underline; }
+  .section-title { @apply text-base font-medium text-ink-900; }
   /* Type scale: page title (PageHeader) > section-title > body 0.95rem > text-sm secondary > text-xs meta. */
-  .page-title { @apply font-display text-[1.6rem] font-bold leading-tight sm:text-[1.8rem]; }
-  .panel-title { @apply text-sm font-bold uppercase tracking-wide text-ink-800; }
-  .cite { @apply mx-0.5 inline-flex h-[1.25rem] min-w-[1.25rem] -translate-y-[1px] cursor-pointer items-center justify-center rounded bg-saffron-50 px-1 align-middle text-[0.7rem] font-bold text-saffron-700 ring-1 ring-saffron-100 hover:bg-saffron-100; }
+  .page-title { @apply text-2xl font-medium leading-tight tracking-tight text-ink-900 sm:text-[1.75rem]; }
+  .panel-title { @apply text-sm font-medium uppercase tracking-wide text-ink-700; }
+  .cite { @apply mx-0.5 inline-flex h-[1.25rem] min-w-[1.25rem] -translate-y-[1px] cursor-pointer items-center justify-center rounded bg-saffron-50 px-1 align-middle text-[0.7rem] font-medium text-saffron-700 ring-1 ring-saffron-100 hover:bg-saffron-100; }
   .prose-chat p { @apply my-1.5 leading-relaxed; }
   .prose-chat ul { @apply my-1.5 list-disc space-y-1 pl-5; }
   .prose-chat ol { @apply my-1.5 list-decimal space-y-1 pl-5; }
   .prose-chat blockquote { @apply my-2 border-l-4 border-paper-300 bg-paper-100 px-3 py-1.5 text-ink-700; }
-  .prose-chat strong { @apply font-semibold text-ink-900; }
+  .prose-chat strong { @apply font-medium text-ink-900; }
 
   /* Long-form reading pages (docs, guide). */
   .prose-doc { @apply max-w-none text-[1.02rem] leading-relaxed text-ink-700; }
-  .prose-doc h2 { @apply mb-3 mt-12 scroll-mt-24 font-display text-2xl font-bold text-ink-900 first:mt-0; }
-  .prose-doc h3 { @apply mb-2 mt-7 text-lg font-bold text-ink-900; }
+  .prose-doc h2 { @apply mb-3 mt-12 scroll-mt-24 text-2xl font-medium tracking-tight text-ink-900 first:mt-0; }
+  .prose-doc h3 { @apply mb-2 mt-7 text-lg font-medium text-ink-900; }
   .prose-doc p { @apply my-3; }
   .prose-doc ul { @apply my-3 list-disc space-y-1.5 pl-6; }
   .prose-doc ol { @apply my-3 list-decimal space-y-1.5 pl-6; }
   .prose-doc code { @apply rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[0.88em] text-ink-800; }
   .prose-doc a { @apply link; }
   .prose-doc table { @apply my-4 w-full border-collapse text-sm; }
-  .prose-doc th { @apply border-b-2 border-paper-300 px-3 py-2 text-left font-semibold text-ink-900; }
+  .prose-doc th { @apply border-b-2 border-paper-300 px-3 py-2 text-left font-medium text-ink-900; }
   .prose-doc td { @apply border-b border-paper-300 px-3 py-2 align-top; }
+
+  /* M3 navigation drawer item: full-width pill, tonal active state. */
+  .nav-item { @apply flex min-h-[44px] items-center gap-3 rounded-full px-4 text-[0.925rem] font-medium text-ink-700 transition-colors duration-150 hover:bg-ink-100; }
+  .nav-item-active { @apply bg-forest-100 text-forest-800 hover:bg-forest-100; }
 }
 
-.tricolor-rule { background: linear-gradient(90deg, #d9731a 0 33.3%, #ffffff 33.3% 66.6%, #1f7a4d 66.6% 100%); }
-.demo-watermark { background-image: repeating-linear-gradient(-45deg, rgba(15,74,55,.035) 0 18px, transparent 18px 36px); }
+.demo-watermark { background-image: repeating-linear-gradient(-45deg, rgba(31,31,31,.03) 0 18px, transparent 18px 36px); }
 
-/* Faint government-building backdrop behind every page; cards and panels sit on top of it. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: url("/government-building.png") left bottom / cover no-repeat;
-  opacity: 0.035;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 70%);
-  mask-image: linear-gradient(to right, #000 0%, transparent 70%);
-}
-/* Landing hero and sign-in panel: white to pale green, building fading in from the lower left. */
-.hero-surface { background: linear-gradient(135deg, #ffffff 0%, #f1f8f4 55%, #e3f1ea 100%); }
-.hero-building {
-  background: url("/government-building.png") left bottom / cover no-repeat;
-  opacity: 0.16;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 35%, transparent 85%), linear-gradient(to top, #000 0%, #000 55%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, #000 0%, #000 35%, transparent 85%), linear-gradient(to top, #000 0%, #000 55%, transparent 100%);
-  mask-composite: intersect;
-}
 /* Children of .stagger rise in one after another (first 12; the rest arrive with the last). */
 @keyframes staggerRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.stagger > * { animation: staggerRise .5s cubic-bezier(.2,.8,.2,1) backwards; }
+.stagger > * { animation: staggerRise .45s cubic-bezier(.2,0,0,1) backwards; }
 .stagger > :nth-child(2) { animation-delay: 50ms; }
 .stagger > :nth-child(3) { animation-delay: 100ms; }
 .stagger > :nth-child(4) { animation-delay: 150ms; }
@@ -93,16 +75,16 @@ body::before {
 .stagger > :nth-child(11) { animation-delay: 500ms; }
 .stagger > :nth-child(n+12) { animation-delay: 550ms; }
 
-.skeleton { @apply rounded-md bg-[linear-gradient(90deg,#e9f1ec_25%,#f5f8f6_50%,#e9f1ec_75%)] bg-[length:200%_100%] animate-skeleton; }
+.skeleton { @apply rounded-md bg-[linear-gradient(90deg,#eef1f4_25%,#f7f9fb_50%,#eef1f4_75%)] bg-[length:200%_100%] animate-skeleton; }
 
-/* Soft green hero panel used at the top of the home page. */
-.greet-surface { background: radial-gradient(120% 140% at 100% 0%, #d9efe5 0%, rgba(217,239,229,0) 55%), linear-gradient(135deg, #ffffff 0%, #f1f8f4 100%); }
+/* Soft blue-tinted welcome panel used at the top of the home/profile pages. */
+.greet-surface { background: radial-gradient(120% 140% at 100% 0%, #d3e3fd 0%, rgba(211,227,253,0) 55%), linear-gradient(135deg, #ffffff 0%, #f4f8fe 100%); }
 
 /* KAG retrieval map: nodes pop in, edges draw from the centre outwards, the question node breathes. */
 @keyframes kagPop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
 @keyframes kagDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes kagPulse { 0%, 100% { opacity: .9; transform: scale(1); } 50% { opacity: .2; transform: scale(1.12); } }
-.kag-pop { transform-box: fill-box; transform-origin: center; animation: kagPop .45s cubic-bezier(.2,.8,.2,1) backwards; transition: opacity .2s; }
+.kag-pop { transform-box: fill-box; transform-origin: center; animation: kagPop .45s cubic-bezier(.2,0,0,1) backwards; transition: opacity .2s; }
 .kag-edge { stroke-dasharray: 1; animation: kagDraw .7s ease-out backwards; transition: opacity .2s; }
 .kag-pulse { transform-box: fill-box; transform-origin: center; animation: kagPulse 2.6s ease-in-out infinite; }
 

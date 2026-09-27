@@ -16,43 +16,43 @@ export default function AdminLayout() {
   ];
   return (
     <div className="flex min-h-screen">
-      {/* Full-height column so the dark sidebar runs the whole length of the page. */}
-      <div className="hidden w-60 flex-none border-r border-paper-300 bg-white lg:block">
-        <aside className="sticky top-0 flex h-screen flex-col px-4 pb-5 text-ink-700">
-          <div className="tricolor-rule -mx-4 mb-5 h-1" />
-          <Logo />
-          <div className="mt-2 text-[0.7rem] font-bold uppercase tracking-wider text-forest-600">Admin console</div>
-          <nav className="mt-6 flex flex-col gap-1" aria-label="Admin">
+      {/* Full-height column so the sidebar runs the whole length of the page. */}
+      <div className="hidden w-60 flex-none bg-paper-100 lg:block">
+        <aside className="sticky top-0 flex h-screen flex-col px-3 pb-5 pt-5 text-ink-700">
+          <div className="px-2"><Logo /></div>
+          <div className="mt-1 px-4 text-[0.7rem] font-medium uppercase tracking-wider text-forest-600">Admin console</div>
+          <nav className="mt-6 flex flex-col gap-0.5" aria-label="Admin">
             {items.map(({ to, icon: Icon, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
-                className={({ isActive }) =>
-                  `flex min-h-[44px] items-center gap-3 rounded-md px-3 text-[0.95rem] font-semibold transition-colors ${isActive ? "bg-forest-800 text-white" : "text-ink-700 hover:bg-forest-50"}`
-                }
+                className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}
               >
-                <Icon size={18} /> {label}
+                {({ isActive }) => (
+                  <>
+                    <Icon size={20} className={isActive ? "text-forest-700" : "text-ink-500"} /> {label}
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
-          <div className="mt-auto space-y-3">
-            <button className="flex min-h-[40px] w-full items-center gap-2 rounded-md px-3 text-sm font-semibold text-ink-700 hover:bg-forest-50" onClick={() => nav("/")}>
-              <ArrowLeft size={16} /> Citizen view
+          <div className="mt-auto px-1">
+            <button className="nav-item w-full !text-sm" onClick={() => nav("/")}>
+              <ArrowLeft size={18} /> Citizen view
             </button>
           </div>
         </aside>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="tricolor-rule h-1 lg:hidden" />
         <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-paper-300 bg-white/90 px-4 py-2.5 backdrop-blur sm:px-6 lg:justify-end">
           <Link to="/admin" className="lg:hidden"><Logo sub={false} /></Link>
           <UserMenu showProfile={false} />
         </header>
         <nav className="flex gap-1 overflow-x-auto border-b border-paper-300 bg-white px-3 py-2 lg:hidden" aria-label="Admin mobile">
           {items.map(({ to, label, end }) => (
-            <NavLink key={to} to={to} end={end} className={({ isActive }) => `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold ${isActive ? "bg-forest-800 text-white" : "text-ink-700"}`}>
+            <NavLink key={to} to={to} end={end} className={({ isActive }) => `whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium ${isActive ? "bg-forest-100 text-forest-800" : "text-ink-700"}`}>
               {label}
             </NavLink>
           ))}

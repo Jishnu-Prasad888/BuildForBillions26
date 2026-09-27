@@ -34,11 +34,11 @@ export default function FormPreview({ formId, schema, page, onPage, source, vers
   const total = schema.pages.length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-lg border border-paper-300 bg-ink-50">
+    <div className="flex h-full min-h-0 flex-col rounded-xl border border-paper-300 bg-ink-50">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-300 bg-white px-3 py-2 text-sm">
         <div className="flex items-center gap-1">
           <button className="btn-ghost btn-sm" disabled={page <= 1} onClick={() => onPage(page - 1)} aria-label="Previous page"><ChevronLeft size={16} /></button>
-          <span className="min-w-[6.5rem] text-center font-semibold text-ink-800">Page {page} / {total}</span>
+          <span className="min-w-[6.5rem] text-center font-medium text-ink-800">Page {page} / {total}</span>
           <button className="btn-ghost btn-sm" disabled={page >= total} onClick={() => onPage(page + 1)} aria-label="Next page"><ChevronRight size={16} /></button>
         </div>
         <span className="chip bg-ink-100 text-ink-700">{source === "completed" ? "Completed PDF" : "Your original form"}</span>
@@ -50,7 +50,7 @@ export default function FormPreview({ formId, schema, page, onPage, source, vers
       </div>
       <div className="min-h-0 flex-1 overflow-auto p-3">
         {loading && !url && <div className="flex h-40 items-center justify-center"><Spinner className="h-6 w-6 text-ink-500" /></div>}
-        {error && <p className="rounded-lg bg-brick-50 p-3 text-sm text-brick">{error}</p>}
+        {error && <p className="rounded-xl bg-brick-50 p-3 text-sm text-brick">{error}</p>}
         {url && pg && (
           <div className="relative mx-auto shadow-lift" style={{ width: `${zoom * 100}%`, maxWidth: `${zoom * 900}px` }}>
             <img src={url} alt={`Page ${page} of your form`} className="block w-full select-none bg-white" draggable={false} />

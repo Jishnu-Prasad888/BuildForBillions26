@@ -53,16 +53,16 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-[9rem] flex-1 space-y-1 overflow-y-auto px-3 py-3">
-        <h3 className="mb-1 font-display text-lg font-bold">Review Information</h3>
+        <h3 className="section-title mb-1">Review Information</h3>
         <p className="mb-3 text-sm text-ink-600">Check every answer before the PDF is made. Identity and bank numbers are shown masked.</p>
         {data.items.map((i) => (
-          <div key={i.field_id} className="flex items-start gap-2.5 rounded-lg border border-paper-300 bg-white px-3 py-2">
+          <div key={i.field_id} className="flex items-start gap-2.5 rounded-xl border border-paper-300 bg-white px-3 py-2">
             {i.status === "filled" ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-leaf" />
               : i.status === "manual" ? <HandMetal size={17} className="mt-0.5 flex-none text-ink-400" />
               : i.status === "blank" ? <CheckCircle2 size={17} className="mt-0.5 flex-none text-ink-300" />
               : <AlertTriangle size={17} className={`mt-0.5 flex-none ${i.required ? "text-amber" : "text-ink-300"}`} />}
             <div className="min-w-0 flex-1">
-              <div className="text-sm font-semibold text-ink-800">{i.label}</div>
+              <div className="text-sm font-medium text-ink-800">{i.label}</div>
               <div className={`break-words text-sm ${i.status === "filled" ? "text-ink-900" : "text-ink-500"}`}>
                 {i.status === "filled" ? i.display : i.status === "manual" ? "You complete this by hand" : i.status === "blank" ? "Left blank on purpose" : i.status === "skipped" ? "Waiting for information" : i.required ? "Missing" : "Optional — empty"}
               </div>
@@ -77,8 +77,8 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
       <div className="max-h-[48%] flex-none space-y-2.5 overflow-y-auto border-t border-paper-300 bg-white px-3 py-3">
         {error && <ErrorNote>{error}</ErrorNote>}
         {justMade && form.output_ready && (
-          <div className={`rounded-lg border p-3 ${warnings.length ? "border-amber-100 bg-amber-50" : "border-leaf-100 bg-leaf-50"}`}>
-            <div className={`font-semibold ${warnings.length ? "text-amber-700" : "text-leaf-700"}`}>
+          <div className={`rounded-xl border p-3 ${warnings.length ? "border-amber-100 bg-amber-50" : "border-leaf-100 bg-leaf-50"}`}>
+            <div className={`font-medium ${warnings.length ? "text-amber-700" : "text-leaf-700"}`}>
               {warnings.length ? `Your PDF was made, but ${warnings.length} ${warnings.length === 1 ? "value was" : "values were"} not written:` : "Your form is ready."}
             </div>
             {warnings.length > 0 && <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-sm text-amber-700">{warnings.map((w) => <li key={w}>{w}</li>)}</ul>}
@@ -90,7 +90,7 @@ export default function ReviewPanel({ form, refreshKey, onEdit, onAsk, onGenerat
           </div>
         )}
         {missing.length > 0 && (
-          <div className="rounded-lg border border-amber-100 bg-amber-50 p-3 text-sm text-amber-700">
+          <div className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-sm text-amber-700">
             <b>{missing.length} required field{missing.length === 1 ? " is" : "s are"} still empty:</b> {missing.slice(0, 5).map((m) => m.label).join(", ")}{missing.length > 5 ? ` and ${missing.length - 5} more` : ""}.
             <label className="mt-2 flex items-start gap-2 text-ink-800">
               <input type="checkbox" className="mt-1" checked={confirmBlank} onChange={(e) => setConfirmBlank(e.target.checked)} />

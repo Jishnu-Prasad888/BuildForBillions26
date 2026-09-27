@@ -538,7 +538,7 @@ function ListenButton({
   return (
     <button
       type="button"
-      className={`btn-sm btn flex-none ${on ? "bg-saffron text-white" : "border border-ink-200 bg-white text-ink-800 hover:bg-ink-50"}`}
+      className={`btn-sm btn flex-none ${on ? "bg-forest-600 text-white" : "border border-ink-300 bg-white text-ink-700 hover:bg-forest-50"}`}
       onClick={() => {
         stopSpeaking();
         if (on) return setPlaying(null);
@@ -571,12 +571,12 @@ function LanguagePills({ compact = false }: { compact?: boolean }) {
           role="radio"
           aria-checked={lang === l.code}
           onClick={() => setLang(l.code)}
-          className={`min-h-[44px] rounded-full border font-semibold transition-colors ${
+          className={`min-h-[44px] rounded-full border font-medium transition-colors ${
             compact ? "px-3 text-sm" : "px-4"
           } ${
             lang === l.code
-              ? "border-ink-800 bg-ink-800 text-white"
-              : "border-paper-300 text-ink-700 hover:border-ink-300"
+              ? "border-forest-100 bg-forest-100 text-forest-800"
+              : "border-paper-300 text-ink-700 hover:bg-ink-50"
           }`}
         >
           {l.native}
@@ -622,15 +622,15 @@ function Navbar() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           to="/"
-          className="flex items-center gap-2 font-display text-lg font-bold text-ink-900"
+          className="flex items-center gap-2 text-lg font-medium text-ink-900"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-800 text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-forest-600 text-white">
             <Mic size={18} />
           </span>
           Sahayak
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-semibold text-ink-700 md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-700 md:flex">
           {links.map((l) => (
             <a key={l.href} href={l.href} className="hover:text-ink-900">
               {tr(l.label)}
@@ -647,7 +647,7 @@ function Navbar() {
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-lg border border-paper-300 text-ink-800 md:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-paper-300 text-ink-800 md:hidden"
           aria-expanded={open}
           aria-label={tr({ en: "Menu", hi: "मेन्यू", kn: "ಮೆನು" })}
           onClick={() => setOpen((v) => !v)}
@@ -663,7 +663,7 @@ function Navbar() {
               <a
                 key={l.href}
                 href={l.href}
-                className="py-2 font-semibold"
+                className="py-2 font-medium"
                 onClick={() => setOpen(false)}
               >
                 {tr(l.label)}
@@ -694,12 +694,7 @@ function DemoMock() {
   const demo = DEMOS[active];
 
   return (
-    <div className="relative">
-      <div
-        aria-hidden
-        className="absolute -inset-4 -z-10 rounded-[32px] bg-gradient-to-br from-blue-100/70 via-white to-saffron/10 blur-2xl"
-      />
-      <div className="rounded-3xl border border-paper-300 bg-white/85 p-4 shadow-xl shadow-ink-900/5 backdrop-blur-xl sm:p-5">
+    <div className="rounded-3xl border border-paper-300 bg-white p-4 shadow-card sm:p-5">
         <p className="mb-2 text-sm font-medium text-ink-500">
           {tr({
             en: "See an example conversation:",
@@ -714,10 +709,10 @@ function DemoMock() {
               type="button"
               onClick={() => setActive(i)}
               aria-pressed={i === active}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 i === active
-                  ? "bg-ink-800 text-white"
-                  : "bg-paper-100 text-ink-700 hover:bg-paper-300"
+                  ? "bg-forest-100 text-forest-800"
+                  : "bg-paper-200 text-ink-700 hover:bg-paper-300"
               }`}
             >
               {tr(d.chip)}
@@ -729,15 +724,15 @@ function DemoMock() {
           {[7, 13, 20, 15, 24, 11, 18, 9].map((h, i) => (
             <span
               key={i}
-              className="w-1.5 rounded-full bg-saffron/70"
+              className="w-1.5 rounded-full bg-forest-300"
               style={{ height: h }}
             />
           ))}
         </div>
 
         <div className="mt-4 flex justify-end">
-          <div className="flex max-w-[88%] items-start gap-2 rounded-2xl rounded-tr-sm bg-ink-800 px-4 py-2.5 text-white">
-            <Mic size={15} className="mt-1 flex-none text-saffron" />
+          <div className="flex max-w-[88%] items-start gap-2 rounded-2xl rounded-tr-sm bg-forest-600 px-4 py-2.5 text-white">
+            <Mic size={15} className="mt-1 flex-none text-forest-100" />
             {tr(demo.query)}
           </div>
         </div>
@@ -752,7 +747,7 @@ function DemoMock() {
         </div>
 
         <div className="mt-3 rounded-2xl border border-paper-300 bg-white p-3">
-          <div className="font-semibold text-ink-900">
+          <div className="font-medium text-ink-900">
             {tr(demo.schemeName)}
           </div>
           <div className="mt-1.5 flex items-center gap-2 text-sm text-leaf-700">
@@ -771,7 +766,6 @@ function DemoMock() {
             </span>
           </div>
         </div>
-      </div>
     </div>
   );
 }
@@ -784,12 +778,12 @@ function AudienceGrid() {
         <Link
           key={label.en}
           to="/assistant"
-          className="group flex flex-col items-center gap-2 rounded-2xl border border-paper-300 bg-white p-4 text-center transition-colors hover:border-saffron-600 hover:bg-paper-100"
+          className="group flex flex-col items-center gap-2 rounded-xl border border-paper-300 bg-white p-4 text-center transition-colors hover:border-forest-300"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-paper-100 text-ink-800 transition-colors group-hover:bg-saffron/15 group-hover:text-saffron-700">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-paper-100 text-ink-600 transition-colors group-hover:bg-forest-100 group-hover:text-forest-700">
             <Icon size={20} />
           </span>
-          <span className="text-sm font-semibold text-ink-800">
+          <span className="text-sm font-medium text-ink-800">
             {tr(label)}
           </span>
         </Link>
@@ -809,8 +803,8 @@ function Footer() {
     <footer className="border-t border-paper-300 bg-paper-100">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.3fr_1fr_1fr]">
         <div>
-          <div className="flex items-center gap-2 font-display text-lg font-bold text-ink-900">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ink-800 text-white">
+          <div className="flex items-center gap-2 text-lg font-medium text-ink-900">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-600 text-white">
               <Mic size={16} />
             </span>
             Sahayak
@@ -828,7 +822,7 @@ function Footer() {
         </div>
 
         <div>
-          <h3 className="font-semibold text-ink-900">
+          <h3 className="font-medium text-ink-900">
             {tr({ en: "Get started", hi: "शुरू करें", kn: "ಪ್ರಾರಂಭಿಸಿ" })}
           </h3>
           <ul className="mt-3 space-y-2 text-sm text-ink-700">
@@ -868,7 +862,7 @@ function Footer() {
         </div>
 
         <div>
-          <h3 className="font-semibold text-ink-900">
+          <h3 className="font-medium text-ink-900">
             {tr({ en: "Policies", hi: "नीतियाँ", kn: "ನೀತಿಗಳು" })}
           </h3>
           <ul className="mt-3 space-y-2 text-sm text-ink-700">
@@ -948,10 +942,10 @@ export default function Landing() {
 
       <main id="main">
         {/* Hero: what it is, pick a language, start. */}
-        <section className="relative overflow-hidden border-b border-paper-300 bg-gradient-to-b from-blue-50/50 via-white to-white">
+        <section className="relative overflow-hidden border-b border-paper-300 bg-white">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_460px] lg:gap-14 lg:py-24">
             <div>
-              <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-medium leading-[1.1] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
                 {tr({
                   en: "Government help, in your own language.",
                   hi: "सरकारी मदद, आपकी अपनी भाषा में।",
@@ -980,7 +974,7 @@ export default function Landing() {
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   to="/signup"
-                  className="btn-accent btn-lg gap-2 rounded-full shadow-lg shadow-saffron/25"
+                  className="btn-primary btn-lg gap-2"
                 >
                   <Mic size={18} />
                   {tr({
@@ -991,7 +985,7 @@ export default function Landing() {
                 </Link>
                 <Link
                   to="/signin"
-                  className="btn-secondary btn-lg rounded-full"
+                  className="btn-secondary btn-lg"
                 >
                   {tr({
                     en: "Continue an application",
@@ -1003,7 +997,7 @@ export default function Landing() {
 
               <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-ink-600">
                 <li className="flex items-center gap-1.5">
-                  <Volume2 size={16} className="text-leaf-700" />
+                  <Volume2 size={16} className="text-forest-600" />
                   {tr({
                     en: "Voice available in every step",
                     hi: "हर कदम पर आवाज़ उपलब्ध",
@@ -1012,7 +1006,7 @@ export default function Landing() {
                 </li>
                 {PROMISES.map(({ icon: Icon, text }) => (
                   <li key={text.en} className="flex items-center gap-1.5">
-                    <Icon size={16} className="text-leaf-700" />
+                    <Icon size={16} className="text-forest-600" />
                     {tr(text)}
                   </li>
                 ))}
@@ -1026,7 +1020,7 @@ export default function Landing() {
                 })}{" "}
                 <Link
                   to="/signin?demo=citizen"
-                  className="font-semibold text-ink-900 underline underline-offset-4 hover:text-saffron-700"
+                  className="link"
                 >
                   {tr({
                     en: "Try the demo as Ramesh, a farmer",
@@ -1054,15 +1048,15 @@ export default function Landing() {
             {OVERVIEW.map(({ icon: Icon, title, text }, i) => (
               <div
                 key={title.en}
-                className="rounded-3xl border border-paper-300 bg-white p-6"
+                className="card p-6"
               >
                 <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-800 text-sm font-bold text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-forest-100 text-sm font-medium text-forest-800">
                     {i + 1}
                   </span>
-                  <Icon size={22} className="text-saffron-600" />
+                  <Icon size={22} className="text-forest-600" />
                 </div>
-                <h3 className="mt-4 text-lg font-bold text-ink-900">
+                <h3 className="mt-4 text-lg font-medium text-ink-900">
                   {tr(title)}
                 </h3>
                 <p className="mt-1.5 text-ink-600">{tr(text)}</p>
@@ -1075,7 +1069,7 @@ export default function Landing() {
         <section id="who" className="border-t border-paper-300 bg-paper-100">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
             <div className="max-w-2xl">
-              <h2 className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">
+              <h2 className="text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
                 {tr({
                   en: "Who Sahayak can help",
                   hi: "सहायक किसकी मदद कर सकता है",
@@ -1099,7 +1093,7 @@ export default function Landing() {
         {/* How to use: the steps, with what to keep ready and safety alongside. */}
         <section id="guide" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
           <div className="max-w-2xl">
-            <h2 className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">
+            <h2 className="text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
               {tr({
                 en: "How to use Sahayak",
                 hi: "सहायक का इस्तेमाल कैसे करें",
@@ -1120,7 +1114,7 @@ export default function Landing() {
             <div className="space-y-6">
               {PHASES.map((phase) => (
                 <div key={phase.title.en} className="card overflow-hidden">
-                  <h3 className="border-b border-paper-300 bg-paper-100 px-5 py-3 font-bold text-ink-900">
+                  <h3 className="border-b border-paper-300 bg-paper-100 px-5 py-3 font-medium text-ink-900">
                     {tr(phase.title)}
                   </h3>
                   <ol className="divide-y divide-paper-300">
@@ -1134,14 +1128,14 @@ export default function Landing() {
                           value={num}
                         >
                           <span
-                            className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-ink-800 text-sm font-bold text-white"
+                            className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-forest-100 text-sm font-medium text-forest-800"
                             aria-hidden
                           >
                             {num}
                           </span>
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
-                              <h4 className="pt-0.5 text-lg font-bold text-ink-900">
+                              <h4 className="pt-0.5 text-lg font-medium text-ink-900">
                                 <span className="sr-only">{num}. </span>
                                 {tr(title)}
                               </h4>
@@ -1156,7 +1150,7 @@ export default function Landing() {
                               {tr(text)}
                             </p>
                             {tip && (
-                              <p className="mt-2 border-l-4 border-saffron pl-3 italic text-ink-700">
+                              <p className="mt-2 border-l-2 border-forest-200 pl-3 italic text-ink-700">
                                 {tr(tip)}
                               </p>
                             )}
@@ -1172,7 +1166,7 @@ export default function Landing() {
             {/* Side panel. Shows before the steps on phones, beside them on desktop. */}
             <aside className="order-first space-y-6 lg:sticky lg:top-6 lg:order-none">
               <section className="card p-5" aria-labelledby="need">
-                <h3 id="need" className="font-bold text-ink-900">
+                <h3 id="need" className="font-medium text-ink-900">
                   {tr({
                     en: "Keep these ready",
                     hi: "ये चीज़ें पास रखिए",
@@ -1187,7 +1181,7 @@ export default function Landing() {
                     >
                       <Icon
                         size={18}
-                        className="mt-0.5 flex-none text-saffron-600"
+                        className="mt-0.5 flex-none text-forest-600"
                       />
                       {tr(text)}
                     </li>
@@ -1196,12 +1190,12 @@ export default function Landing() {
               </section>
 
               <section
-                className="rounded-2xl border border-brick-100 bg-brick-50 p-5"
+                className="rounded-xl border border-brick-100 bg-brick-50 p-5"
                 aria-labelledby="safe"
               >
                 <h3
                   id="safe"
-                  className="flex items-center gap-2 font-bold text-brick"
+                  className="flex items-center gap-2 font-medium text-brick"
                 >
                   <ShieldAlert size={20} />
                   {tr({
@@ -1236,7 +1230,7 @@ export default function Landing() {
               </section>
 
               <section className="card p-5" aria-labelledby="words">
-                <h3 id="words" className="font-bold text-ink-900">
+                <h3 id="words" className="font-medium text-ink-900">
                   {tr({
                     en: "Words you may see",
                     hi: "शब्द जो आपको दिख सकते हैं",
@@ -1246,7 +1240,7 @@ export default function Landing() {
                 <div className="mt-2 divide-y divide-paper-300">
                   {WORDS.map(({ word, meaning }) => (
                     <details key={word.en} className="group py-2">
-                      <summary className="flex min-h-[40px] cursor-pointer list-none items-center justify-between font-semibold text-ink-800 [&::-webkit-details-marker]:hidden">
+                      <summary className="flex min-h-[40px] cursor-pointer list-none items-center justify-between font-medium text-ink-800 [&::-webkit-details-marker]:hidden">
                         {tr(word)}
                         <span
                           className="text-ink-400 transition-transform group-open:rotate-45"
@@ -1268,7 +1262,7 @@ export default function Landing() {
         <section id="trust" className="border-t border-paper-300 bg-white">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
             <div className="max-w-2xl">
-              <h2 className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">
+              <h2 className="text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
                 {tr({
                   en: "Built to be trusted",
                   hi: "भरोसे के लिए बनाया गया",
@@ -1287,12 +1281,12 @@ export default function Landing() {
               {TRUST_CARDS.map(({ icon: Icon, title, text }) => (
                 <div
                   key={title.en}
-                  className="rounded-3xl border border-paper-300 bg-paper-100/60 p-6"
+                  className="card p-6"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-leaf-700 shadow-sm">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-50 text-forest-600">
                     <Icon size={20} />
                   </span>
-                  <h3 className="mt-4 font-bold text-ink-900">{tr(title)}</h3>
+                  <h3 className="mt-4 font-medium text-ink-900">{tr(title)}</h3>
                   <p className="mt-1.5 text-ink-600">{tr(text)}</p>
                 </div>
               ))}
@@ -1301,9 +1295,9 @@ export default function Landing() {
         </section>
 
         {/* Close */}
-        <section className="border-t border-paper-300 bg-white">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
-            <p className="text-lg font-semibold text-ink-900">
+        <section className="bg-forest-800">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 md:flex-row md:items-center md:justify-between">
+            <p className="text-xl font-medium text-white">
               {tr({
                 en: "Ready? Let's begin.",
                 hi: "तैयार हैं? चलिए शुरू करें।",
@@ -1311,7 +1305,7 @@ export default function Landing() {
               })}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/assistant" className="btn-accent btn-lg rounded-full">
+              <Link to="/assistant" className="btn btn-lg bg-white text-forest-800 hover:bg-forest-50">
                 <Mic size={20} />
                 {tr({
                   en: "Talk to the assistant",
@@ -1321,7 +1315,7 @@ export default function Landing() {
               </Link>
               <Link
                 to="/signin?demo=citizen"
-                className="btn-secondary btn-lg rounded-full"
+                className="btn btn-lg border border-white/40 text-white hover:bg-white/10"
               >
                 {tr({
                   en: "Try the demo",

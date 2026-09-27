@@ -18,13 +18,17 @@ const ICONS: Record<string, [LucideIcon, string]> = {
 export default function Documents() {
   const { t } = useI18n();
   const [docs, setDocs] = useState<WalletDoc[] | null>(null);
+  const [loadErr, setLoadErr] = useState("");
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ doc_type: "LAND_RECORD", title: "" });
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
-  const load = () => api.get<WalletDoc[]>("/api/documents").then(setDocs);
+  const load = () => {
+    setLoadErr("");
+    return api.get<WalletDoc[]>("/api/documents").then(setDocs).catch((e) => setLoadErr(e.message));
+  };
   useEffect(() => {
     load();
   }, []);
@@ -64,23 +68,34 @@ export default function Documents() {
     <div>
       <PageHeader eyebrow="Document wallet" title={t("documents")} subtitle="Keep the documents you need for applications in one place. The assistant checks this wallet to tell you what's missing."
         actions={<button className="btn-primary" onClick={() => setOpen(true)}><Upload size={16} /> Add document</button>} />
-      {docs === null ? (
+      {loadErr && docs === null ? (
+        <div className="card flex flex-col items-center gap-3 p-8 text-center" role="alert">
+          <div className="font-medium text-ink-900">We couldn't load your documents</div>
+          <p className="max-w-md text-sm text-ink-600">{loadErr}</p>
+          <button className="btn-secondary btn-sm" onClick={load}>Try again</button>
+        </div>
+      ) : docs === null ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{[0, 1, 2].map((i) => <div key={i} className="skeleton h-40" />)}</div>
-      ) : docs.length === 0 ? <EmptyState icon={<FileText size={22} />} title="Your wallet is empty">Add your Aadhaar, land record and bank passbook.</EmptyState> : (
+      ) : docs.length === 0 ? (
+        <EmptyState icon={<FileText size={22} />} title="Your wallet is empty">
+          Add your Aadhaar, land record and bank passbook so the assistant can check what's missing.
+          <div><button className="btn-primary btn-sm mt-4" onClick={() => setOpen(true)}><Upload size={15} /> Add document</button></div>
+        </EmptyState>
+      ) : (
         <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {docs.map((d) => {
             const [Icon, tone] = ICONS[d.doc_type] ?? [FileText, "bg-ink-100 text-ink-700"];
             return (
-            <div key={d.id} className="card group flex flex-col p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift">
+            <div key={d.id} className="card group flex flex-col p-4 transition-shadow hover:border-forest-200 hover:shadow-lift">
               <div className="flex items-start gap-3">
-                <div className={`flex h-11 w-11 flex-none items-center justify-center rounded-lg transition-transform group-hover:scale-105 ${tone}`}><Icon size={21} /></div>
+                <div className={`flex h-11 w-11 flex-none items-center justify-center rounded-xl ${tone}`}><Icon size={21} /></div>
                 <div className="min-w-0">
-                  <div className="font-semibold">{d.title}</div>
-                  <div className="text-sm text-ink-500">{TYPES[d.doc_type] ?? d.doc_type}</div>
+                  <div className="font-medium text-ink-900">{d.title}</div>
+                  <div className="text-sm text-ink-600">{TYPES[d.doc_type] ?? d.doc_type}</div>
                 </div>
               </div>
               {d.is_sample && <span className="chip mt-3 w-fit bg-amber-50 text-amber-700">Sample (demo data)</span>}
-              {d.extracted_text && <p className="mt-3 line-clamp-3 rounded bg-paper-100 px-2 py-1.5 font-mono text-xs text-ink-600">{d.extracted_text}</p>}
+              {d.extracted_text && <p className="mt-3 line-clamp-3 rounded-lg bg-paper-100 px-2 py-1.5 font-mono text-xs text-ink-600">{d.extracted_text}</p>}
               <div className="mt-auto flex items-center justify-between pt-4 text-xs text-ink-500">
                 <span>{formatDate(d.created_at)}{d.size ? ` · ${(d.size / 1024).toFixed(0)} KB` : ""}</span>
                 <span className="flex gap-1">
@@ -92,9 +107,9 @@ export default function Documents() {
             );
           })}
           <button onClick={() => setOpen(true)}
-            className="flex min-h-[10rem] flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-paper-300 text-ink-500 transition-colors hover:border-forest-300 hover:bg-forest-50 hover:text-forest-800">
+            className="flex min-h-[10rem] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paper-300 text-ink-500 transition-colors hover:border-forest-300 hover:bg-forest-50 hover:text-forest-700">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-card"><Plus size={20} /></span>
-            <span className="font-semibold">Add document</span>
+            <span className="font-medium">Add document</span>
           </button>
         </div>
       )}

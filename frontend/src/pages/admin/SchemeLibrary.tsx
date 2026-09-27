@@ -61,7 +61,7 @@ export default function SchemeLibrary({ onOpen }: { onOpen: (documentId: string)
     <section className="card p-5">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="flex items-center gap-2 text-lg font-bold"><FolderSync size={19} className="text-forest-600" /> Scheme library</h2>
+          <h2 className="section-title flex items-center gap-2"><FolderSync size={19} className="text-forest-600" /> Scheme library</h2>
           <p className="text-sm text-ink-600">Pages and PDFs from the <code className="rounded bg-ink-100 px-1">scheme/</code> folder, chunked, embedded and stored in ChromaDB. The assistant retrieves from this index.</p>
         </div>
         <div className="flex gap-2">
@@ -86,10 +86,10 @@ export default function SchemeLibrary({ onOpen }: { onOpen: (documentId: string)
             <Tile icon={Search} label="Embedding model" value={lib.embedding_model} small />
           </div>
 
-          <div className="mt-4 rounded-lg bg-paper-100 px-4 py-3 text-sm">
+          <div className="mt-4 rounded-xl bg-paper-100 px-4 py-3 text-sm">
             {s?.running ? (
               <>
-                <div className="mb-2 flex flex-wrap justify-between gap-2 font-semibold text-ink-800">
+                <div className="mb-2 flex flex-wrap justify-between gap-2 font-medium text-ink-800">
                   <span>Indexing {s.done} of {s.total}{s.current ? ` · ${s.current}` : ""}</span>
                   <span className="text-ink-500">{s.indexed} new/changed · {s.unchanged} unchanged · {s.failed} failed</span>
                 </div>
@@ -113,22 +113,24 @@ export default function SchemeLibrary({ onOpen }: { onOpen: (documentId: string)
             <div className="flex gap-1.5 overflow-x-auto">
               {cats.map((c) => (
                 <button key={c} onClick={() => setCat(c)} aria-pressed={cat === c}
-                  className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${cat === c ? "border-forest-800 bg-forest-800 text-white" : "border-paper-300 bg-white text-ink-700 hover:bg-forest-50"}`}>
+                  className={`min-h-[36px] whitespace-nowrap rounded-full border px-3.5 py-1 text-xs font-medium transition-colors ${cat === c ? "border-transparent bg-forest-100 text-forest-800" : "border-paper-300 bg-white text-ink-700 hover:bg-ink-50"}`}>
                   {c === "all" ? "All" : CATEGORY[c] ?? c} <span className="opacity-70">{c === "all" ? docs.length : docs.filter((d) => d.category === c).length}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="mt-3 max-h-[28rem] overflow-y-auto rounded-lg border border-paper-300">
-            {shown.length === 0 ? <p className="p-4 text-sm text-ink-500">No documents match.</p> : (
+          <div className="mt-3 max-h-[28rem] overflow-y-auto rounded-xl border border-paper-300">
+            {shown.length === 0 ? (
+              <div className="p-3"><EmptyState icon={<Search size={22} />} title="No documents match">Try a different search or category.</EmptyState></div>
+            ) : (
               <ul className="divide-y divide-paper-300">
                 {shown.map((d) => (
                   <li key={d.slug}>
-                    <button className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-forest-50 disabled:cursor-default disabled:hover:bg-transparent"
+                    <button className="flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors hover:bg-ink-50 disabled:cursor-default disabled:hover:bg-transparent"
                       disabled={!d.document_id} onClick={() => d.document_id && onOpen(d.document_id)}>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-ink-900">{d.title}</span>
+                        <span className="block truncate text-sm font-medium text-ink-900">{d.title}</span>
                         <span className="flex items-center gap-1.5 truncate text-xs text-ink-500">
                           {d.publisher} · {(d.size / 1024).toFixed(0)} KB{d.chunk_count ? ` · ${d.chunk_count} chunks` : ""}{d.language ? ` · ${d.language}` : ""}
                           {d.source_url && (
@@ -152,11 +154,11 @@ export default function SchemeLibrary({ onOpen }: { onOpen: (documentId: string)
 
 function Tile({ icon: Icon, label, value, small, warn }: { icon: typeof Database; label: string; value: string; small?: boolean; warn?: boolean }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-paper-300 bg-white p-3">
-      <span className={`flex h-9 w-9 flex-none items-center justify-center rounded-lg ${warn ? "bg-brick-50 text-brick" : "bg-forest-50 text-forest-700"}`}><Icon size={18} /></span>
+    <div className="flex items-center gap-3 rounded-xl border border-paper-300 bg-white p-3">
+      <span className={`flex h-9 w-9 flex-none items-center justify-center rounded-full ${warn ? "bg-brick-50 text-brick" : "bg-forest-50 text-forest-700"}`}><Icon size={18} /></span>
       <span className="min-w-0">
-        <span className={`block truncate font-bold text-ink-900 ${small ? "text-sm" : "font-display text-lg"}`}>{value}</span>
-        <span className="block truncate text-xs text-ink-500">{label}</span>
+        <span className={`block truncate font-medium text-ink-900 ${small ? "text-sm" : "text-2xl"}`}>{value}</span>
+        <span className="block truncate text-sm text-ink-600">{label}</span>
       </span>
     </div>
   );

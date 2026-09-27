@@ -2,7 +2,7 @@ import { ExternalLink, RefreshCw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import type { IngestionJob, KnowledgeDoc } from "@/types";
-import { Drawer, Spinner, StatusPill, formatDate } from "@/components/ui";
+import { Drawer, SkeletonList, StatusPill, formatDate } from "@/components/ui";
 import PipelineViz from "./PipelineViz";
 
 interface Chunk {
@@ -22,22 +22,22 @@ export default function DocDrawer({ docId, onClose, onChanged }: { docId: string
 
   return (
     <Drawer open={!!docId} onClose={onClose} title="Document" width="max-w-3xl">
-      {!d ? <Spinner className="h-6 w-6" /> : (
+      {!d ? <SkeletonList rows={3} className="h-24" /> : (
         <div className="space-y-5">
           <div>
-            <h3 className="text-xl font-bold">{d.title}</h3>
+            <h3 className="text-xl font-medium text-ink-900">{d.title}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink-600">
               <StatusPill status={d.status} /> {d.publisher} {d.is_demo && <span className="chip bg-amber-50 text-amber-700">demo</span>}
               {d.source?.is_official && <span className="chip bg-leaf-50 text-leaf-700">official source</span>}
             </div>
-            {d.source_url && <a href={d.source_url} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-sm underline decoration-saffron">{d.source_url} <ExternalLink size={12} /></a>}
+            {d.source_url && <a href={d.source_url} target="_blank" rel="noreferrer" className="link mt-1 inline-flex items-center gap-1 break-all text-sm">{d.source_url} <ExternalLink size={12} className="flex-none" /></a>}
           </div>
           <dl className="card grid grid-cols-2 gap-3 p-4 text-sm sm:grid-cols-4">
-            <div><dt className="eyebrow">Chunks</dt><dd className="font-semibold">{d.chunk_count}</dd></div>
-            <div><dt className="eyebrow">Language</dt><dd className="font-semibold">{d.language}</dd></div>
-            <div><dt className="eyebrow">Kind</dt><dd className="font-semibold">{d.kind}</dd></div>
-            <div><dt className="eyebrow">Published</dt><dd className="font-semibold">{d.published_date || "—"}</dd></div>
-            <div className="col-span-2"><dt className="eyebrow">Linked schemes (graph)</dt><dd className="font-semibold">{d.scheme_codes.join(", ") || "—"}</dd></div>
+            <div><dt className="eyebrow">Chunks</dt><dd className="font-medium text-ink-900">{d.chunk_count}</dd></div>
+            <div><dt className="eyebrow">Language</dt><dd className="font-medium text-ink-900">{d.language}</dd></div>
+            <div><dt className="eyebrow">Kind</dt><dd className="font-medium text-ink-900">{d.kind}</dd></div>
+            <div><dt className="eyebrow">Published</dt><dd className="font-medium text-ink-900">{d.published_date || "—"}</dd></div>
+            <div className="col-span-2"><dt className="eyebrow">Linked schemes (graph)</dt><dd className="font-medium text-ink-900">{d.scheme_codes.join(", ") || "—"}</dd></div>
             <div className="col-span-2"><dt className="eyebrow">Content hash</dt><dd className="truncate font-mono text-xs">{d.content_hash}</dd></div>
           </dl>
           {d.jobs[0] && (
@@ -56,9 +56,9 @@ export default function DocDrawer({ docId, onClose, onChanged }: { docId: string
             <div className="space-y-2">
               {d.chunks.map((c) => (
                 <div key={c.chunk_id} className="card overflow-hidden">
-                  <button className="flex w-full items-start gap-3 p-3 text-left" onClick={() => setOpen(open === c.chunk_id ? null : c.chunk_id)}>
-                    <span className="font-mono text-xs font-bold text-saffron-700">{c.chunk_id}</span>
-                    <span className="flex-1 text-sm"><b>{c.section || "—"}</b>{c.page ? ` · p.${c.page}` : ""}<span className="line-clamp-2 text-ink-600">{c.content}</span></span>
+                  <button className="flex w-full items-start gap-3 p-3 text-left transition-colors hover:bg-ink-50" onClick={() => setOpen(open === c.chunk_id ? null : c.chunk_id)}>
+                    <span className="font-mono text-xs font-medium text-saffron-700">{c.chunk_id}</span>
+                    <span className="flex-1 text-sm"><span className="font-medium text-ink-900">{c.section || "—"}</span>{c.page ? ` · p.${c.page}` : ""}<span className="line-clamp-2 text-ink-600">{c.content}</span></span>
                   </button>
                   {open === c.chunk_id && (
                     <div className="border-t border-paper-300 bg-paper-100 p-3">

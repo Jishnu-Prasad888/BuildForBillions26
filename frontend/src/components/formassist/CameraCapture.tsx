@@ -67,18 +67,18 @@ export default function CameraCapture({ onCapture, onClose, onUnavailable }: { o
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/90" role="dialog" aria-modal aria-label="Take a photo of your form">
       <div className="flex items-center justify-between px-4 py-3 text-white">
-        <div className="font-semibold">Take a photo of your form</div>
+        <div className="font-medium">Take a photo of your form</div>
         <button className="rounded-full p-2 hover:bg-white/10" onClick={() => { stopStream(); onClose(); }} aria-label="Close camera"><X size={22} /></button>
       </div>
       <div className="relative flex min-h-0 flex-1 items-center justify-center px-3">
         {error && <div className="max-w-md"><ErrorNote>{error}</ErrorNote></div>}
         {!error && !shot && (
           <>
-            <video ref={videoRef} playsInline muted className="max-h-full max-w-full rounded-lg" />
+            <video ref={videoRef} playsInline muted className="max-h-full max-w-full rounded-xl border-2 border-dashed border-ink-300 bg-black" />
             {!ready && <div className="absolute text-white"><Spinner className="h-7 w-7" /></div>}
           </>
         )}
-        {shot && <img src={shot.url} alt="Captured form" className="max-h-full max-w-full rounded-lg" />}
+        {shot && <img src={shot.url} alt="Captured form" className="max-h-full max-w-full rounded-xl border-2 border-dashed border-ink-300" />}
       </div>
       <div className="flex flex-col items-center gap-2 px-4 pb-6 pt-3 text-white">
         <p className="text-center text-sm text-white/80">Lay the form flat, fit the whole page in view and keep it well lit. No need to crop — I straighten it for you.</p>

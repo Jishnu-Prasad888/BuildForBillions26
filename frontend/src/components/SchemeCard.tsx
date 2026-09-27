@@ -24,13 +24,13 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
   };
 
   return (
-    <div className="card flex flex-col p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-forest-200 hover:shadow-lift sm:p-5">
+    <div className="card flex flex-col p-4 transition-all duration-200 hover:border-forest-200 hover:shadow-lift sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-semibold leading-snug text-ink-900">{scheme.display_name}</div>
+          <div className="font-medium leading-snug text-ink-900">{scheme.display_name}</div>
           {scheme.department && (
-            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-500">
-              <Building2 size={13} /> {scheme.department}
+            <div className="mt-1 flex items-center gap-1.5 text-sm text-ink-600">
+              <Building2 size={14} className="flex-none text-ink-500" /> {scheme.department}
             </div>
           )}
         </div>
@@ -42,7 +42,7 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
       </div>
       {!compact && scheme.summary && <p className="mt-2 text-sm text-ink-700">{scheme.summary}</p>}
       {scheme.benefit && (
-        <div className="mt-2 rounded-md bg-leaf-50 px-2.5 py-1.5 text-sm text-leaf-700">
+        <div className="mt-2 rounded-lg bg-leaf-50 px-2.5 py-1.5 text-sm text-leaf-700">
           <Landmark size={14} className="mr-1 inline -translate-y-px" />
           {scheme.benefit}
         </div>
@@ -52,7 +52,7 @@ export default function SchemeCard({ scheme, evidence = [], onCite, compact = fa
           <div className="eyebrow mb-1.5">Documents needed</div>
           <ul className="flex flex-wrap gap-1.5 text-sm text-ink-700">
             {scheme.documents.map((d) => (
-              <li key={d.code} className="inline-flex items-center gap-1 rounded-full bg-paper-200 px-2.5 py-0.5 text-[0.8rem]">
+              <li key={d.code} className="chip bg-paper-200 text-ink-700">
                 <FileCheck2 size={13} className="flex-none text-forest-600" /> {d.display_name}
               </li>
             ))}
