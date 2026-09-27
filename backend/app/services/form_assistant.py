@@ -22,6 +22,7 @@ from app.models import Application, Conversation, Message, User
 from app.models.common import utcnow
 from app.services import ocr
 from app.services.ai import get_ai
+from app.services import form_help
 from app.services.form_templates import f, fmt
 from app.services.forms import (
     NO, YES, all_fields, compute_status, field_label, get_form, is_filled, mask, option_display, parse_value,
@@ -88,12 +89,34 @@ class FormAssistant:
                 seen.add(e["id"])
 
     # ------------------------------------------------------------ KAG field hint
+    def _localize(self, text: str) -> str:
+        """English help in the citizen's language: an LLM translation when one is available, else the English
+        text with a note that the official wording is in English."""
+        if self.lang == "en" or not text:
+            return text
+        tr = get_ai().generate([
+            {"role": "system", "content": "Translate to simple, friendly " + {"hi": "Hindi", "kn": "Kannada"}[self.lang] +
+             ". Keep numbers, codes and examples unchanged. Output only the translation."},
+            {"role": "user", "content": text},
+        ])
+        return tr.strip() if tr else text + f("english_hint", self.lang)
+
     def field_hint(self, fid: str, sentences: int = 1) -> str:
+        """One or two plain sentences about a field, or "" when there is nothing good to say.
+
+        Order of trust: the help written for the field in the form definition, then a sentence from the scheme
+        guide that is clearly prose about this field (``form_help`` refuses headings, fee lines and lists).
+        """
         fld = self._field(fid)
         key = f"{fid}:{fld['label']}:{self.lang}:{sentences}"
         cache = self.state.setdefault("hints", {})
         if key in cache:
             self._add_evidence(cache[key]["evidence"])
+            return cache[key]["text"]
+        own = form_help.authored_help(fld, self.lang)
+        if own:
+            text = own if self.lang == "en" or (fld.get("helps") or {}).get(self.lang) else self._localize(own)
+            cache[key] = {"text": text + " ", "evidence": []}
             return cache[key]["text"]
         q = QueryContext(question=fld.get("help_query") or fld["label"], language="en",
                          retrieval_query=f"{fld.get('help_query', '')} {fld['label']}", intent="general",
@@ -108,18 +131,15 @@ class FormAssistant:
             s = c.score * 100 + 3 * len(label_words & sec)
             if s > best_score:
                 best, best_score = c, s
-        if not best:
+        picked = []
+        if best:
+            candidates = _best_sentences(best, q.retrieval_query + " " + " ".join(label_words), 8)
+            picked = form_help.pick_guide_sentences(candidates, form_help.content_words(fld["label"] + " " + fld.get("help_query", "")),
+                                                    sentences)
+        if not picked:
             cache[key] = {"text": "", "evidence": []}
             return ""
-        text = " ".join(_best_sentences(best, q.retrieval_query + " " + " ".join(label_words), sentences))
-        if self.lang != "en":
-            tr = get_ai().generate([
-                {"role": "system", "content": "Translate to simple, friendly " + {"hi": "Hindi", "kn": "Kannada"}[self.lang] +
-                 ". Keep numbers, codes and examples unchanged. Output only the translation."},
-                {"role": "user", "content": text},
-            ])
-            text = tr.strip() if tr else text + f("english_hint", self.lang)
-        text = f"{text} [{best.id}] "
+        text = f"{self._localize(' '.join(picked))} [{best.id}] "
         ev = [best.as_dict()]
         cache[key] = {"text": text, "evidence": ev}
         self._add_evidence(ev)
@@ -393,6 +413,7 @@ class FormAssistant:
     def _match_field(self, text: str, strict: bool = False) -> str | None:
         low = text.lower()
         toks = set(re.findall(r"\w+", low))
+        toks |= {t[:-1] for t in toks if len(t) > 4 and t.endswith("s")}  # "fathers" also matches the label word "father"
         best, score = None, 0
         for x in self.fields:
             fr = resolve_field(x, self.values)
@@ -420,9 +441,10 @@ class FormAssistant:
             msg = res["answer"]
             self._add_evidence(res["evidence"])
         else:
-            # deterministic field explanation grounded in the form guide (no LLM available)
-            hint = self.field_hint(fid, sentences=3)
-            msg = f("field_explain", self.lang, label=field_label(fld, self.lang)) + (" " + hint if hint else "")
+            # No LLM answer: explain from the field's own help, then a clean guide sentence, else say so plainly.
+            hint = self.field_hint(fid, sentences=2).strip()
+            label = field_label(fld, self.lang)
+            msg = f("field_named", self.lang, label=label, help=hint) if hint else f("field_no_help", self.lang, label=label)
             insufficient = not hint
         if insufficient:
             self.questions.append(question)
