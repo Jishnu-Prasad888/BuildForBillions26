@@ -1,26 +1,34 @@
-# Whisper Chat (on-device whisper-small)
+# Whisper Chat (on-device whisper + Gemma 4 RAG)
 
-An Expo/React Native app that records your voice and transcribes it **entirely
-on-device** with OpenAI's `whisper-small`, showing each transcription as a chat
-bubble. This folder is a complete, runnable project — the app files plus all the
-config needed to build it.
-
-Worth knowing up front: whisper-small is a **speech-to-text** model, not a
-conversational one. It can't reply to you — it only turns speech into text. So
-this app is really "talk and see it transcribed, in a chat-style log."
+An Expo/React Native app that answers questions about government schemes
+**entirely on-device, with no network after the first launch**. You type a
+question, or speak it and `whisper-small` fills the input box; then **Gemma 4
+E2B** answers from a small knowledge base bundled inside the app (retrieval-
+augmented generation, RAG). This folder is a complete, runnable project — the
+app files plus all the config needed to build it.
 
 ## How it works
 
 - **[react-native-executorch](https://docs.swmansion.com/react-native-executorch/)**
-  (Software Mansion) runs `whisper-small` on-device via Meta's ExecuTorch
-  runtime, and downloads/caches the model weights for you.
+  (Software Mansion) runs all three models on-device via Meta's ExecuTorch
+  runtime, and downloads/caches the model weights for you:
+  - `whisper-small` (English) — speech to text
+  - `all-MiniLM-L6-v2` — turns passages and questions into vectors for search
+  - `Gemma 4 E2B` (8-bit/4-bit quantized) — writes the answer from the retrieved passages
 - **[react-native-audio-api](https://docs.swmansion.com/react-native-audio-api/)**
   captures the microphone as raw 16 kHz mono float32 PCM — the exact format
   Whisper wants, so there's no audio file or format conversion involved.
 
 ```
-mic ──► AudioRecorder ──► 0.5s PCM chunks ──► stitch ──► stt.transcribe() ──► chat bubble
+speak:  mic ──► AudioRecorder ──► PCM ──► whisper ──► fills the input box ─┐
+type:   ───────────────────────────────────────────► the input box ────────┤
+                                                                            ▼ Send
+question ──► MiniLM vector + keyword search over assets/corpus.json ──► top 4 passages
+         ──► Gemma 4 (fresh context each question) ──► streamed answer + numbered sources
 ```
+
+Typed and spoken questions take the same path: voice only fills the box, and
+nothing is sent until you tap **Send**.
 
 ## Requirements
 
@@ -29,7 +37,11 @@ mic ──► AudioRecorder ──► 0.5s PCM chunks ──► stitch ──►
 - iOS 17+ / Android 8.0+ (`minSdkVersion` 26 — already set in `app.json`).
 - A **development build** is required; this will **not** run in Expo Go, because
   both libraries ship native code.
-- ~500 MB free space for the one-time model download (cached afterwards).
+- **~3.5 GB free storage** for the one-time model downloads (Gemma 4 ~2.6 GB,
+  whisper ~0.45 GB, MiniLM ~0.1 GB), cached afterwards.
+- **A high-memory phone (about 8 GB RAM is my expectation, not measured).** Gemma,
+  whisper and the embedder are all loaded at once. If the app is killed while
+  loading, try `WHISPER.EN.TINY` (see below) or a phone with more RAM.
 - Node 20+ and npm. Apple silicon Mac + Xcode for iOS; Android Studio for Android.
 
 ## Install and run
@@ -39,9 +51,10 @@ npm install
 npm run ios       # or: npm run android
 ```
 
-First launch downloads whisper (~450 MB for the English-only small model) and
-shows a progress bar. After that it's cached on-device and every transcription
-runs fully offline.
+First launch downloads the three models (about 3.2 GB, so use Wi-Fi), shows a
+progress bar for each, then embeds the bundled data once (a few seconds) and
+saves the vectors on the device. From then on **everything runs fully offline**,
+including the first answer after a restart.
 
 If the build complains about missing native artifacts
 (`Build input files cannot be found`), the executorch postinstall was skipped:
@@ -52,24 +65,67 @@ npm rebuild react-native-executorch
 
 ## Using it
 
-Tap **🎤 Speak**, say something, tap **⏹ Stop**. A few seconds later the text
-appears as a chat bubble. Repeat to build up a log. Recording is capped at 60
+Type a question and tap **Send**, or tap **🎤**, speak, and tap **⏹** — a few
+seconds later the transcription appears in the input box, where you can fix it
+before sending. The answer streams in, followed by the numbered passages it
+used (`[1]`, `[2]`… match the numbers in the answer). **Stop** cuts a long
+answer short. If the bundled data doesn't cover the question, the assistant
+says it can't verify the answer instead of guessing. Recording is capped at 60
 seconds, which Whisper splits into its own 29-second windows internally.
+
+Only English is supported: the speech model and the search model are both
+English-only, and the bundled data is English.
+
+## The data (what it can answer)
+
+The knowledge base is `assets/corpus.json`, generated from the repo's `data/`
+folder: the two demo advisories in `data/documents`, the scheme summaries,
+situations and document names in `data/seed/graph.json`, and the demo form in
+`data/seed/forms`. **`data/users` (citizens' uploaded forms) is never read.**
+It is about 8.5 KB, so today it covers four crop-damage schemes (crop loss
+relief, PMFBY, PM-KISAN, KCC calamity relief) plus the field-survey and
+hailstorm advisories.
+
+After changing anything in `data/`, rebuild it and rebuild the app:
+
+```bash
+python3 scripts/build_corpus.py     # needs pdftotext (poppler-utils) or PyMuPDF for the PDFs
+```
+
+The app fingerprints the corpus: on the next launch it notices the change,
+re-embeds and re-saves the vectors by itself. To use more data (for example the
+`scheme/` folder) point the script's `from_*` functions at it.
 
 ## Project layout
 
 | File | What it does |
 | --- | --- |
 | `App.tsx` | Entry guard: if the native modules are missing (Expo Go), it explains how to build a dev build |
-| `src/WhisperChat.tsx` | Screen: model download state, message list, record button |
-| `src/hooks/useWhisperChat.ts` | Loads the model, records the mic, transcribes |
-| `src/components/ChatBubble.tsx` | One transcribed message bubble |
+| `src/WhisperChat.tsx` | Screen: message list, input box, mic and Send buttons. Typed and spoken questions both go through `submit` |
+| `src/hooks/useWhisperChat.ts` | Loads whisper, records the mic, transcribes |
+| `src/hooks/useGemmaRag.ts` | Loads Gemma 4 and the embedder, builds the index, exposes `ask(question, onToken)` |
+| `src/rag/chunker.ts` | Cuts the corpus into ~700-character passages |
+| `src/rag/vectorIndex.ts` | Embeds the passages once and saves the vectors on the device |
+| `src/rag/retrieve.ts` | Finds the best passages: vector similarity fused with keyword matching |
+| `src/rag/prompt.ts` | The grounded prompt and the context-window budget |
+| `src/rag/answerSession.ts` | One Gemma question at a time, from an empty context (the library's chat session would keep old passages) |
+| `src/components/ChatBubble.tsx` | One message bubble (you / Gemma / notice) with its sources |
+| `src/components/LoadingStatus.tsx` | First-launch screen: one progress row per model and the index |
+| `assets/corpus.json` | The bundled knowledge base (generated, committed) |
+| `scripts/build_corpus.py` | Regenerates `assets/corpus.json` from `data/` |
 | `app.json` | Microphone permissions, iOS 17 target, Android `minSdkVersion` 26 |
 | `index.ts` | Expo entry point |
 
-## Tweaking the model
+## Tweaking the models
 
-The model is one line in `src/hooks/useWhisperChat.ts`:
+Gemma 4 E2B is the smallest Gemma 4 that `react-native-executorch` ships; the
+models are constants at the top of `src/hooks/useGemmaRag.ts`. Retrieval and
+answer length are constants there too (`TOP_K`, `MAX_NEW_TOKENS`,
+`TEMPERATURE`), and `MIN_COSINE` in `src/rag/retrieve.ts` decides how similar a
+passage must be to count as relevant — raise it if off-topic questions still get
+sources, lower it if on-topic ones get none.
+
+The speech model is one line in `src/hooks/useWhisperChat.ts`:
 
 ```ts
 const STT_MODEL = models.speechToText.WHISPER.EN.SMALL.DEFAULT;
@@ -97,7 +153,11 @@ The source files are self-contained, so copy them in:
 App.tsx                                 (dev-build guard, keep it or merge it away)
 src/WhisperChat.tsx                     (the screen)
 src/hooks/useWhisperChat.ts
+src/hooks/useGemmaRag.ts
+src/rag/                                (chunker, vectorIndex, retrieve, prompt, answerSession)
 src/components/ChatBubble.tsx
+src/components/LoadingStatus.tsx
+assets/corpus.json                      (or generate your own with scripts/build_corpus.py)
 ```
 
 Then make sure your app has the same setup:
@@ -152,7 +212,11 @@ Then make sure your app has the same setup:
 | `Build input files cannot be found ... XnnpackBackend` | `npm rebuild react-native-executorch` |
 | `Headers/Types.h` build error | A pod is building as a framework (`use_frameworks!`). Force `react-native-executorch` back to a static library in your `Podfile`; Expo SDK 55+ does this for you already. |
 | Android crash on load | `minSdkVersion` under 26, or an unsupported ABI — keep `arm64-v8a` and `x86_64` in `android/gradle.properties` |
-| Progress bar stuck / `modelError` set | First launch needs internet to fetch the model; a failed download surfaces as an error on screen |
+| Progress bar stuck / a row shows `Failed: …` | First launch needs internet to fetch the models; a failed download surfaces as an error on that model's row |
+| App is killed while loading, or Gemma never finishes loading | Out of memory: three models are loaded at once. Use a phone with more RAM, or a smaller whisper (`WHISPER.EN.TINY`) |
+| Gemma fails to load only on Android GPU | `DEFAULT` prefers the Vulkan build there. Pin `models.llm.GEMMA4_E2B.XNNPACK_8DA4W` in `src/hooks/useGemmaRag.ts` |
+| Every answer says it "cannot verify" | The question isn't covered by `assets/corpus.json`, or `MIN_COSINE` is too high. Check the `[rag]` lines in the Metro log |
+| `[rag] dropped N source(s)` in the log | The model's context window is smaller than the passages; only the best fit are sent. Lower `TOP_K` |
 | Transcribed text is nonsense | The mic returned a non-16 kHz rate. The hook resamples automatically; if you replace it, keep that conversion. |
 | Install/build errors | Almost always a version mismatch — check the [compatibility page](https://docs.swmansion.com/react-native-executorch/docs/other/compatibility) |
 

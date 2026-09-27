@@ -1,0 +1,52 @@
+{
+ "documents": [
+  {
+   "id": "doc-crop-damage-field-survey-advisory-DEMO",
+   "title": "Advisory – What to do before the crop damage field survey (DEMO)",
+   "source": "data/documents/crop-damage-field-survey-advisory-DEMO.md",
+   "text": "> DEMO DOCUMENT for the admin upload demo. Written for the Build for Billions prototype; not an official advisory.\n\n## Before the field survey\n\nDo not remove, plough or burn the damaged crop before the joint field survey is completed. Officials need to see the damaged field to assess the percentage of loss for each survey number.\n\nTake clear photographs of the damaged field on the day of the damage and on the following days. Photographs should show the crop, the field boundary and, if possible, a landmark. Keep the date and time on the photographs.\n\n## Keep these ready for the surveyor\n\n- RTC / Pahani of the survey number\n- Aadhaar card\n- Bank passbook of the Aadhaar-seeded account\n- Photographs of the damage\n\n## If you are a tenant cultivator\n\nIf you cultivate land owned by someone else, inform the Village Accountant during the survey and carry any written lease agreement or a letter from the landowner."
+  },
+  {
+   "id": "doc-hailstorm-guidance-note-DEMO",
+   "title": "Hailstorm Crop Damage - Farmer Guidance Note (DEMO)",
+   "source": "data/documents/hailstorm-guidance-note-DEMO.pdf",
+   "text": "Hailstorm Crop Damage - Farmer Guidance Note (DEMO)\nDEMO DOCUMENT created for the Build for Billions prototype admin-upload demo. Not an official government publication.\n\nImmediate steps after a hailstorm\nFarmers whose standing crops are damaged by hailstorm should report the damage to the Raitha Samparka\nKendra or Village Accountant within 48 hours. Hailstorm is treated as a localized calamity, so damage is\nassessed field by field.\n\nInsured farmers\nIf the crop is insured, the farmer must also intimate the insurance company within 72 hours. Note the survey\nnumber, crop name and approximate damaged area in acres when reporting.\n\nEvidence to collect\nCollect photographs showing hail marks on leaves and fruits, and photographs of the whole field. Do not\nharvest or clear the damaged crop until officials have inspected it.\n\nHorticulture crops\nFor fruit orchards and vegetables damaged by hail, the Horticulture Department officer participates in the joint\nsurvey. Perennial crops are assessed separately from annual crops.\n\nHelpline\nContact your local Raitha Samparka Kendra for assistance with the relief application and survey dates."
+  },
+  {
+   "id": "scheme-crop_loss_relief_ka",
+   "title": "Crop Loss Input Subsidy (Disaster Relief) (DEMO seed summary)",
+   "source": "data/seed/graph.json",
+   "text": "Scheme: Crop Loss Input Subsidy (Disaster Relief) (Crop Damage Assistance)\nSummary: Relief (input subsidy) for farmers whose crops are damaged by notified natural calamities, paid under State/National Disaster Response Fund norms.\nBenefit: Input subsidy per hectare of affected area as per the SDRF/NDRF norms in force (see official notification).\nRun by: Revenue Department (Disaster Management), Government of Karnataka\nApplies in: Karnataka\nDocuments needed: Identity proof (Aadhaar card or Driving Licence); Land record (RTC / Pahani) showing survey number; Bank account details (passbook first page or cancelled cheque); Photographs / field inspection report of crop damage\nOfficial portal: Karnataka Land Records (Bhoomi) portal (https://landrecords.karnataka.gov.in)\nEligibility rules:\n- Applicant must be a farmer cultivating the affected land (owner or recorded cultivator).\n- Crop loss must be caused by a notified natural calamity such as heavy rain, flood, drought or hailstorm.\n- Assessed crop loss should be 33% or more for assistance under SDRF/NDRF norms.\n- Assistance is limited to a maximum area per farmer as specified in the norms (commonly up to 2 hectares).\nNote: DEMO SEED GRAPH. Scheme summaries are representative, prepared for the hackathon prototype. Always verify on the official portal."
+  },
+  {
+   "id": "scheme-pmfby",
+   "title": "Pradhan Mantri Fasal Bima Yojana (PMFBY) – Crop Insurance Claim (DEMO seed summary)",
+   "source": "data/seed/graph.json",
+   "text": "Scheme: Pradhan Mantri Fasal Bima Yojana (PMFBY) – Crop Insurance Claim (Crop Insurance Claim)\nSummary: Crop insurance for notified crops; insured farmers can claim for localized calamities and post-harvest losses.\nBenefit: Insurance claim for yield loss / localized damage as assessed by the insurance company.\nRun by: Ministry of Agriculture & Farmers Welfare\nApplies in: All India\nDocuments needed: Identity proof (Aadhaar card or Driving Licence); Land record (RTC / Pahani) showing survey number; Bank account details (passbook first page or cancelled cheque); Sowing certificate / declaration of crop sown; Crop insurance policy / enrolment receipt\nOfficial portal: PMFBY official portal (https://pmfby.gov.in)\nEligibility rules:\n- Farmer must be enrolled/insured under PMFBY for the notified crop and area in the current season.\n- Localized calamity or post-harvest loss should be intimated within 72 hours of occurrence.\n- Post-harvest losses are covered for crops kept in cut-and-spread condition in the field for up to 14 days, for specified perils such as unseasonal rain.\nNote: DEMO SEED GRAPH. Scheme summaries are representative, prepared for the hackathon prototype. Always verify on the official portal."
+  },
+  {
+   "id": "scheme-pm_kisan",
+   "title": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi) (DEMO seed summary)",
+   "source": "data/seed/graph.json",
+   "text": "Scheme: PM-KISAN (Pradhan Mantri Kisan Samman Nidhi) (PM-KISAN)\nSummary: Income support to eligible landholding farmer families, paid directly to bank accounts.\nBenefit: ₹6,000 per year in three equal instalments of ₹2,000 via Direct Benefit Transfer.\nRun by: Ministry of Agriculture & Farmers Welfare\nApplies in: All India\nDocuments needed: Identity proof (Aadhaar card or Driving Licence); Land record (RTC / Pahani) showing survey number; Bank account details (passbook first page or cancelled cheque)\nOfficial portal: PM-KISAN official portal (https://pmkisan.gov.in)\nEligibility rules:\n- Landholding farmer families with cultivable land recorded in their name are eligible, subject to exclusions.\n- Excluded categories include income-tax payers, institutional landholders, holders of constitutional posts and certain pensioners and professionals.\n- eKYC and Aadhaar-seeded bank account are required to receive instalments.\nNote: DEMO SEED GRAPH. Scheme summaries are representative, prepared for the hackathon prototype. Always verify on the official portal."
+  },
+  {
+   "id": "scheme-kcc_calamity_relief",
+   "title": "Crop Loan (KCC) Relief in Natural Calamities (DEMO seed summary)",
+   "source": "data/seed/graph.json",
+   "text": "Scheme: Crop Loan (KCC) Relief in Natural Calamities (Crop Loan Relief)\nSummary: Banks may restructure/reschedule crop loans and provide fresh crop loans to farmers in areas declared affected by natural calamities.\nBenefit: Restructuring/rescheduling of existing crop loan and eligibility for fresh finance, as per RBI relief-measure directions.\nRun by: Scheduled Commercial Banks (e.g. SBI) under RBI / Department of Financial Services\nApplies in: All India\nDocuments needed: Identity proof (Aadhaar card or Driving Licence); Land record (RTC / Pahani) showing survey number; Kisan Credit Card / crop loan account details; Photographs / field inspection report of crop damage\nOfficial portal: State Bank of India (https://sbi.co.in)\nEligibility rules:\n- Applies to borrowers with crop loans in districts/areas declared affected by a natural calamity by the State Government.\n- Relief measures such as restructuring are generally linked to crop loss of 33% or more as assessed by the authorities.\nNote: DEMO SEED GRAPH. Scheme summaries are representative, prepared for the hackathon prototype. Always verify on the official portal."
+  },
+  {
+   "id": "event-crop_damage",
+   "title": "Situation: Crop Damage",
+   "source": "data/seed/graph.json",
+   "text": "Situation: Crop Damage (for Farmers)\nLoss or damage to standing or harvested crops due to heavy rain, flood, drought, hailstorm, pests or other natural calamities.\nCommon words: crop, crops, harvest, farm, field, rain, heavy rain, flood, flooded, drought, hailstorm, hail, pest, damaged, destroyed, ruined, loss, cyclone, unseasonal, paddy, ragi, maize, sugarcane"
+  },
+  {
+   "id": "form-crop_relief_form",
+   "title": "Crop Damage Assistance – Application for Input Subsidy (DEMO form)",
+   "source": "data/seed/forms/crop_relief_form.json",
+   "text": "Application form: Crop Damage Assistance – Application for Input Subsidy\nIssued by: Revenue Department (Disaster Management) – DEMO FORM\nSection 'Applicant details' asks for: Full name of applicant (required); Father's / Spouse's name (required); Date of birth (required); Mobile number (required)\nSection 'Identity information' asks for: Identity Proof (required) - choose one of: Aadhaar, Driving Licence; Identity document number (required)\nSection 'Address' asks for: Residential address (required); District (required) - choose one of: Bagalkot, Belagavi, Ballari, Bengaluru Rural, Chikkamagaluru, Dharwad, Hassan, Haveri, Kalaburagi, Kodagu, Mandya, Mysuru, Raichur, Shivamogga, Tumakuru, Udupi, Vijayapura; Taluk (required); Village (required)\nSection 'Land & crop details' asks for: Land survey number (Sy. No.) (required); Extent of affected land (acres) (required); Crop damaged (required) - choose one of: Paddy, Ragi, Maize, Jowar, Tur (Red gram), Cotton, Sugarcane, Groundnut, Other; Season (required) - choose one of: Kharif, Rabi, Summer; Date of damage (required); Cause of damage (required) - choose one of: Heavy rain / Flood, Drought, Hailstorm, Pest attack, Other; Estimated crop loss (%) (required)\nSection 'Bank details' asks for: Bank account number (required); IFSC code (required); Bank & branch name (required)\nSection 'Declaration' asks for: I declare that the information given is true (required)"
+  }
+ ]
+}
