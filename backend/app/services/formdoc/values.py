@@ -10,6 +10,8 @@ from datetime import date
 from app.services.forms import normalize_digits, parse_date
 
 NON_FILLABLE = {"signature"}
+#: Completed by hand after printing: the citizen attaches these, the assistant never writes into them.
+HAND_FILL_TYPES = {"signature", "photograph", "attachment"}
 # Fields the assistant must never collect: it never handles OTPs, passwords or PINs.
 SECRET_LABEL = re.compile(r"\b(otp|one[- ]time|password|passcode|cvv|atm pin|upi pin|mpin)\b|\bpin\b(?!\s*-?code)", re.I)
 
@@ -74,10 +76,28 @@ def _id_kind(field: dict, siblings: dict) -> str:
     return "other"
 
 
+#: Fine-grained validator for each *detector* type. The schema type is coarse ("text" for a PAN, an IFSC and
+#: a plain sentence), so the sub-type decides how strict the check is — and it is always named explicitly,
+#: never guessed from the words in the label.
+def _validation_kind(field: dict) -> str:
+    sub = (field.get("input_type") or "").strip()
+    if sub in ("identity_number", "bank_account", "ifsc", "pincode", "amount", "choice", "checkbox",
+               "signature", "photograph", "attachment", "date", "phone", "email", "multiline", "name", "number", "text"):
+        return sub
+    t = field.get("type") or "text"
+    if t in ("identity_number", "bank_account", "ifsc", "pincode", "amount", "name", "multiline", "choice"):
+        return t  # a row written before the schema switch
+    if t == "address" or t == "multiline_text":
+        return "multiline"
+    if t in ("select", "radio", "yes_no"):
+        return "choice"
+    return t
+
+
 def validate_value(field: dict, raw, siblings: dict | None = None):
     """Returns the normalised value or raises ValueError_. ``siblings`` = {"choices": [answers of choice fields]}."""
     siblings = siblings or {}
-    t = field["type"]
+    t = _validation_kind(field)
     if is_secret_field(field):
         raise ValueError_("For your safety I never collect OTPs, passwords or PINs. Please enter this yourself on the completed form.")
     if t in NON_FILLABLE:
@@ -184,7 +204,7 @@ def to_display(field: dict, value) -> str:
         return "Yes" if value else "No"
     if isinstance(value, list):
         return ", ".join(value)
-    if field["type"] == "date" and isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+    if _validation_kind(field) == "date" and isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
         y, m, d = value.split("-")
         return f"{d}/{m}/{y}"
     return "" if value is None else str(value)
@@ -193,14 +213,14 @@ def to_display(field: dict, value) -> str:
 def mask(field: dict, value) -> str:
     """Display for review screens: identity and bank numbers show only the last four characters."""
     s = to_display(field, value)
-    if field["type"] in ("identity_number", "bank_account") and len(re.sub(r"\s", "", s)) > 4:
+    if _validation_kind(field) in ("identity_number", "bank_account") and len(re.sub(r"\s", "", s)) > 4:
         compact = re.sub(r"\s", "", s)
         return "•" * (len(compact) - 4) + compact[-4:]
     return s
 
 
 def is_sensitive(field: dict) -> bool:
-    return field["type"] in ("identity_number", "bank_account", "phone", "multiline", "ifsc") or bool(re.search(r"aadhaar|pan\b|address|account", field["label"], re.I))
+    return _validation_kind(field) in ("identity_number", "bank_account", "phone", "multiline", "ifsc") or bool(re.search(r"aadhaar|pan\b|address|account", field["label"], re.I))
 
 
 # --------------------------------------------------------------------------- profile suggestions
@@ -229,7 +249,7 @@ def profile_suggestions(fields: list[dict], user_full_name: str, profile: dict) 
     """Values from the citizen's own profile for fields whose meaning is unambiguous. Suggestions only; code, never an LLM."""
     out: dict[str, str] = {}
     for f in fields:
-        label, ftype = f["label"], f["type"]
+        label, ftype = f["label"], _validation_kind(f)
         if ftype in ("choice", "checkbox", "signature"):
             continue
         if ftype == "name" and re.search(r"applicant|full name|^name$|^name of", label, re.I) and not re.search(r"father|mother|husband|spouse|guardian|nominee", label, re.I):

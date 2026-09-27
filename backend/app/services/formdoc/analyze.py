@@ -16,6 +16,7 @@ from app.config import settings
 from app.models import Form, FormField, FormPage, FormValue
 from app.models.common import utcnow
 from app.services.formdoc import detect, extract, imaging, storage
+from app.services.formdoc import fields as field_schema
 from app.services.formdoc.detect import TYPES, infer_type, is_required
 from app.services.redact import redact
 
@@ -154,7 +155,9 @@ def analyze_form(db: Session, form: Form) -> None:
         for p in pages:
             for f in p["fields"]:
                 f["page"] = p["number"]
+                f.setdefault("section", "")
                 all_fields.append(f)
+        _carry_sections(pages)          # a page that starts inside a section keeps the heading of the page before
         for i, f in enumerate(all_fields, start=1):
             f["_id"] = f"field_{i:03d}"
         _refine_with_llm(all_fields)
@@ -164,17 +167,28 @@ def analyze_form(db: Session, form: Form) -> None:
         db.execute(delete(FormPage).where(FormPage.form_id == fid, FormPage.user_id == uid))
         for p in pages:
             db.add(FormPage(form_id=fid, user_id=uid, page_number=p["number"], width=p["width"], height=p["height"], text_source=p["source"],
-                            ocr_confidence=p["conf"], extracted_text=p["text"][:60000], blocks=p["blocks"][:1500], warnings=p["warnings"]))
+                            ocr_confidence=p["conf"], extracted_text=p["text"][:60000], blocks=p["blocks"][:1500], warnings=p["warnings"],
+                            structure=p["structure"] or {}))
         for pos, f in enumerate(all_fields):
-            db.add(FormField(form_id=fid, user_id=uid, field_id=f["_id"], label=f["label"], description=f.get("description", ""), type=f["type"],
-                             page=f["page"], bbox=f["page_bbox"], options=f.get("options", []), required=f["required"],
-                             confidence=f["confidence"], source=f["source"], meta=f.get("meta", {}), position=pos))
+            db.add(_field_row(fid, uid, f, pos, "detected"))
+        # candidates the citizen has to confirm: stored, but never counted and never asked about
+        next_id = len(all_fields) + 1
+        pos = len(all_fields)
+        for p in pages:
+            for c in p.get("uncertain", []):
+                c["page"] = p["number"]
+                c["_id"] = f"field_{next_id:03d}"
+                next_id += 1
+                pos += 1
+                db.add(_field_row(fid, uid, c, pos, "uncertain"))
         form.page_count = len(pages)
         form.analysis = {
             "fillable": any(f["source"] == "acroform" for f in all_fields),
             "ocr_pages": [p["number"] for p in pages if p["source"] == "ocr"],
             "unreadable_pages": [p["number"] for p in pages if p["unreadable"]],
             "field_count": len(all_fields),
+            "candidate_count": next_id - 1 - len(all_fields),
+            "title": next((p["structure"].get("title") for p in pages if p["structure"] and p["structure"].get("title")), ""),
             "warnings": sorted({w for p in pages for w in p["warnings"]}),
             "photo": pages[0].get("photo") if form.kind == "image" else None,
         }
@@ -199,6 +213,43 @@ def _mark_failed(db: Session, form: Form, message: str) -> None:
         db.commit()
 
 
+def _field_row(fid: str, uid: str, f: dict, pos: int, status: str) -> FormField:
+    """One detected field (or review candidate) as a row: detector type, schema type and label id all kept."""
+    det_type = f.get("type", "text")
+    label = f.get("label", "")
+    meta = dict(f.get("meta") or {})
+    return FormField(
+        form_id=fid, user_id=uid, field_id=f["_id"], label=label,
+        normalized_label=f.get("normalized_label") or field_schema.normalize_label(label),
+        description=f.get("description", "") or str(meta.get("rejected", "")),
+        type=field_schema.TYPE_MAP.get(det_type, "text"), input_type=det_type,
+        page=f.get("page", 1), bbox=f.get("page_bbox", []), label_bbox=f.get("label_bbox") or [],
+        options=f.get("options", []), required=bool(f.get("required", False)),
+        conditional=field_schema.condition_for(label, f.get("section", "")) is not None,
+        confidence=float(f.get("confidence", 0.5)), source=f.get("source", "layout"),
+        section=f.get("section", ""), meta=meta, position=pos, status=status)
+
+
+def _carry_sections(pages: list[dict]) -> None:
+    """A page that opens without a heading continues the last section of the page before it."""
+    current = ""
+    for p in pages:
+        struct = p.get("structure") or {}
+        first_y = min([s["bbox"][1] for s in struct.get("sections", [])], default=0.0)
+        for f in p["fields"] + p.get("uncertain", []):
+            y = (f.get("page_bbox") or [0, 0])[1]
+            if y < first_y - 1:
+                if not f.get("section"):
+                    f["section"] = current
+                continue
+            break
+        for f in p["fields"] + p.get("uncertain", []):
+            if f.get("section"):
+                current = f["section"]
+        if struct.get("sections"):
+            current = struct["sections"][-1]["name"]
+
+
 def _page_record(number, width, height, source, conf, tokens, tokens_scale, geometry, geom_scale, widget_fields, extra_warnings) -> dict:
     """``tokens_scale`` / ``geom_scale`` convert the tokens / the pixel geometry into the page's coordinate space."""
     ts, gs = tokens_scale, geom_scale
@@ -206,15 +257,27 @@ def _page_record(number, width, height, source, conf, tokens, tokens_scale, geom
     hlines = [(a * gs, b * gs, y * gs) for a, b, y in geometry["hlines"]]
     rects = [(a * gs, b * gs, c * gs, d * gs) for a, b, c, d in geometry["boxes"]]
     existing = [f["page_bbox"] for f in widget_fields]
-    st = detect.detect_page(tokens_u, hlines, rects, width, height, existing)
+    st = detect.detect_page(tokens_u, hlines, rects, width, height, existing, page=number, is_first_page=(number == 1))
     warnings = list(extra_warnings)
     if not tokens_u and not widget_fields:
         warnings.append("ocr_unclear")
+    doc_struct = st.structure
+    structure_json = None
+    if doc_struct is not None:
+        structure_json = {
+            "title": doc_struct.title,
+            "sections": doc_struct.sections,
+            "areas": doc_struct.areas,
+            "elements": [e.as_dict() for e in doc_struct.elements][:220],
+        }
+    for f in st.merged:
+        warnings.append("duplicate_field")
     return {"number": number, "width": round(width, 2), "height": round(height, 2), "source": source, "conf": conf,
             "text": extract.text_of(tokens_u), "unreadable": (not tokens_u and not widget_fields),
             "blocks": [{"text": t[4], "bbox": [round(t[0], 1), round(t[1], 1), round(t[2], 1), round(t[3], 1)],
                         "confidence": None if t[5] is None else round(t[5], 1)} for t in tokens_u],
-            "fields": widget_fields + st.fields, "warnings": warnings}
+            "fields": widget_fields + st.fields, "uncertain": st.uncertain, "structure": structure_json,
+            "warnings": warnings}
 
 
 def _analyze_pdf(data: bytes, uid: str, fid: str, lang: str) -> list[dict]:

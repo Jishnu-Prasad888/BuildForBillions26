@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 log = logging.getLogger("forms.router")
 
-INTENTS = ("answer", "question", "skip", "dont_know", "correction", "other")
+INTENTS = ("answer", "question", "skip", "dont_know", "correction", "not_applicable", "other")
 
 
 @dataclass
@@ -97,6 +97,19 @@ _OTHER = re.compile(r"^(hi|hello|hey|namaste|namaskar|namaskara|thanks|thank you
 
 _CORRECTION_LEAD = re.compile(r"^(actually|sorry|no[,]?|nahi[,]?|galti se|galti ho gayi|mistake|correction|oops|"
                               r"wait[,]?|change|update|correct)\b[\s,:-]*", re.I)
+
+# A statement that *describes the world* instead of answering the question: "I don't have a PAN", "I am
+# unmarried", "there is no spouse". It is deliberately separate from "I don't know" (the answer is unknown),
+# and it never carries a value — a denial must never be written into a field. Answering it is the assistant's
+# job (``answers.denial``), so this router only refuses to treat it as an answer.
+_DENIAL = re.compile(
+    r"\b(i\s*(do\s*not|don'?t|dont|does\s*not|doesn'?t)\s+have|"
+    r"i\s*(do\s*not|don'?t|dont)\s+own|"
+    r"there\s*('?s|is)\s+no|have\s+no|has\s+no|"
+    r"i\s*(am|are|was)\s+not|"
+    r"i\s*(am|are)\s+(un\w+|no\b|without|not)|none\s+of\s+(them|these|the\s+above)|neither|"
+    r"not\s+applicable|does\s+not\s+apply|"
+    r"no\s+(one|father|mother|spouse|husband|wife|pan|aadhaar|job|income|salary|address|phone|email|guardian))\b", re.I)
 
 # "my name is X", "mera naam X hai", "it is X", "X hai" …
 _LEAD_PHRASES = [
@@ -183,6 +196,15 @@ def is_question(text: str) -> bool:
     return bool("?" in s or _Q_EN_START.search(s) or _Q_EN_ANY.search(s) or _Q_INDIC.search(s))
 
 
+#: Schema type or detector type: both vocabularies are accepted so a row written before the schema switch
+#: still routes the same way.
+_CHOICE_TYPES = ("select", "radio", "yes_no", "choice")
+
+
+def _is_choice(field: dict) -> bool:
+    return (field.get("type") in _CHOICE_TYPES) or (field.get("input_type") == "choice")
+
+
 def route(text: str, field: dict | None, fields: list[dict], *, option_match=None, llm=None) -> Turn:
     """Classify one message sent while ``field`` is being asked.
 
@@ -197,6 +219,9 @@ def route(text: str, field: dict | None, fields: list[dict], *, option_match=Non
         return Turn("skip", reason="skip word")
     if _DONT_KNOW.search(s):
         return Turn("dont_know", reason="dont-know phrase")
+    if _DENIAL.search(s) and not re.match(r"^\s*(yes|no|nope|nahi|nahin)\b", s, re.I):
+        # "not applicable" / "leave blank" are explicit instructions about the *box*, not values.
+        return Turn("not_applicable", reason="denial: the citizen says they do not have this")
 
     # Corrections: "actually my branch is Koramangala" (another field) or "sorry, it's Ravi" (this field).
     lead = _CORRECTION_LEAD.match(s)
@@ -208,7 +233,7 @@ def route(text: str, field: dict | None, fields: list[dict], *, option_match=Non
             if v:
                 return Turn("correction", v, target["field_id"], min(conf, 0.9), "correction lead")
 
-    if field is not None and field.get("type") == "choice" and option_match and "?" not in s:
+    if field is not None and _is_choice(field) and option_match and "?" not in s:
         m = option_match(field, s)
         if len(m) == 1 or (m and field.get("meta", {}).get("multiple")):
             return Turn("answer", s, field["field_id"], 0.95, "option match")

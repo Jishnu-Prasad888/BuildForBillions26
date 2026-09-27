@@ -178,4 +178,11 @@ def detect_geometry(gray: np.ndarray) -> dict:
         if any(abs(b[0] - k[0]) <= 4 and abs(b[1] - k[1]) <= 4 and abs(b[2] - k[2]) <= 4 and abs(b[3] - k[3]) <= 4 for k in kept):
             continue
         kept.append(b)
-    return {"hlines": [tuple(m) for m in merged], "boxes": kept}
+    # A rectangle's top and bottom edge are indistinguishable from a ruled blank to a line detector. They
+    # are the border of a box, not an answer area, so they are dropped from "ruled lines": keeping them made
+    # the bottom edge of a photograph box look like the input area of an instruction printed beside it.
+    hlines = [tuple(m) for m in merged
+              if not any((by0 - 4 <= m[2] <= by0 + 4 or by1 - 4 <= m[2] <= by1 + 4)
+                         and bx0 - 4 <= m[0] and m[1] <= bx1 + 4
+                         for (bx0, by0, bx1, by1) in kept)]
+    return {"hlines": hlines, "boxes": kept}

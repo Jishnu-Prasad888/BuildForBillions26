@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 from app.kag import agent
 from app.models import Form, FormAssistanceSession, FormField, FormValue, User
-from app.services.formdoc import service, turn_router
+from app.services.formdoc import answers, fields as field_schema, knowledge as form_knowledge, messages, questions, service, turn_router
 from app.services.formdoc.scheme_scope import detect_form_scheme
 from app.services.formdoc.values import ValueError_, is_secret_field, match_options, mask, to_display, validate_value
 from app.services.query_normalizer import answer_normalized
@@ -29,7 +29,8 @@ log = logging.getLogger("forms.assistant")
 UNVERIFIED = "I couldn't verify this from the uploaded form or available official sources."
 QUESTION_RE = re.compile(r"\?|^\s*(what|where|which|how|why|who|when|do i|does|is|are|can|could|should|explain|tell me|meaning of)\b", re.I)
 SKIP_RE = re.compile(r"^\s*(skip|later|not now|pass|i (do not|don't|dont) know|dont know|don't know|no idea|not sure|next)\b", re.I)
-BLANK_RE = re.compile(r"^\s*(leave (it|this)( blank| empty)?|leave blank|not applicable|n/?a|nothing|none|no value)\s*[.!]*$", re.I)
+#: Semantic denial, shared with ``answers.denial`` so the router and the answer stage agree on what counts.
+DENIAL_RE = answers.DENIAL_RE
 BOTH_RE = re.compile(r"\b(both|all( of them| of these)?|either|any( of them| one)?|every one)\b", re.I)
 SAME_RE = re.compile(r"\b(same as (before|last time|earlier|previous)|same (address|number|one)|as before|use (my )?(saved|profile|previous|earlier)|already (gave|given|told))\b", re.I)
 SUMMARY_RE = re.compile(r"how many|which fields|what fields|list (of )?(the )?fields|what('s| is) (left|missing|pending|remaining)|progress|how much (is )?(left|done)", re.I)
@@ -71,20 +72,18 @@ class FormAssistant:
     def _ask_payload(self, f: dict | None) -> dict | None:
         if f is None:
             return None
-        return {"field_id": f["field_id"], "label": f["label"], "type": f["type"], "options": f["options"]}
+        return {"field_id": f["field_id"], "label": f["label"], "type": f["type"], "input_type": f.get("input_type", f["type"]),
+                "options": f["options"], "required": bool(f.get("required")), "section": f.get("section", ""),
+                "hint": questions.context_for(f)}
 
     def _ask_text(self, f: dict) -> str:
-        label = f["label"]
-        if f["type"] == "choice":
-            multi = f["meta"].get("multiple")
-            return f"For “{label}”, the form offers: " + ", ".join(f["options"]) + (". Which ones apply to you?" if multi else ". Which one applies to you?")
-        if f["type"] == "checkbox":
-            return f"The form has a box: “{label}”. Should it be ticked? (yes / no)"
-        if f["type"] == "date":
-            return f"I found a field called “{label}”. What date should I enter? (for example 25/12/1990)"
-        if f["type"] == "phone":
-            return f"I found a field called “{label}”. What is the 10-digit number?"
-        return f"I found a field called “{label}”. Do you know it? Tell me the value, or say “skip” to come back to it later."
+        """The question for a field, in words a person would use.
+
+        Wording comes from ``questions.py``, which builds it out of the field's own label, type, options and
+        glossary terms. The fallback keeps the field name visible and offers the two escape routes, so a
+        question is never just the word "I found a field called X".
+        """
+        return questions.question_for(f)
 
     def _finish_reply(self, sections: list[dict], ask_after: str | None, *, ask: dict | None = None, choices: list[str] | None = None,
                       clarification: bool = False, evidence: list | None = None, reask: bool = True, hist: str | None = None) -> dict:
@@ -95,17 +94,26 @@ class FormAssistant:
             if nxt is not None:
                 self.state["asking"] = nxt["field_id"]
                 sections.append({"kind": "assistant", "text": self._ask_text(self.by_id[nxt["field_id"]])})
-                if nxt["type"] == "choice":
+                if field_schema.is_choice(self.by_id[nxt["field_id"]]):
                     choices = nxt["options"]
             else:
                 self.state["asking"] = None
                 sm = self._summary()
                 if sm["required_missing"] == 0:
-                    sections.append({"kind": "assistant", "text": "All the information I need is in. Open **Review** to check every answer, then generate your PDF."})
+                    text = "All the information I need is in. Open **Review** to check every answer, then generate your PDF."
                 else:
-                    sections.append({"kind": "assistant", "text": f"{sm['required_missing']} required field(s) still need an answer."})
+                    text = f"{sm['required_missing']} required field(s) still need an answer."
+                sections.append({"kind": "assistant", "text": text})
         elif nxt is not None:
             self.state["asking"] = nxt["field_id"]
+        # Everything reaching the citizen (and the stored transcript) passes the sanitising boundary: internal
+        # tokens, stray markup and non-text objects are removed, and the removal is logged, never silent.
+        for s in sections:
+            raw = s.get("text")
+            if not isinstance(raw, str) or messages.LEAK_TOKENS.search(raw):
+                log.warning("Sanitised a %s reply section that held internal tokens or a non-text value", s.get("kind"))
+            s["text"] = messages.sanitize(raw)
+        sections = [s for s in sections if s["text"]]
         reply = "\n\n".join(s["text"] for s in sections)
         # The stored transcript never contains values the citizen entered: those live only in form_values.
         self._push("assistant", hist if hist is not None else redact(reply))
@@ -120,13 +128,20 @@ class FormAssistant:
     # ------------------------------------------------------------------ entry points
     def greet(self) -> dict:
         sm = self._summary()
-        text = (f"I found **{sm['detected']} fields** in “{self.form.original_filename}”. "
-                + (f"{sm['pending']} still need information." if sm["pending"] else "Every field already has an answer.")
-                + " I'll ask about them one at a time, and you can ask me what any field means. I only fill what you tell me — you review everything before the PDF is made.")
+        title = (self.form.analysis or {}).get("title") or self.form.original_filename
+        n = sm["fillable"]
+        text = (f"I read **{title}**. I found {n} field{'' if n == 1 else 's'} for you to answer"
+                + (f"; {sm['pending']} still need information." if sm["pending"] else " and every one already has an answer.")
+                + " I'll ask about them one at a time, in the order the form prints them, and you can ask me what any field means. "
+                  "I only fill what you tell me — you review everything before the PDF is made.")
         sections = [{"kind": "assistant", "text": text}]
-        low = [f for f in self.fields if f["confidence"] < 0.6 and f["type"] != "signature"]
-        if low:
-            sections.append({"kind": "assistant", "text": f"I couldn't confidently identify {len(low)} field(s). You can fix their names in the AutoFill panel."})
+        if sm["manual"]:
+            sections.append({"kind": "assistant", "text": f"{sm['manual']} of them you complete by hand on the printed form (signatures, photographs)."})
+        candidates = len(service.load_candidates(self.db, self.form))
+        if candidates:
+            sections.append({"kind": "assistant", "text": f"{candidates} printed label{'' if candidates == 1 else 's'} looked like "
+                                                          "fields but had no box or line to write in, so I left "
+                                                          f"{'it' if candidates == 1 else 'them'} out."})
         if self.form.analysis.get("ocr_pages"):
             sections.append({"kind": "assistant", "text": "Some pages were read with OCR, so please double-check the field names."})
         return self._finish_reply(sections, None)
@@ -138,6 +153,7 @@ class FormAssistant:
         longer matches the server's pointer the client is out of date, so nothing is saved.
         ``current_field_id``: a field the citizen deliberately picked (clicked in the preview / AutoFill panel)."""
         self._input_mode = input_mode
+        self._language = language
         text = (message or "").strip()
         if not text:
             return self.greet()
@@ -153,7 +169,7 @@ class FormAssistant:
             log.info("Stale pending_field_id from client; re-prompting the current field")
             self._push("user", "(out of sync)")
             return self._finish_reply([{"kind": "assistant", "text": "Let's continue with this one: " + self._ask_text(asking)}], None,
-                                      ask=self._ask_payload(asking), choices=asking["options"] if asking["type"] == "choice" else None)
+                                      ask=self._ask_payload(asking), choices=asking["options"] if field_schema.is_choice(asking) else None)
 
         clar = self.state.get("clarify")
         if clar:
@@ -179,30 +195,43 @@ class FormAssistant:
             if target is None:
                 return self._finish_reply([{"kind": "assistant", "text": "I'm not sure which field that is for. Tell me a field name, or ask me a question about the form."}], None)
             return self._finish_reply([{"kind": "assistant", "text": "Okay. " + self._ask_text(target)}], None, ask=self._ask_payload(target),
-                                      choices=target["options"] if target["type"] == "choice" else None)
+                                      choices=target["options"] if field_schema.is_choice(target) else None)
 
         self._push("user", "(answer)")
         if target is None and turn.intent != "correction":
             return self._finish_reply([{"kind": "assistant", "text": "I'm not sure which field that is for. Tell me a field name, or ask me a question about the form."}], self.state.get("asking"))
         if turn.intent == "skip":
+            # "skip" is a decision about the field, not an answer to it: the field is marked and the
+            # conversation moves to the next question. It is never stored as a value.
             service.set_marker(self.db, self.form, target["field_id"], "skipped")
             self._reload()
             return self._finish_reply([{"kind": "assistant", "text": f"No problem — I'll leave “{target['label']}” for later. You can add a note about it in My Notes."}], target["field_id"])
         if turn.intent == "correction" and turn.target_field and turn.target_field != (target or {}).get("field_id"):
             return self._store(self.by_id[turn.target_field], turn.value, then_ask=target)
-        if BLANK_RE.match(text):
-            service.set_marker(self.db, self.form, target["field_id"], "blank")
-            self._reload()
-            return self._finish_reply([{"kind": "assistant", "text": f"Okay, “{target['label']}” will be left blank."}], target["field_id"])
+        if turn.intent == "not_applicable":
+            return self._mark_not_applicable(target, text)
         if SAME_RE.search(text):
             return self._previous_value(target)
-        if target["type"] == "choice" and BOTH_RE.search(text) and not target["meta"].get("multiple") and len(match_options(target["options"], text)) != 1:
+        if field_schema.is_choice(target) and BOTH_RE.search(text) and not target["meta"].get("multiple") and len(match_options(target["options"], text)) != 1:
             self.state["clarify"] = {"field_id": target["field_id"], "kind": "choice"}
             return self._finish_reply([{"kind": "assistant", "text": "The form allows only one option here. Which one would you like to use?"}], None, ask=self._ask_payload(target),
                                       choices=target["options"], clarification=True)
         value = turn.value if turn.value else text
-        if turn.confidence < 0.7 and target["type"] in ("text", "name", "multiline"):
-            return self._confirm(target, value)
+        if field_schema.is_typed(target):
+            # A name that is nearly, but not quite, a real name is offered back, never rewritten silently.
+            if target.get("input_type") in ("text", "name", "unknown") or not target.get("input_type"):
+                suggestion = answers.suggest_spelling(value, target.get("input_type", "text"))
+                if suggestion and answers.is_confirmation(text):
+                    value = suggestion
+                elif suggestion:
+                    self.state["clarify"] = {"field_id": target["field_id"], "kind": "spelling", "value": value,
+                                             "suggestion": suggestion}
+                    return self._finish_reply(
+                        [{"kind": "assistant", "text": f"Did you mean “{suggestion}”? I will keep exactly what you say if you prefer."}],
+                        None, ask=self._ask_payload(target), choices=["Yes", "No"], clarification=True,
+                        hist=f"Checked a possible spelling for “{target['label']}” before saving.")
+            if turn.confidence < 0.7:
+                return self._confirm(target, value)
         return self._store(target, value)
 
     def _router_llm(self, cleaned_text: str, field: dict) -> str | None:
@@ -234,6 +263,25 @@ class FormAssistant:
         self.state["scheme"] = codes
         return codes
 
+    def _mark_not_applicable(self, target: dict, text: str) -> dict:
+        """"I don't have a PAN" / "not applicable" / "leave it blank".
+
+        Three outcomes are possible and only the citizen can choose between them, because only the citizen
+        knows: leave the box empty, mark it not applicable, or answer the other half of a compound label
+        ("Father's/ Spouse Name" -> "Spouse"). Nothing is ever guessed or stored as a value.
+        """
+        low = text.lower()
+        if re.search(r"\b(not\s*applicable|does\s*not\s+apply|n/?a\b)\b", low) and re.search(r"applicable|apply|n/?a", low):
+            service.set_marker(self.db, self.form, target["field_id"], "not_applicable")
+            self._reload()
+            return self._finish_reply(
+                [{"kind": "assistant", "text": f"I've marked “{target['label']}” as not applicable, and I won't fill it in."}],
+                target["field_id"])
+        denial_text, options = questions.denial_response(target, answers.denial(text) or "")
+        self.state["clarify"] = {"field_id": target["field_id"], "kind": "denial", "subject": answers.denial(text) or ""}
+        return self._finish_reply([{"kind": "assistant", "text": denial_text}], None,
+                                  ask=self._ask_payload(target), choices=options, clarification=True)
+
     def _confirm(self, target: dict, value: str) -> dict:
         """Low-confidence extraction: read the value back before saving anything."""
         self.state["clarify"] = {"field_id": target["field_id"], "kind": "confirm", "value": value}
@@ -241,23 +289,61 @@ class FormAssistant:
                                   ask=self._ask_payload(target), choices=["Yes", "No"], clarification=True,
                                   hist=f"I read back a value for “{target['label']}” to confirm.")
 
+    # ------------------------------------------------------------------ "I don't have it" / "I don't have a PAN"
+    def _resolve_denial(self, text: str, clar: dict) -> dict | None:
+        """A denial resolves to a *state* of the field, never to a value the citizen did not give.
+
+        "Leave blank" and "not applicable" are the same thing to a PDF writer — the box stays empty — but
+        they are different for the citizen's review, so the choice is recorded, not inferred.
+        """
+        target = self.by_id.get(clar.get("field_id", ""))
+        if target is None:
+            self.state.pop("clarify", None)
+            return None
+        low = text.lower()
+        if re.search(r"\b(leave|blank|empty|skip)\b", low) or answers.NO_RE.match(text):
+            self.state.pop("clarify", None)
+            service.set_marker(self.db, self.form, target["field_id"], "blank")
+            self._reload()
+            return self._finish_reply([{"kind": "assistant", "text": f"Okay, “{target['label']}” will be left blank on the form."}],
+                                      target["field_id"])
+        if re.search(r"not applicable|does not apply|n/?a\b", low):
+            self.state.pop("clarify", None)
+            service.set_marker(self.db, self.form, target["field_id"], "not_applicable")
+            self._reload()
+            return self._finish_reply([{"kind": "assistant", "text": f"I've marked “{target['label']}” as not applicable. I won't fill it in."}],
+                                      target["field_id"])
+        if re.search(r"\b(more|explain|tell me more|what|why)\b", low):
+            return self._explain_field(target, getattr(self, "_language", "en"))
+        # A compound label ("Father's/ Spouse Name") can be narrowed instead: use the other half.
+        compound = questions.is_compound(target["label"])
+        if compound and not re.search(r"\b(neither|both|none)\b", low):
+            other = [p for p in compound if _norm(p) not in _norm(text)]
+            if len(other) == 1:
+                self.state.pop("clarify", None)
+                return self._store(target, other[0], note="(the other half of the label)")
+        return None
+
+    def _resolve_spelling(self, text: str, clar: dict) -> dict | None:
+        """"Did you mean …?" — yes stores the suggested spelling, no stores exactly what was said."""
+        target = self.by_id.get(clar.get("field_id", ""))
+        if target is None:
+            self.state.pop("clarify", None)
+            return None
+        if answers.is_yes(text):
+            self.state.pop("clarify", None)
+            return self._store(target, clar.get("suggestion", ""))
+        if answers.is_no(text):
+            self.state.pop("clarify", None)
+            return self._store(target, clar.get("value", ""), note="(kept as you said it)")
+        return None
+
     def _explain_field(self, target: dict, language: str) -> dict:
         """"I don't know": explain what the field asks for (and each option), then ask it again. Nothing is saved."""
         self._push("user", "(doesn't know)")
         sections: list[dict] = []
         evidence: list = []
-        what = f"“{target['label']}” asks for "
-        if target["type"] == "choice":
-            what += "one of these options: " + "; ".join(f"**{o}**" for o in target["options"]) + "."
-        elif target["type"] == "checkbox":
-            what += "a yes or no: tick it only if it applies to you."
-        else:
-            what += {"date": "a date.", "phone": "a 10-digit mobile number.", "bank_account": "your bank account number (9 to 18 digits, printed in your passbook or on a cheque).",
-                     "ifsc": "your bank branch's IFSC code (11 characters, printed in your passbook or on a cheque).",
-                     "identity_number": "the number printed on your identity document."}.get(target["type"], "the information named in the label.")
-        if target["description"]:
-            what += f" The form says: “{target['description']}”."
-        sections.append({"kind": "assistant", "text": what})
+        sections.append({"kind": "assistant", "text": questions.explain_field(target)})
         try:
             _q = ("What does " + target["label"] + " mean on this form"
                   + (" and what do the options " + ", ".join(target["options"])
@@ -273,7 +359,7 @@ class FormAssistant:
             log.warning("KAG lookup failed: %s", type(exc).__name__)
         sections.append({"kind": "assistant", "text": self._ask_text(target) + " If you still aren't sure, say “skip” and we'll come back to it."})
         return self._finish_reply(sections, None, ask=self._ask_payload(target), evidence=evidence,
-                                  choices=target["options"] if target["type"] == "choice" else None)
+                                  choices=target["options"] if field_schema.is_choice(target) else None)
 
     # ------------------------------------------------------------------ storing values
     def _store(self, target: dict, raw, source: str = "assistant", note: str = "", then_ask: dict | None = None) -> dict:
@@ -281,7 +367,7 @@ class FormAssistant:
         try:
             v = validate_value(target, raw, service.sibling_context(self.fields, self.values))
         except ValueError_ as exc:
-            if exc.options and target["type"] == "choice":
+            if exc.options and field_schema.is_choice(target):
                 self.state["clarify"] = {"field_id": target["field_id"], "kind": "choice"}
                 msg = "More than one option matches what you said. Which one do you mean?" if len(exc.options) < len(target["options"]) else "I couldn't match that to an option on the form. Which one applies?"
                 return self._finish_reply([{"kind": "assistant", "text": msg}], None, ask=self._ask_payload(target), choices=exc.options, clarification=True)
@@ -294,7 +380,7 @@ class FormAssistant:
         if then_ask is not None and service.field_status(then_ask, self.values, self.skipped, self.blank) in ("missing", "skipped"):
             back = "Back to the form: " + self._ask_text(then_ask)
             return self._finish_reply([{"kind": "assistant", "text": f"Updated “{target['label']}”: **{shown}**."}, {"kind": "assistant", "text": back}], None,
-                                      ask=self._ask_payload(then_ask), choices=then_ask["options"] if then_ask["type"] == "choice" else None,
+                                      ask=self._ask_payload(then_ask), choices=then_ask["options"] if field_schema.is_choice(then_ask) else None,
                                       hist=f"Updated “{target['label']}”. {back}")
         hist = f"Got it — “{target['label']}” saved. " + (self._ask_text(self.by_id[nxt["field_id"]]) if (nxt := self._next(target["field_id"])) else "")
         return self._finish_reply([{"kind": "assistant", "text": f"Got it — “{target['label']}”: **{shown}**. {note}".strip()}], target["field_id"], hist=hist.strip())
@@ -304,16 +390,25 @@ class FormAssistant:
         if target is None:
             self.state.pop("clarify", None)
             return None
-        if clar["kind"] == "confirm":
-            if re.fullmatch(r"\s*(yes|y|yeah|yep|correct|right|ok|okay|haan|haa|han|ha|ji|ji haan|sahi|sahi hai|theek hai|houdu|haudu|हाँ|हां|सही|ಹೌದು)[\s.!]*", text, re.I):
+        kind = clar.get("kind")
+        if kind == "denial":
+            out = self._resolve_denial(text, clar)
+            if out is not None:
+                return out
+        if kind == "spelling":
+            out = self._resolve_spelling(text, clar)
+            if out is not None:
+                return out
+        if kind == "confirm":
+            if answers.is_yes(text):
                 self.state.pop("clarify", None)
                 self._push("user", "(confirmed)")
                 return self._store(target, clar.get("value", ""))
             self.state.pop("clarify", None)
-            if re.fullmatch(r"\s*(no|n|nope|wrong|nahi|nahin|galat|illa|ಇಲ್ಲ|नहीं|गलत)[\s.!]*", text, re.I):
+            if answers.is_no(text):
                 self._push("user", "(rejected)")
                 return self._finish_reply([{"kind": "assistant", "text": "Okay, I haven't saved it. " + self._ask_text(target)}], None, ask=self._ask_payload(target),
-                                          choices=target["options"] if target["type"] == "choice" else None)
+                                          choices=target["options"] if field_schema.is_choice(target) else None)
             return None  # anything else is a new message: route it normally
         if SKIP_RE.match(text):
             self.state.pop("clarify", None)
@@ -376,7 +471,7 @@ class FormAssistant:
             .order_by(FormValue.updated_at.desc()).limit(200)).all()
         for val, fld in rows:
             v = (val.value or {}).get("v")
-            if not isinstance(v, str) or fld.type != target["type"]:
+            if not isinstance(v, str) or service.detector_type(fld.type, fld.input_type) != target["type"]:
                 continue
             same_kind = _norm(fld.label) == _norm(target["label"]) or ("address" in fld.label.lower() and "address" in label)
             if same_kind:
@@ -410,6 +505,22 @@ class FormAssistant:
             if s == len(words) and s > score:
                 best, score = f, s
         return best or self.by_id.get(self.state.get("asking") or "")
+
+    def _form_answer(self, text: str) -> dict | None:
+        """What the form itself says about a field or term the citizen *named* ("what does PAN mean?").
+
+        Only an explicit mention counts: the field being asked is not used as a fallback, so an unrelated
+        question never gets a per-field preamble. Nothing here reads values or calls a model, and the result is
+        shown to the citizen only; it is not sent to KAG.
+        """
+        if not form_knowledge.ASK_ABOUT.search(text):
+            return None
+        target = form_knowledge.find_field(text, self.fields)
+        if target is None and form_knowledge.term_in_question(text) is None:
+            return None
+        doc = form_knowledge.DocumentKnowledge(self.form, self.fields, service.load_structure(self.db, self.form))
+        out = doc.answer(text, target)
+        return out if out["answer"] else None
 
     def _observe(self, f: dict) -> str:
         bits = [f"The uploaded form contains a field called “{f['label']}” on page {f['page']}"]
@@ -485,13 +596,16 @@ class FormAssistant:
                 knowledge = res
         except Exception as exc:  # noqa: BLE001
             log.warning("KAG lookup failed: %s", type(exc).__name__)
+        form_answer = self._form_answer(text)
+        if form_answer:
+            sections.append({"kind": "assistant", "text": form_answer["answer"]})
         if knowledge:
             sections.append({"kind": "knowledge", "text": knowledge["answer"], "evidence": knowledge["evidence"]})
             evidence = knowledge["evidence"]
             if not self.state.get("portal_line_shown"):
                 sections.append({"kind": "assistant", "text": "Always confirm important details on the official government portal."})
                 self.state["portal_line_shown"] = True
-        else:
+        elif not form_answer:
             sections.append({"kind": "assistant", "text": UNVERIFIED})
         return self._finish_reply(sections, None, ask=None, evidence=evidence, reask=False) if not self.state.get("asking") else self._with_reask(sections, evidence)
 
@@ -500,5 +614,5 @@ class FormAssistant:
         if asking is not None and service.field_status(asking, self.values, self.skipped, self.blank) in ("missing", "skipped"):
             sections.append({"kind": "assistant", "text": "Back to the form: " + self._ask_text(asking)})
             return self._finish_reply(sections, None, ask=self._ask_payload(asking), evidence=evidence,
-                                      choices=asking["options"] if asking["type"] == "choice" else None)
+                                      choices=asking["options"] if field_schema.is_choice(asking) else None)
         return self._finish_reply(sections, asking["field_id"] if asking else None, evidence=evidence)

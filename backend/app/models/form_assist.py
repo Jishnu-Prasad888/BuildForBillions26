@@ -47,6 +47,9 @@ class FormPage(Base):
     extracted_text: Mapped[str] = mapped_column(Text, default="")
     blocks: Mapped[list] = mapped_column(JSON, default=list)  # [{text, bbox, confidence}]
     warnings: Mapped[list] = mapped_column(JSON, default=list)
+    # Document structure found on this page: {"title", "sections", "elements": [...]}. Every element keeps its
+    # text, type, bbox and confidence, so "what is physically on this page" never has to be re-derived from OCR.
+    structure: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class FormField(Base):
@@ -56,18 +59,27 @@ class FormField(Base):
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
     form_id: Mapped[str] = mapped_column(ForeignKey("forms.id", ondelete="CASCADE"), index=True)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
-    field_id: Mapped[str] = mapped_column(String(32))  # field_001 ...
-    label: Mapped[str] = mapped_column(String(255))
+    field_id: Mapped[str] = mapped_column(String(32))  # field_001 ... (stable, never reused)
+    label: Mapped[str] = mapped_column(String(255))  # exactly as printed on the form (for rendering)
+    normalized_label: Mapped[str] = mapped_column(String(64), default="")  # applicant_name, father_or_spouse_name, ...
     description: Mapped[str] = mapped_column(Text, default="")
     type: Mapped[str] = mapped_column(String(24), default="text")
+    input_type: Mapped[str] = mapped_column(String(16), default="text")  # text | date | choice | checkbox | signature | photo | ...
     page: Mapped[int] = mapped_column(Integer, default=1)
-    bbox: Mapped[list] = mapped_column(JSON, default=list)  # [x0, y0, x1, y1]
+    bbox: Mapped[list] = mapped_column(JSON, default=list)  # [x0, y0, x1, y1] of the *input area*
+    label_bbox: Mapped[list] = mapped_column(JSON, default=list)  # [x0, y0, x1, y1] of the printed label
     options: Mapped[list] = mapped_column(JSON, default=list)
     required: Mapped[bool] = mapped_column(Boolean, default=True)
+    conditional: Mapped[bool] = mapped_column(Boolean, default=False)  # only relevant when meta["when"] holds
     confidence: Mapped[float] = mapped_column(Float, default=0.5)
-    source: Mapped[str] = mapped_column(String(16), default="layout")  # acroform | layout | table | user
-    meta: Mapped[dict] = mapped_column(JSON, default=dict)  # option_boxes, acro field name, ...
-    position: Mapped[int] = mapped_column(Integer, default=0)
+    source: Mapped[str] = mapped_column(String(16), default="layout")  # acroform | layout | table | area | user
+    section: Mapped[str] = mapped_column(String(120), default="")  # nearest heading, e.g. "Identity Details"
+    meta: Mapped[dict] = mapped_column(JSON, default=dict)  # option_boxes, when, acro field name, ...
+    position: Mapped[int] = mapped_column(Integer, default=0)  # reading order: page -> section -> y -> x
+    # detected = a real field of the form (counted, asked about);
+    # uncertain = a plausible label with no drawn evidence, waiting for the citizen in the review panel;
+    # rejected   = the citizen looked at it and said it is not a field.
+    status: Mapped[str] = mapped_column(String(16), default="detected")
 
 
 class FormValue(Base):

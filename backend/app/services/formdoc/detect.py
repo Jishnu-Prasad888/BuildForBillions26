@@ -1,19 +1,33 @@
-"""Form structure detection from text tokens + page geometry (heuristics only, no model).
+"""Field detection: labels + page geometry -> candidate fields (heuristics only, no model).
 
-Everything is in one coordinate space per page (PDF points, or pixels for photos).
-Nothing is invented: a field is only produced when the page shows evidence for it
-(a blank, a ruled line, a rectangle or a tick box next to a label).
+Everything is in one coordinate space per page (PDF points, or pixels for photos). The rules below never
+invent a field. A field is produced only when all three of these hold:
+
+1. the text is a *label* according to document understanding (``structure.py``) — not a document title, a
+   section heading, an instruction, an example or helper text;
+2. the page shows evidence of an input area for that label — a blank, a ruled line next to it, a rectangle
+   beside it, a tick box group, or a table cell;
+3. the label and the evidence are genuinely near each other (a line in another column is not evidence).
+
+Anything weaker is not a field. Candidates that are merely plausible go to ``PageStructure.uncertain`` and
+are shown in the AutoFill review panel for the citizen to accept, rename or reject — they are never asked
+about and never counted as fields.
 """
 from __future__ import annotations
 
+import logging
 import re
 import statistics
 from dataclasses import dataclass, field
 
+from app.services.formdoc import fields as fields_mod
+from app.services.formdoc import structure as struct
 from app.services.formdoc.extract import Token, cluster_rows, median_height
 
+log = logging.getLogger("forms.detect")
+
 TYPES = {"text", "name", "multiline", "date", "phone", "email", "identity_number", "bank_account", "ifsc", "pincode",
-         "amount", "number", "choice", "checkbox", "signature"}
+         "amount", "number", "choice", "checkbox", "signature", "photograph", "attachment"}
 
 BOX_GLYPHS = "□☐☑☒❏❑▢◻⬜■○◯◌"
 _GLYPH_ONLY = re.compile(rf"^(?:\[\s*[xX✓✔]?\s*\]|\(\s*[xX✓✔]?\s*\)|[{BOX_GLYPHS}])$")
@@ -38,6 +52,10 @@ TYPE_RULES: list[tuple[str, re.Pattern]] = [(t, re.compile(p, re.I)) for t, p in
     ("name", r"\bname\b|नाम|ಹೆಸರು"),
 ]]
 MULTI_SELECT = re.compile(r"select all|all that apply|any of|tick all|check all|documents? (attached|enclosed)|enclosures?", re.I)
+#: Fragments that look like a split option but are not one ("n/a", "or", "others" is kept, "etc." is not).
+OPTION_NOISE = re.compile(r"^(n/?a|none|or|and|etc\.?|if any|if applicable|others?$|y/?n|yes/?no|\W+)$", re.I)
+#: Detector type -> schema type (``fields.TYPE_MAP``). Kept here so detection and the schema cannot drift.
+AREA_TYPES = {"photograph": "photograph", "attachment": "attachment", "signature": "signature"}
 
 
 def infer_type(label: str, default: str = "text") -> str:
@@ -47,17 +65,25 @@ def infer_type(label: str, default: str = "text") -> str:
     return default
 
 
+#: "Contact Details: Tel. (Off.)" is a sub-heading followed by the real label; keep only the label.
+_HEADING_PREFIX = re.compile(r"^[\w\s/&'-]{3,34}?\b(details?|information|info|particulars?)\s*[:：]\s*(\S.{1,44})$", re.I)
+
+
 def clean_label(text: str) -> str:
     t = re.sub(r"\s+", " ", text).strip()
     t = re.sub(r"^\(?\d{1,2}[\).:]\s*|^\(?[a-z][\).]\s+", "", t, flags=re.I)  # "1." "(a)"
     t = t.strip(" :：_*«＊-–—.·")
+    m = _HEADING_PREFIX.match(t)
+    if m and not re.search(r"[:：]", m.group(2)):
+        t = m.group(2).strip(" :：_*«＊-–—.·")
     return t.strip()
 
 
 def is_required(text: str, ftype: str) -> bool:
-    if ftype == "signature":
+    """Printed wording decides; a signature/photo/attachment is never "required" text to type."""
+    if ftype in ("signature", "photograph", "attachment"):
         return False
-    if re.search(r"\boptional\b", text, re.I):
+    if re.search(r"\boptional\b|\bif\s+available\b|\bif\s+applicable\b|\bif\s+any\b", text, re.I):
         return False
     return True
 
@@ -272,6 +298,15 @@ def _group_options(opts: list[Opt], segs: list[Seg], h: float) -> list[tuple[lis
     return merged
 
 
+def _edge_lines(rects: list[tuple[float, float, float, float]]) -> list[tuple[float, float, float]]:
+    """The top and bottom edges of every rectangle, as ``(x0, x1, y)`` lines."""
+    out: list[tuple[float, float, float]] = []
+    for (x0, y0, x1, y1) in rects:
+        out.append((x0, x1, y0))
+        out.append((x0, x1, y1))
+    return out
+
+
 def _find_group_label(opts: list[Opt], segs: list[Seg], h: float, preset: Seg | None) -> Seg | None:
     if preset is not None:
         return preset
@@ -295,6 +330,9 @@ def _find_group_label(opts: list[Opt], segs: list[Seg], h: float, preset: Seg | 
 class PageStructure:
     fields: list[dict] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    structure: struct.PageStructure | None = None   # classified document elements for this page
+    uncertain: list[dict] = field(default_factory=list)  # plausible labels with no real evidence: review only
+    merged: list[dict] = field(default_factory=list)      # duplicate labels collapsed into another field
 
 
 def _comb_clusters(boxes: list[Box], h: float) -> tuple[list[Box], list[Box]]:
@@ -318,14 +356,29 @@ def _comb_clusters(boxes: list[Box], h: float) -> tuple[list[Box], list[Box]]:
 
 
 def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], rects: list[tuple[float, float, float, float]],
-                page_w: float, page_h: float, existing: list[list[float]] | None = None) -> PageStructure:
+                page_w: float, page_h: float, existing: list[list[float]] | None = None,
+                page: int = 1, is_first_page: bool = True) -> PageStructure:
     """``rects`` are hollow rectangles from geometry detection; ``existing`` are bboxes already covered
-    by real form widgets (they win over anything detected here)."""
+    by real form widgets (they win over anything detected here).
+
+    Returns the page's fields *and* the page's classified document structure, so nothing downstream has to
+    re-derive "was that a title or a label?" from raw OCR text.
+    """
     out = PageStructure()
     h = median_height(tokens)
     if not tokens or h <= 0:
         return out
     existing = existing or []
+
+    # ---- document understanding first: titles, headings, instructions, examples and areas
+    doc = struct.analyze_page(page, tokens, list(rects), page_w, page_h, is_first_page=is_first_page)
+    out.structure = doc
+    # A rectangle's top and bottom edge look exactly like a ruled blank to a line detector. They are borders,
+    # not input areas, so they are not evidence for any label (this is what stopped a photograph box on the
+    # right of the page from turning an instruction on the left into a text field).
+    box_edges = _edge_lines(list(rects))
+    hlines = [(x0, x1, y) for (x0, x1, y) in hlines
+              if not any(y <= ey + 2.5 and x0 >= ex0 - 2 and x1 <= ex1 + 2 for ex0, ex1, ey in box_edges)]
 
     tokens, glyphs = _glyph_boxes(tokens, h)
     boxes = [Box(*r) for r in rects] + glyphs
@@ -345,7 +398,8 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
     fields: list[dict] = []
 
     def add(label: str, ftype: str, page_bbox: list[float], conf: float, source: str = "layout", options: list[str] | None = None,
-            description: str = "", meta: dict | None = None, required_text: str = "") -> None:
+            description: str = "", meta: dict | None = None, required_text: str = "",
+            label_bbox: list[float] | None = None) -> None:
         label = clean_label(label)
         if not label or not _LETTER.search(label):
             return
@@ -353,7 +407,16 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
             return
         fields.append({"label": label[:200], "type": ftype, "page_bbox": _r(page_bbox), "confidence": round(conf, 2), "source": source,
                        "options": options or [], "description": description[:300], "meta": meta or {},
+                       "label_bbox": _r(label_bbox) if label_bbox else [], "section": section_of(page_bbox),
                        "required": is_required(required_text or label, ftype)})
+
+    def section_of(page_bbox: list[float]) -> str:
+        cy = (page_bbox[1] + page_bbox[3]) / 2
+        name = ""
+        for s in doc.sections:
+            if s["bbox"][1] <= cy + 1.5 * h:
+                name = s["name"]
+        return name
 
     # ---- choices and checkboxes
     opts = _extract_options(segs, small, h)
@@ -362,20 +425,31 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
         o.box.used = True
     for grp, preset in _group_options(opts, segs, h):
         label_seg = _find_group_label(grp, segs, h, preset)
+        printed_group = False
         if label_seg is not None:
             label_seg.used = True
+            # The text above a row of tick boxes is often a heading ("Status (please tick any one)") or an
+            # instruction, not a label. Keep it as context; do not let it become the field's name.
+            if doc.rejected(label_seg.text) or doc.area_at(label_seg.bbox):
+                printed_group = True
+        group_label = "" if printed_group else (clean_label(label_seg.text) if label_seg else "")
         labels = [o.label for o in grp]
         bb = [min(o.box.x0 for o in grp), min(o.box.y0 for o in grp), max(o.box.x1 for o in grp), max(o.box.y1 for o in grp)]
-        group_label = clean_label(label_seg.text) if label_seg else ""
         if len(grp) == 1:
-            add(labels[0], "checkbox", bb, 0.8, options=[], description=group_label if group_label.lower() != labels[0].lower() else "",
-                meta={"option_boxes": [o.box.bbox for o in grp]}, required_text=group_label + " " + labels[0])
+            if doc.area_at(bb):
+                continue
+            add(labels[0], "checkbox", bb, 0.8, options=[],
+                description="" if printed_group else (group_label if group_label.lower() != labels[0].lower() else ""),
+                meta={"option_boxes": [o.box.bbox for o in grp]},
+                required_text="" if printed_group else group_label + " " + labels[0],
+                label_bbox=label_seg.bbox if label_seg else None)
         else:
             if not group_label:
                 group_label = "Select one"
             add(group_label, "choice", bb, 0.85 if label_seg else 0.45, options=labels,
-                meta={"option_boxes": [_r(o.box.bbox) for o in grp], "multiple": bool(MULTI_SELECT.search(group_label))},
-                required_text=group_label)
+                meta={"option_boxes": [_r(o.box.bbox) for o in grp], "multiple": bool(MULTI_SELECT.search(group_label)),
+                      "printed_label": printed_group},
+                required_text=group_label, label_bbox=label_seg.bbox if label_seg else None)
 
     # ---- tables: a fully-labelled header row above empty cells
     rect_pool = [b for b in inputs if b not in combs]
@@ -431,6 +505,52 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
 
     claimed_lines: set[int] = set()
 
+    # ---- options printed as text instead of boxes: "Gender:  Male/ Female", "Status: Resident Individual/
+    # Non Resident/ Foreign National". Nothing is drawn to anchor on, so the confidence stays in the review
+    # band: the citizen is asked, and the field is shown for confirmation rather than silently trusted.
+    def _split_options(text: str) -> list[str] | None:
+        if not re.search(r"\S\s*/\s*\S", text) or len(text.split()) > 12:
+            return None
+        parts = [p.strip(" .,:;()") for p in re.split(r"[/|]", text)]
+        parts = [p for p in parts if p and len(p) <= 40 and not OPTION_NOISE.search(p)]
+        if len(parts) < 2 or len(parts) > 8 or any(":" in p for p in parts):
+            return None
+        return parts
+
+    def inline_options(s: Seg) -> tuple[str, list[str], list[float]] | None:
+        """Return (label, options, area) when a label is followed by its options as printed text."""
+        if len(s.text.split()) > 16:
+            return None
+        head, sep, tail = s.text.partition(":")
+        head, tail = head.strip(), tail.strip()
+        if sep and tail and head:
+            parts = _split_options(tail)
+            if parts:
+                return clean_label(head), parts, [s.x0 + (s.x1 - s.x0) * 0.25, s.y0, s.x1, s.y1]
+        if not re.search(r"[:：]\s*\**\s*$", s.text) or len(s.text.split()) > 6:
+            return None
+        nxt = [t for t in segs_sorted if t is not s and not t.blank and not t.used
+               and abs(t.cy - s.cy) <= 0.6 * h and s.x1 - 1 <= t.x0 <= s.x1 + 4 * h]
+        if not nxt:
+            return None
+        run = nxt[0]
+        parts = _split_options(run.text)
+        if not parts:
+            return None
+        return clean_label(s.text), parts, [run.x0, s.y0, run.x1, run.y1]
+
+    for s in text_segs:
+        if s.used or doc.rejected(s.text) or doc.area_at(s.bbox):
+            continue
+        found = inline_options(s)
+        if not found:
+            continue
+        label, parts, area = found
+        s.used = True
+        add(label, "choice", area, 0.75, source="layout", options=parts,
+            meta={"inline_options": True, "multiple": bool(MULTI_SELECT.search(s.text))},
+            required_text=s.text, label_bbox=s.bbox)
+
     def detect_text_fields(stage: int) -> None:
         """Stage 1: evidence beside the label (blank, ruled line, box). Stage 2: below the label, or open space."""
         for s in text_segs:
@@ -440,29 +560,78 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
             words = len(label.split())
             if not label or not _LETTER.search(label) or words > 10 or s.text.lstrip().startswith("("):
                 continue
-            ends_colon = s.text.rstrip().endswith((":", "：", "*")) or bool(re.search(r":\s*\*?$", s.text))
+
+            ends_colon = bool(re.search(r"[:：]\s*\**\s*$", s.text))
             right_edge = page_w
             for t in row_neighbours(s):
                 if t.x0 >= s.x1 - 1 and not t.blank:
                     right_edge = min(right_edge, t.x0)
             ftype = infer_type(label)
+
+            # Evidence first, gate second: an underscore run printed right after the label is drawn proof
+            # that the form wants an answer there, even when the paragraph it sits in reads like an
+            # instruction ("… declaration … Name & Signature of the Authorised Signatory ______").
+            blank_bbox: list[float] | None = None
+            blank_seg: Seg | None = None
+            for bl in blanks:
+                if bl.x0 >= s.x1 - 2 and abs(bl.cy - s.cy) <= 0.7 * h and bl.x0 - s.x1 <= 6 * h and bl.x0 < right_edge:
+                    blank_bbox = [bl.x0, min(s.y0, bl.y0), bl.x1, max(s.y1, bl.y1)]
+                    blank_seg = bl
+                    break
+            # A signature is the one field the citizen fills with a pen, so the space for it is usually
+            # drawn *above* the printed caption: "______________  Signature of the Applicant".
+            above_bbox: list[float] | None = None
+            if ftype == "signature":
+                for bl in blanks:
+                    if 0 <= s.y0 - bl.y1 <= 1.8 * h and _overlap_x(bl.x0, bl.x1, s.x0, s.x1) > 0.3 * (s.x1 - s.x0):
+                        above_bbox = [bl.x0, bl.y0, bl.x1, min(bl.y1 + 0.3 * h, s.y0)]
+                        break
+
+            # ---- document understanding gate: only a label can become a field
+            blocked = doc.rejected(s.text)
+            area = doc.area_at(s.bbox)
+            override = ""
+            if blocked and blank_bbox is not None and words <= 8 and blocked in struct.SOFT_ELEMENTS:
+                override = blocked   # real input area beats a paragraph classification
+                blocked = ""
+            if blocked or area:
+                s.used = True
+                why = blocked or "printed inside a photograph / signature box"
+                # Titles, headings and instructions are confidently not fields, and they stay in the page
+                # structure with their classification. Only text shaped like a label ("Something:") is worth
+                # the citizen's second look, so the review list is not flooded with every printed sentence.
+                if ends_colon and words <= 6 and _not_capitalised_run(s.text):
+                    out.uncertain.append({"label": label[:200], "type": infer_type(label), "page_bbox": _r(s.bbox),
+                                          "confidence": 0.3, "source": "layout", "options": [], "description": "",
+                                          "meta": {"rejected": why, "label_bbox": _r(s.bbox)}, "section": section_of(s.bbox),
+                                          "required": False})
+                else:
+                    log.debug("Not a field (%s): %r", why, label[:60])
+                continue
+
             bbox = None
             conf = 0.0
-            meta: dict = {}
+            meta: dict = {"classification": override} if override else {}
 
             if stage == 1:
                 # A: blank token right after the label on the same row
-                for bl in blanks:
-                    if bl.x0 >= s.x1 - 2 and abs(bl.cy - s.cy) <= 0.7 * h and bl.x0 - s.x1 <= 6 * h and bl.x0 < right_edge:
-                        bbox = [bl.x0, min(s.y0, bl.y0), bl.x1, max(s.y1, bl.y1)]
-                        conf = 0.9
-                        if bl.date_blank and ftype in ("text", "name"):
-                            ftype = "date"
-                        break
+                if blank_bbox is not None:
+                    bbox = blank_bbox
+                    conf = 0.9
+                    if blank_seg is not None and blank_seg.date_blank and ftype in ("text", "name"):
+                        ftype = "date"
+                # A2: a signature caption with its space drawn above it
+                if bbox is None and above_bbox is not None:
+                    bbox, conf = above_bbox, 0.8
                 # B: ruled line at the label's baseline, to its right
                 if bbox is None:
                     for li, (x0, x1, y) in enumerate(hlines):
                         if li in claimed_lines or not (s.y1 - 0.5 * h <= y <= s.y1 + 1.1 * h):
+                            continue
+                        # The line must actually continue the label: it starts close to the label's right edge
+                        # and finishes before the next piece of text on the row. A line far away in another
+                        # column (a photograph box, a table cell) is not evidence for this label.
+                        if not (s.x1 - 0.5 * h <= x0 <= s.x1 + 3.5 * h):
                             continue
                         if x1 > s.x1 + 3 * h and x0 < right_edge - 2 * h and x0 >= s.x0 - 1:
                             lx0, lx1 = max(x0, s.x1 + 0.4 * h), min(x1, right_edge - 0.4 * h)
@@ -482,9 +651,8 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
                             meta["comb"] = b in combs
                             break
             else:
-                heading = s.text.isupper() and not ends_colon
                 # D: lines / a tall box under the label ("Address:")
-                if (ends_colon or words <= 3) and not heading:
+                if ends_colon or words <= 3:
                     under = sorted([(li, x0, x1, y) for li, (x0, x1, y) in enumerate(hlines)
                                     if li not in claimed_lines and y - s.y1 >= 0.3 * h and x0 <= s.x0 + 4 * h and x1 >= s.x0 + 4 * h],
                                    key=lambda t: t[3])
@@ -509,11 +677,17 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
                                 if b.h > 2.6 * h and ftype in ("text", "name"):
                                     ftype = "multiline"
                                 break
-                # E: "Label:" followed by open space (lower confidence)
-                if bbox is None and ends_colon and not heading and right_edge - s.x1 >= 5 * h and words <= 6:
-                    bbox = [s.x1 + 0.5 * h, s.y0, min(right_edge - 0.5 * h, s.x1 + 30 * h), s.y1 + 0.2 * h]
-                    conf = 0.5
-                    meta["layout_guess"] = True
+                # E: "Label:" with open space to the right. No drawn evidence at all, so this is never a
+                # field on its own: it goes to the review list for the citizen to accept or reject.
+                if bbox is None and ends_colon and right_edge - s.x1 >= 5 * h and words <= 6:
+                    etype, c, reasons = struct.text_type(s.text, conf=conf, has_input_below=False)
+                    if etype == "field_label" and _not_capitalised_run(s.text):
+                        s.used = True
+                        out.uncertain.append({"label": label[:200], "type": ftype, "page_bbox":
+                                              [s.x1 + 0.5 * h, s.y0, min(right_edge - 0.5 * h, s.x1 + 30 * h), s.y1 + 0.2 * h],
+                                              "confidence": 0.5, "source": "layout", "options": [], "description": "",
+                                              "meta": {"layout_guess": True, "reasons": reasons, "label_bbox": _r(s.bbox)},
+                                              "section": section_of(s.bbox), "required": is_required(s.text, ftype)})
             if bbox is None:
                 continue
             s.used = True
@@ -524,10 +698,15 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
                     desc = t.text.strip("() ")
                     t.used = True
                     break
-            add(label, ftype, bbox, conf, description=desc, meta=meta, required_text=s.text)
+            add(label, ftype, bbox, conf, description=desc, meta=meta, required_text=s.text, label_bbox=s.bbox)
 
     detect_text_fields(1)  # evidence beside the label first, so lines are not stolen by a label above
     detect_text_fields(2)  # then lines/boxes below a label and open space
+
+    # ---- photograph / signature / attachment boxes: real parts of the form, but never typed by the citizen
+    for area in doc.areas:
+        add(clean_label(area["label"]) or area["kind"].title(), area["kind"], list(area["bbox"]), area["confidence"],
+            source="area", description=area.get("label", ""), meta={"area": area["kind"]}, required_text="")
 
     # ---- unlabeled-but-boxed leftovers are ignored on purpose (never invent a label)
     fields.sort(key=lambda f: (round(f["page_bbox"][1] / max(h, 1) / 1.5), f["page_bbox"][0]))
@@ -537,5 +716,18 @@ def detect_page(tokens: list[Token], hlines: list[tuple[float, float, float]], r
         if any(_iou_or_contain(f["page_bbox"], d["page_bbox"]) > 0.6 and f["type"] not in ("choice", "checkbox") and d["type"] not in ("choice", "checkbox") for d in dedup):
             continue
         dedup.append(f)
-    out.fields = dedup
+    # the same field printed twice (e.g. "Name" on page 1 and in a continuation box) is one field
+    kept, merged = fields_mod.dedupe(dedup)
+    for f in kept:
+        f["normalized_label"] = fields_mod.normalize_label(f["label"])
+    out.merged = merged
+    out.fields = kept
     return out
+
+
+def _not_capitalised_run(text: str) -> bool:
+    """False for ALL-CAPS runs (headings, banners) that only look like labels because a colon follows them."""
+    letters = [c for c in text if c.isalpha()]
+    if not letters:
+        return False
+    return sum(1 for c in letters if c.isupper()) / len(letters) < 0.85

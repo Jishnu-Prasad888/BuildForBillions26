@@ -27,6 +27,19 @@ def ensure_extensions() -> None:
             conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
 
 
+# Columns added to the form-assistant tables after they were first created. Kept here so an existing database
+# gets the same shape as a fresh one; `create_all` never adds columns to a table that already exists.
+_FORM_ASSIST_COLUMNS = (
+    "ALTER TABLE form_pages ADD COLUMN IF NOT EXISTS structure JSONB NOT NULL DEFAULT '{}'",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS normalized_label VARCHAR(64) NOT NULL DEFAULT ''",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS input_type VARCHAR(16) NOT NULL DEFAULT 'text'",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS label_bbox JSONB NOT NULL DEFAULT '[]'",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS conditional BOOLEAN NOT NULL DEFAULT false",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS section VARCHAR(120) NOT NULL DEFAULT ''",
+    "ALTER TABLE form_fields ADD COLUMN IF NOT EXISTS status VARCHAR(16) NOT NULL DEFAULT 'detected'",
+)
+
+
 def ensure_migrations() -> None:
     """Add columns introduced after initial schema creation (safe on fresh DBs too)."""
     with engine.begin() as conn:
@@ -36,3 +49,5 @@ def ensure_migrations() -> None:
         conn.execute(text(
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS whatsapp_id VARCHAR(32) UNIQUE"
         ))
+        for ddl in _FORM_ASSIST_COLUMNS:
+            conn.execute(text(ddl))

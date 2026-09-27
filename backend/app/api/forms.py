@@ -19,6 +19,7 @@ from app.database import SessionLocal, get_db
 from app.models import Form, FormAssistanceSession, FormField, FormNote, FormPage, FormValue, User
 from app.models.common import new_id, utcnow
 from app.services.formdoc import analyze, fill, service, storage
+from app.services.formdoc import fields as field_schema
 from app.services.formdoc.block_letters import asks_for_block_letters
 from app.services.formdoc.assistant import FormAssistant
 from app.services.formdoc.validate import UploadRejected, validate_upload
@@ -162,21 +163,25 @@ def analyze_endpoint(form_id: str, background: BackgroundTasks, body: AnalyzeIn 
     return form_out(form)
 
 
-def _schema_payload(db: Session, form: Form, user: User) -> dict:
+def _schema_payload(db: Session, form: Form, user: User, invalid: set[str] | None = None) -> dict:
     fields = service.load_fields(db, form)
     rows = service.load_value_rows(db, form)
     values, skipped, blank = service.split_values(rows)
     pages = db.scalars(select(FormPage).where(FormPage.form_id == form.id, FormPage.user_id == user.id).order_by(FormPage.page_number)).all()
+    candidates = service.load_candidates(db, form)
     sess = db.scalar(select(FormAssistanceSession).where(FormAssistanceSession.form_id == form.id, FormAssistanceSession.user_id == user.id,
                                                          FormAssistanceSession.ended_at.is_(None)))
     clar = bool(sess and (sess.state or {}).get("clarify"))
-    sm = service.summarize(fields, values, skipped, blank, clar)
+    sm = service.summarize(fields, values, skipped, blank, clar, invalid)
     return {"form": form_out(form),
             "pages": [{"page": p.page_number, "width": p.width, "height": p.height, "text_source": p.text_source,
-                       "ocr_confidence": p.ocr_confidence, "warnings": p.warnings or []} for p in pages],
+                       "ocr_confidence": p.ocr_confidence, "warnings": p.warnings or [],
+                       "title": (p.structure or {}).get("title", ""),
+                       "sections": [s.get("name") for s in (p.structure or {}).get("sections", [])]} for p in pages],
             "fields": [service.public_field(f) for f in fields],
+            "candidates": candidates,
             "values": values, "sources": {fid: r.source for fid, r in rows.items() if fid in values},
-            "summary": sm, "ai_notes": service.ai_notes(form, fields, values, skipped, blank, list(pages), clar),
+            "summary": sm, "ai_notes": service.ai_notes(form, fields, values, skipped, blank, list(pages), clar, len(candidates)),
             "profile_suggestions": {k: v for k, v in profile_suggestions(fields, user.full_name, user.profile or {}).items() if k not in values}}
 
 
@@ -192,7 +197,29 @@ class AutoFillIn(BaseModel):
     values: dict[str, str | bool | list[str] | None] = Field(default_factory=dict)
     use_profile: bool = False
     skip: list[str] = Field(default_factory=list)
-    rename: dict[str, str] = Field(default_factory=dict)  # field_id -> corrected label/type (manual fix of a doubtful field)
+    rename: dict[str, str] = Field(default_factory=dict)  # field_id -> corrected label (manual fix of a doubtful field)
+    blank: list[str] = Field(default_factory=list)  # field_id -> deliberately left empty
+    not_applicable: list[str] = Field(default_factory=list)  # field_id -> "this does not apply to me"
+    accept_candidates: list[str] = Field(default_factory=list)  # field_id -> it *is* a field
+    reject_candidates: list[str] = Field(default_factory=list)  # field_id -> it is not a field
+
+
+def _review_candidate(db: Session, form: Form, user: User, fid: str, accept: bool) -> None:
+    """Accept or reject one printed label that detection could not confirm as a field.
+
+    Accepting turns it into an ordinary field (in reading order, after its neighbours) so the assistant
+    asks it like any other. Rejecting keeps a record — ``status='rejected'`` — so the same label is not
+    offered again on the next page load.
+    """
+    row = db.scalar(select(FormField).where(FormField.form_id == form.id, FormField.user_id == user.id, FormField.field_id == fid))
+    if row is None or row.status != "uncertain":
+        return
+    if accept:
+        row.status = "detected"
+        row.confidence = 1.0
+        row.source = "user"
+    else:
+        row.status = "rejected"
 
 
 @router.post("/{form_id}/autofill")
@@ -224,14 +251,27 @@ def autofill(form_id: str, body: AutoFillIn, user: User = Depends(get_current_us
     for fid in body.skip:
         if fid in by_id:
             service.set_marker(db, form, fid, "skipped")
+    for fid in body.blank:
+        if fid in by_id:
+            service.set_marker(db, form, fid, "blank")
+    for fid in body.not_applicable:
+        if fid in by_id:
+            service.set_marker(db, form, fid, "not_applicable")
+    for fid in body.accept_candidates:
+        _review_candidate(db, form, user, fid, accept=True)
+    for fid in body.reject_candidates:
+        _review_candidate(db, form, user, fid, accept=False)
     for fid, new_label in body.rename.items():  # the citizen names a field the AI could not identify
         row = db.scalar(select(FormField).where(FormField.form_id == form.id, FormField.user_id == user.id, FormField.field_id == fid))
         if row is not None and new_label.strip():
             row.label = new_label.strip()[:200]
+            row.normalized_label = field_schema.normalize_label(row.label)
             row.confidence = 1.0
             row.source = row.source if row.source == "acroform" else "user"
+            if row.status == "uncertain":  # naming it is the same as accepting it
+                row.status = "detected"
     db.commit()
-    return _schema_payload(db, form, user) | {"saved": saved, "errors": errors}
+    return _schema_payload(db, form, user, invalid=set(errors)) | {"saved": saved, "errors": errors}
 
 
 # --------------------------------------------------------------------------- assistant

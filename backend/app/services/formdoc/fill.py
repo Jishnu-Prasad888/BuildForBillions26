@@ -15,6 +15,7 @@ import re
 from pathlib import Path
 
 from app.config import settings
+from app.services.formdoc import fields as field_schema
 from app.services.formdoc.block_letters import apply_block_letters
 from app.services.formdoc.values import NON_FILLABLE, to_display
 
@@ -154,7 +155,7 @@ def _mark(page, rect, rotate_page: bool) -> None:
 
 def _display(field: dict, value, block_letters: bool) -> str:
     text = to_display(field, value)
-    return apply_block_letters(field["type"], text) if block_letters else text
+    return apply_block_letters(field_schema.norm_type(field["type"]), text) if block_letters else text
 
 
 def _fill_widgets(page, fields: list[dict], values: dict, block_letters: bool = False) -> set[str]:
@@ -220,7 +221,9 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
         try:
             for pno in range(doc.page_count):
                 page = doc[pno]
-                on_page = [f for f in fields if f["page"] == pno + 1 and f["field_id"] in values and f["type"] not in NON_FILLABLE]
+                on_page = [f for f in fields
+                           if f["page"] == pno + 1 and f["field_id"] in values
+                           and field_schema.norm_type(f["type"]) not in NON_FILLABLE]
                 if not on_page:
                     continue
                 handled = _fill_widgets(page, on_page, values, block_letters) if kind == "pdf" else set()
@@ -230,7 +233,7 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                         continue
                     v = values[f["field_id"]]
                     bbox = [c * s for c in f["bbox"]]
-                    if f["type"] == "choice":
+                    if field_schema.is_choice(f):
                         boxes = f["meta"].get("option_boxes") or []
                         chosen = v if isinstance(v, list) else [v]
                         for opt in chosen:
@@ -247,7 +250,7 @@ def generate_pdf(original_bytes: bytes, kind: str, page_image_paths: dict[int, P
                     text = _display(f, v, block_letters)
                     if not text:
                         continue
-                    multiline = f["type"] == "multiline" or (bbox[3] - bbox[1]) > 26 * max(s, 1e-6) and len(text) > 30
+                    multiline = field_schema.norm_type(f["type"]) in ("address", "multiline_text") or (bbox[3] - bbox[1]) > 26 * max(s, 1e-6) and len(text) > 30
                     script = _script(text)
                     if script != "latn":
                         ok = _fit_indic(page, bbox, text, multiline, script)

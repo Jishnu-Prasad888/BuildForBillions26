@@ -10,8 +10,23 @@ OFFICE_USE = re.compile(r"office\s*use|for\s+(the\s+)?bank('?s)?\s+use|bank\s+us
                         r"to\s+be\s+filled\s+(in\s+)?by\s+(the\s+)?(bank|branch|office|officer|official)|for\s+departmental\s+use", re.I)
 
 
+#: A field printed *inside* an office-use section is for the official, not for the citizen, even when the
+#: label itself is innocent ("Date", "Signature of the Authorised Signatory" under "FOR OFFICE USE ONLY").
+OFFICE_SECTION = re.compile(r"office\s*use|for\s+(the\s+)?(bank|office|branch|official)s?\b|official\s+use|"
+                            r"to\s+be\s+filled\s+(in\s+)?by\s+(the\s+)?(bank|branch|office|officer|official)|"
+                            r"for\s+departmental\s+use|bank\s+use\s+only|internal\s+use", re.I)
+
+
 def is_office_only(field: dict) -> bool:
-    return bool(OFFICE_USE.search(f"{field.get('label', '')} {field.get('description', '')}"))
+    """Is this field for the official to fill in, rather than for the citizen?
+
+    Two independent signals, either of which is enough: the field says so itself ("for bank use only"), or
+    the section it is printed in does. The section is what saves the KYC form, where a bare "Date" sits
+    under "FOR OFFICE USE ONLY" with no wording of its own.
+    """
+    if OFFICE_USE.search(f"{field.get('label', '')} {field.get('description', '')}"):
+        return True
+    return bool(OFFICE_SECTION.search(field.get("section", "") or ""))
 
 
 def _norm(s: str) -> str:
