@@ -15,7 +15,9 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 | [docs/FORM_ASSISTANT.md](docs/FORM_ASSISTANT.md) | AI Form Assistant: upload any form, detect fields, AutoFill, completed PDF |
 | [TELEGRAM_SETUP.md](TELEGRAM_SETUP.md) | End-to-end Telegram bot setup |
 | [WHATSAPP_SETUP.md](WHATSAPP_SETUP.md) | End-to-end WhatsApp bot setup (Meta Cloud API) |
-| [whisper-chat-app/README.md](whisper-chat-app/README.md) | Optional on-device Whisper STT companion app |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Production topology, scaling, rate limits, TLS, backups |
+| [sentry.md](sentry.md) | Step-by-step guide to the optional Sentry dashboard |
+| [whisper-chat-app/README.md](whisper-chat-app/README.md) | Optional offline mobile app: on-device whisper speech-to-text + Gemma 4 answers over the bundled data |
 
 ---
 
@@ -27,7 +29,8 @@ Sahayak is a multilingual AI assistant for public services. A citizen describes 
 - **AI Form Assistant** — upload any PDF or photo of a form (no prebuilt forms). It reads the page (PyMuPDF, OpenCV, Tesseract), detects fields, asks for what is missing, clarifies ambiguity, and writes a completed PDF onto a copy. The original is never modified; every file and row is private to its owner.
 - **Citizen wallet** — documents, notes, application tracker with a mock status timeline.
 - **Admin knowledge ops** — upload PDFs/HTML/MD/DOCX, fetch URLs, watch ingestion stages, inspect chunks, add schemes.
-- **Telegram bot** — same KAG pipeline, long-polling in the FastAPI process (optional token).
+- **Telegram and WhatsApp bots** — same KAG pipeline (Telegram long-polls in the FastAPI process; WhatsApp uses a webhook). Both optional.
+- **Offline mobile app** — `whisper-chat-app/` runs whisper, a small embedder and Gemma 4 E2B on the phone and answers from bundled data with no network after the first launch.
 - **Pluggable AI** — Ollama (default), OpenAI, or Kimi; labelled fallback when models are still downloading.
 
 ```mermaid
@@ -106,13 +109,14 @@ backend/app/
   kag/                   understand → retrieve → generate → validate citations
   services/              AI providers, form assistant, seed, notes
   services/formdoc/      AI Form Assistant: storage, validation, analysis, detection, fill, assistant
+  bot/                   Telegram and WhatsApp handlers, keyboards, formatter
 backend/tests/           pytest suite for the form assistant (SQLite, no containers)
-  bot/                   Telegram handlers, keyboards, formatter
 data/seed/               graph.json, DEMO documents, form JSON
 data/documents/          extra files for the admin upload demo
 frontend/src/            React + Vite + Tailwind (citizen + admin); monitoring.ts is the optional Sentry setup
-whisper-chat-app/        Expo on-device whisper-small (needs a native dev build)
-docs/                    Architecture and API reference
+whisper-chat-app/        Expo offline assistant: whisper + Gemma 4 RAG (needs a native dev build)
+scheme/                  Scraped scheme library, synced into the knowledge base (SCHEME_DIR)
+docs/                    Architecture, API reference and form assistant notes
 ```
 
 ---

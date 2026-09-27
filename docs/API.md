@@ -7,7 +7,29 @@ ReDoc: `/redoc`
 
 All JSON request and response bodies use UTF-8. Timestamps are ISO-8601 UTC.
 
-Companion docs: [README](../README.md), [ARCHITECTURE.md](ARCHITECTURE.md).
+Companion docs: [README](../README.md), [ARCHITECTURE.md](ARCHITECTURE.md), [FORM_ASSISTANT.md](FORM_ASSISTANT.md).
+
+---
+
+## Contents
+
+- [Conventions](#conventions)
+- [Root](#root)
+- [Health](#health)
+- [Auth — /api/auth](#auth--apiauth)
+- [Users — /api/users](#users--apiusers)
+- [Schemes — /api/schemes](#schemes--apischemes)
+- [Assistant — /api/assistant](#assistant--apiassistant)
+- [KAG playground — /api/kag](#kag-playground--apikag)
+- [Applications — /api/applications](#applications--apiapplications)
+- [Notes — /api/notes](#notes--apinotes)
+- [Citizen documents (wallet) — /api/documents](#citizen-documents-wallet--apidocuments)
+- [Screen assistance — /api/screen-assistance](#screen-assistance--apiscreen-assistance)
+- [Admin — /api/admin](#admin--apiadmin)
+- [AI Form Assistant — /api/forms](#ai-form-assistant--apiforms)
+- [WhatsApp webhook — /api/webhooks/whatsapp](#whatsapp-webhook--apiwebhookswhatsapp)
+- [Example: sign in and ask the assistant](#example-sign-in-and-ask-the-assistant)
+- [OpenAPI as source of truth](#openapi-as-source-of-truth)
 
 ---
 
@@ -25,7 +47,7 @@ Obtain the token from `POST /api/auth/signin` or `POST /api/auth/signup`. The we
 
 | Dependency | Who can call |
 |---|---|
-| Public | Health, root, auth signup/signin/forgot/reset, logout |
+| Public | Health, root, auth signup/signin/forgot/reset, logout, and the WhatsApp webhook (authenticated by its own verify token and signature) |
 | `get_current_user` | Any active user |
 | `require_admin` | `role === "ADMIN"` (entire `/api/admin` router) |
 
@@ -48,7 +70,7 @@ FastAPI `HTTPException`: `{ "detail": "<string or validation list>" }`.
 
 ### Rate limits
 
-Limited `/api` responses carry `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset`. Requests are counted per signed-in user, or per IP when there is no valid token. Health checks are exempt.
+Limited `/api` responses carry `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset`. Requests are counted per signed-in user, or per IP when there is no valid token. Health checks and the WhatsApp webhook are exempt.
 
 | Tier | Endpoints | Default |
 |---|---|---|
@@ -87,7 +109,7 @@ No auth.
 |---|---|
 | `status` | `ok` or `degraded` (Postgres ping) |
 | `database` | `connected` \| `unavailable` |
-| `vector_backend` | `pgvector` \| `json` |
+| `vector_backend` | `chroma` (default) \| `pgvector` \| `json` |
 | `graph_backend` | `neo4j` \| `memory` |
 | `demo_mode` | from settings |
 | `rate_limit` | `redis` (shared across replicas) \| `memory` (per process) \| `disabled` |
@@ -438,6 +460,26 @@ New job. Seed documents cannot be reindexed this way (400); they refresh on star
 
 Re-embeds all chunks with the current embedding model. Returns a summary from `reembed_all`.
 
+### Scheme library
+
+The `scheme/` folder (`SCHEME_DIR`) is a library of scraped scheme pages that is synced into the knowledge base: in the background at startup, from these routes, or with `python -m app.ingestion.scheme_folder [--force]`. Unchanged text is skipped and folders that disappear are de-indexed.
+
+#### `GET /api/admin/knowledge`
+
+The library, its sync progress and the vector index it feeds.
+
+| Field | Meaning |
+|---|---|
+| `folder` | `{ path, exists, documents, indexed, chunks }` for the scheme folder |
+| `sync` | Progress of the current or last sync: `running`, `total`, `done`, `current`, `indexed`, `unchanged`, `skipped`, `failed`, `removed`, `started_at`, `finished_at`, `error` |
+| `vector_store` | Chroma status (`backend`, `collection`, `location`, `vectors`, `status`), or `{ backend, vectors: null, status: "not in use" }` |
+| `embedding_model` | Model that produces the vectors |
+| `documents` | One row per library page: `slug`, `title`, `category`, `publisher`, `source_url`, `size`, `document_id`, `status` (`PENDING`, `NO_TEXT`, or the ingestion status), `chunk_count`, `language` |
+
+#### `POST /api/admin/knowledge/sync?force=false` — 202
+
+Starts a sync in a background thread and returns `{ started, sync }`. `started` is `false` if a sync is already running. `force=true` re-indexes pages whose text has not changed. `404` if the scheme folder does not exist.
+
 ### Sources (web fetch)
 
 #### `GET /api/admin/sources`
@@ -502,6 +544,46 @@ Graph view for visualization. Optional `scheme` code filters to that neighbourho
 
 ---
 
+---
+
+## AI Form Assistant — `/api/forms`
+
+Upload any form, let the app read it, collect values and produce a completed PDF. Everything is scoped to the signed-in user; another user's form returns `404`. Design notes: [FORM_ASSISTANT.md](FORM_ASSISTANT.md).
+
+| Method & path | Purpose |
+|---|---|
+| `POST /api/forms/upload` (multipart `file`) | Validate (extension, magic bytes, MIME, size, encryption) and store the original. `201` → form. `413` too large, `422` rejected. |
+| `GET /api/forms` | The user's forms, newest first. |
+| `GET /api/forms/{id}` | One form: `status` (`UPLOADED`, `ANALYZING`, `READY`, `FAILED`, `COMPLETED`), `error`, `output_ready`. |
+| `DELETE /api/forms/{id}` | Delete the form, derived files, values, notes and output. |
+| `POST /api/forms/{id}/analyze` `{force?}` | Start analysis in the background (`202`); poll `GET /api/forms/{id}`. |
+| `GET /api/forms/{id}/schema` | Pages (`width`, `height`, coordinate space), fields (`field_id`, `label`, `description`, `type`, `page`, `bbox`, `options`, `required`, `confidence`, `source`), `values`, `summary`, `ai_notes`, `profile_suggestions`. `409` until analysed. |
+| `POST /api/forms/{id}/autofill` `{values, use_profile?, skip?, rename?}` | Validate and save values. Returns the schema plus `saved` and per-field `errors`. Empty string clears a value. |
+| `POST /api/forms/{id}/assistant` `{message, current_field_id?, language, frame?, screen_shared?}` | Conversational turn. Empty `message` starts/greets. Returns `sections` (`form_observation` \| `knowledge` \| `assistant`), `ask`, `choices`, `clarification`, `field_updates`, `summary`, `evidence`. |
+| `GET /api/forms/{id}/assistant` | Stored transcript (no entered values). |
+| `POST /api/forms/{id}/assistant/end` | End the session. |
+| `GET /api/forms/{id}/review` | Per-field review items (identity/bank numbers masked), `missing`, `can_generate`. |
+| `POST /api/forms/{id}/generate` `{allow_blank?}` | Create `completed.pdf` from a copy. `422 {code: "missing_required", missing: [...]}` unless the fields are filled or listed in `allow_blank`. `500` “I couldn't generate the completed PDF. Your original form has not been modified.” |
+| `GET /api/forms/{id}/preview?page=1&source=original\|completed` | PNG of a page (`Cache-Control: private, no-store`). |
+| `GET /api/forms/{id}/download` | The completed PDF. |
+| `GET/POST /api/forms/{id}/notes`, `PATCH/DELETE /api/forms/{id}/notes/{nid}` | The citizen's own notes (`GET` also returns the derived `ai_notes`; they are separate and AI notes cannot be edited). |
+
+---
+
+## WhatsApp webhook — `/api/webhooks/whatsapp`
+
+Called by Meta's WhatsApp Cloud API, not by the web app. There is no JWT and no rate limit; each request is authenticated by a verify token (`GET`) or an HMAC signature (`POST`). Setup: [WHATSAPP_SETUP.md](../WHATSAPP_SETUP.md).
+
+### `GET /api/webhooks/whatsapp`
+
+Meta's verification handshake. Query: `hub.mode=subscribe`, `hub.verify_token` (must equal a non-empty `WHATSAPP_VERIFY_TOKEN`) and `hub.challenge`. Returns the challenge as `text/plain`, otherwise `403`.
+
+### `POST /api/webhooks/whatsapp`
+
+Incoming messages. When `WHATSAPP_APP_SECRET` is set, the `X-Hub-Signature-256` header (`sha256=` plus the HMAC-SHA256 of the raw body) must match, otherwise `403`; with no secret configured the check is skipped, so set it outside local development. Invalid JSON returns `400`. The response is `{ "status": "ok" }` straight away and the message is handled in a background task, only when both `WHATSAPP_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
+
+---
+
 ## Example: sign in and ask the assistant
 
 ```bash
@@ -536,26 +618,3 @@ curl -s http://localhost:8000/api/admin/documents \
 Request field constraints and response models that use Pydantic `response_model` are fully described at `/docs`. This document adds ownership rules, demo behaviour, and payloads that the routers return as plain `dict`s.
 
 ---
-
-## AI Form Assistant — `/api/forms`
-
-Upload any form, let the app read it, collect values and produce a completed PDF. Everything is scoped to the signed-in user; another user's form returns `404`. Design notes: [FORM_ASSISTANT.md](FORM_ASSISTANT.md).
-
-| Method & path | Purpose |
-|---|---|
-| `POST /api/forms/upload` (multipart `file`) | Validate (extension, magic bytes, MIME, size, encryption) and store the original. `201` → form. `413` too large, `422` rejected. |
-| `GET /api/forms` | The user's forms, newest first. |
-| `GET /api/forms/{id}` | One form: `status` (`UPLOADED`, `ANALYZING`, `READY`, `FAILED`, `COMPLETED`), `error`, `output_ready`. |
-| `DELETE /api/forms/{id}` | Delete the form, derived files, values, notes and output. |
-| `POST /api/forms/{id}/analyze` `{force?}` | Start analysis in the background (`202`); poll `GET /api/forms/{id}`. |
-| `GET /api/forms/{id}/schema` | Pages (`width`, `height`, coordinate space), fields (`field_id`, `label`, `description`, `type`, `page`, `bbox`, `options`, `required`, `confidence`, `source`), `values`, `summary`, `ai_notes`, `profile_suggestions`. `409` until analysed. |
-| `POST /api/forms/{id}/autofill` `{values, use_profile?, skip?, rename?}` | Validate and save values. Returns the schema plus `saved` and per-field `errors`. Empty string clears a value. |
-| `POST /api/forms/{id}/assistant` `{message, current_field_id?, language, frame?, screen_shared?}` | Conversational turn. Empty `message` starts/greets. Returns `sections` (`form_observation` \| `knowledge` \| `assistant`), `ask`, `choices`, `clarification`, `field_updates`, `summary`, `evidence`. |
-| `GET /api/forms/{id}/assistant` | Stored transcript (no entered values). |
-| `POST /api/forms/{id}/assistant/end` | End the session. |
-| `GET /api/forms/{id}/review` | Per-field review items (identity/bank numbers masked), `missing`, `can_generate`. |
-| `POST /api/forms/{id}/generate` `{allow_blank?}` | Create `completed.pdf` from a copy. `422 {code: "missing_required", missing: [...]}` unless the fields are filled or listed in `allow_blank`. `500` “I couldn't generate the completed PDF. Your original form has not been modified.” |
-| `GET /api/forms/{id}/preview?page=1&source=original\|completed` | PNG of a page (`Cache-Control: private, no-store`). |
-| `GET /api/forms/{id}/download` | The completed PDF. |
-| `GET/POST /api/forms/{id}/notes`, `PATCH/DELETE /api/forms/{id}/notes/{nid}` | The citizen's own notes (`GET` also returns the derived `ai_notes`; they are separate and AI notes cannot be edited). |
-
