@@ -1,8 +1,13 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { LANGUAGES, useI18n, useTr } from "@/i18n";
 import GuideSection from "@/components/GuideSection";
+import TelegramMark from "@/components/TelegramMark";
+
+/** The Sahayak assistant is also reachable as a Telegram bot. */
+const TELEGRAM_BOT = "sahayaknitkbot";
+const TELEGRAM_URL = `https://t.me/${TELEGRAM_BOT}`;
 
 export default function Landing() {
   const { lang, setLang } = useI18n();
@@ -86,6 +91,25 @@ export default function Landing() {
                   {tr({ en: "Sign in", hi: "साइन इन करें", kn: "ಸೈನ್ ಇನ್ ಮಾಡಿ" })}
                 </Link>
               </div>
+
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-4 inline-flex min-h-[44px] items-center gap-3 rounded-md border border-forest-500/70 bg-forest-900/40 px-3.5 py-2 text-left transition-colors hover:border-forest-300 hover:bg-forest-800/60"
+              >
+                <TelegramMark className="h-6 w-6 flex-none text-[#2AABEE]" />
+                <span className="leading-tight">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.1em] text-forest-300">
+                    {tr({ en: "Also on Telegram", hi: "टेलीग्राम पर भी", kn: "ಟೆಲಿಗ್ರಾಮ್‌ನಲ್ಲೂ" })}
+                  </span>
+                  <span className="block font-semibold text-white">@{TELEGRAM_BOT}</span>
+                </span>
+                <ArrowUpRight
+                  size={16}
+                  className="flex-none text-forest-300 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
             </div>
 
             {/* Right — assistant preview */}
